@@ -29,23 +29,37 @@
 <body>
 <div id="root"></div>
 
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+<script>
+// Show loading screen
+document.getElementById('root').innerHTML = 
+  '<div style="min-height:100vh;background:#0a0e1a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;">' +
+  '<div style="font-size:28px;font-weight:900;letter-spacing:-1px;font-family:sans-serif"><span style="color:#00e5ff">fin</span><span style="color:#fff">track</span></div>' +
+  '<div class="spinner"></div>' +
+  '<div style="color:#6b7fa3;font-size:11px;letter-spacing:2px;font-family:sans-serif">CARREGANT...</div>' +
+  '</div>';
 
-<script>
-window.onerror = function(msg, src, line, col, err) {
-  document.getElementById('root').innerHTML = 
-    '<div style="color:#ff4d6d;padding:20px;font-family:monospace;font-size:13px;background:#0a0e1a;min-height:100vh">' +
-    '<div style="font-size:24px;font-weight:900;margin-bottom:12px"><span style="color:#00e5ff">fin</span><span style="color:#fff">track</span></div>' +
-    '<b>Error:</b> ' + msg + '<br><br>' +
-    '<span style="color:#6b7fa3">Línia ' + line + ' · ' + (src||'').split("/").pop() + '</span><br><br>' +
-    '<span style="color:#ffd166">ℹ️ Si obres el fitxer localment, prova a usar un servidor local o puja'l a GitHub Pages.</span>' +
-    '</div>';
-  return false;
-};
-</script>
-<script>
+function loadScript(src, cb) {
+  var s = document.createElement('script');
+  s.src = src;
+  s.onload = cb;
+  s.onerror = function() { 
+    document.getElementById('root').innerHTML = 
+      '<div style="padding:30px;color:#ff4d6d;font-family:sans-serif;background:#0a0e1a;min-height:100vh">' +
+      '<div style="font-size:24px;font-weight:900;margin-bottom:12px"><span style="color:#00e5ff">fin</span><span style="color:#fff">track</span></div>' +
+      'Error carregant: ' + src + '<br><br>' +
+      '<span style="color:#6b7fa3;font-size:12px">Comprova la connexió a internet i recarrega la pàgina.</span></div>';
+  };
+  document.head.appendChild(s);
+}
+
+loadScript('https://unpkg.com/react@18/umd/react.production.min.js', function() {
+loadScript('https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', function() {
+loadScript('https://unpkg.com/recharts@2.12.7/umd/Recharts.js', function() {
+  startApp();
+});});});
+
+function startApp() {
+try {
 'use strict';
 const e = React.createElement;
 const {useState, useEffect, createContext, useContext, useRef} = React;
@@ -1221,7 +1235,18 @@ function App() {
 }
 
 // Mount
+document.getElementById('root').innerHTML = '';
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+} catch(err) {
+  document.getElementById('root').innerHTML = 
+    '<div style="padding:24px;color:#ff4d6d;font-family:monospace;font-size:12px;background:#0a0e1a;min-height:100vh;white-space:pre-wrap">' +
+    '<div style="font-size:22px;font-weight:900;margin-bottom:16px;font-family:sans-serif"><span style="color:#00e5ff">fin</span><span style="color:#fff">track</span> — Error</div>' +
+    '<b>' + err.name + ':</b> ' + err.message + '\n\n' +
+    (err.stack||'').replace(/</g,'&lt;') +
+    '</div>';
+  console.error(err);
+}
+} // end startApp
 </script>
 </body>
 </html>
