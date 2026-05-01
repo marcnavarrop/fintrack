@@ -484,8 +484,11 @@ function GastosFixes({data,setData}) {
       e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Per categoria'),
         e(HBarChart,{data:byCat,height:150})
+      ),
+      e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Distribució'),
         e(DonutChart,{data:data.gastosFixes.map(g=>({...g,value:g.import})),size:150})
+      )
     ),
     e('div',{style:{display:'grid',gap:7}},
       data.gastosFixes.length===0 && e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:24}},"Cap gasto fix. Afegeix-ne un!"),
@@ -559,8 +562,6 @@ function GastosVariables({data,setData}) {
     cats.length>0 && e(Card,{style:{marginBottom:12}},
       e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Gastat vs Pressupost'),
         e(BarChartSimple,{data:cats.map(c=>({nom:c,pressupost:pressupostos[c]||0,gastat:mesDades[c]||0})),dataKeys:['pressupost','gastat'],colors:[C.border,C.accent],height:150})
-        )
-      )
     ),
     // Categories
     e('div',{style:{display:'grid',gap:7}},
@@ -781,7 +782,6 @@ function Inversions({data,setData}) {
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Per tipus'),
         e('div',{style:{display:'flex',alignItems:'center',gap:8}},
           e(DonutChart,{data:byTipus,size:90}),
-          ),
           e('div',{style:{flex:1}},
             byTipus.map(d=>e('div',{key:d.name,style:{display:'flex',justifyContent:'space-between',marginBottom:4}},
               e('div',{style:{display:'flex',alignItems:'center',gap:4}},
@@ -1085,7 +1085,7 @@ function Fire({data,setData}) {
     ),
     e(Card,null,
       e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},'Projecció fins FIRE'),
-        e(AreaChartSimple,{data:proj.filter((_,i)=>i%2===0||i<6).map(d=>({...d,mes:String(d.any),valor:d.valor})),height:190})
+        e(AreaChartSimple,{data:proj.filter((_,i)=>i%2===0||i<6).map(d=>({...d,mes:String(d.any),valor:d.valor})),height:190}),
       e('div',{style:{marginTop:10,padding:10,background:C.bg,borderRadius:9}},
         e('div',{style:{fontWeight:700,fontSize:9,color:C.dim,marginBottom:7,textTransform:'uppercase'}},'Projecció per fites'),
         e('div',{style:{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:8}},
