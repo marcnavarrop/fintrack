@@ -48,19 +48,15 @@ function loadScript(src, cb) {
 
 loadScript('https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js', function() {
 loadScript('https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js', function() {
-loadScript('https://cdn.jsdelivr.net/npm/recharts@2.12.7/umd/Recharts.js', function() {
   startApp();
-});});});
+});});
 
 function startApp() {
 try {
 'use strict';
 const e = React.createElement;
 const {useState, useEffect, createContext, useContext, useRef} = React;
-const {
-  PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, Tooltip,
-  ResponsiveContainer, BarChart, Bar, Legend, ReferenceLine
-} = Recharts;
+// No external chart library needed
 
 // ── Colors ───────────────────────────────────────────────────────────────────
 const C = {
@@ -70,6 +66,82 @@ const C = {
   dim:'#6b7fa3', white:'#ffffff'
 };
 const PAL = [C.accent,C.purple,C.green,C.yellow,C.red,C.orange,'#ff6eb4','#4ecdc4'];
+
+// ── Pure CSS/SVG Charts (no external library) ──────────────────────────────
+
+function DonutChart({data, size=100}) {
+  if(!data||data.length===0) return null;
+  const total = data.reduce((s,d)=>s+(d.value||0),0);
+  if(total===0) return null;
+  const r=38, cx=50, cy=50, circumf=2*Math.PI*r;
+  let offset=0;
+  const slices = data.map((d,i)=>{
+    const pct=(d.value||0)/total;
+    const dash=pct*circumf;
+    const slice=e('circle',{key:i,cx,cy,r,fill:'none',stroke:d.color||'#444',
+      strokeWidth:12,strokeDasharray:dash+' '+(circumf-dash),
+      strokeDashoffset:-offset,style:{transition:'stroke-dasharray .5s'}});
+    offset+=dash;
+    return slice;
+  });
+  return e('svg',{width:size,height:size,viewBox:'0 0 100 100'},slices);
+}
+
+function BarChartSimple({data, dataKeys, colors, height=150}) {
+  if(!data||data.length===0) return null;
+  const allVals = data.flatMap(d=>dataKeys.map(k=>d[k]||0));
+  const max = Math.max(...allVals, 1);
+  const barW = Math.floor(90/data.length/dataKeys.length);
+  const gap = Math.floor(10/data.length);
+  return e('div',{style:{height,display:'flex',alignItems:'flex-end',gap:2,padding:'0 4px',overflowX:'auto'}},
+    data.map((d,i)=>e('div',{key:i,style:{display:'flex',alignItems:'flex-end',gap:2,flex:1,minWidth:0}},
+      dataKeys.map((k,j)=>e('div',{key:k,style:{flex:1,minWidth:6,background:colors[j]||C.accent,
+        height:Math.max(4,Math.round(((d[k]||0)/max)*(height-20)))+'px',borderRadius:'3px 3px 0 0',
+        transition:'height .4s ease',opacity:.9,cursor:'default',position:'relative',title:d.nom+': '+fmt(d[k]||0)}}))
+    ))
+  );
+}
+
+function HBarChart({data, height=160}) {
+  if(!data||data.length===0) return null;
+  const max = Math.max(...data.map(d=>d.total||0), 1);
+  return e('div',{style:{height,display:'flex',flexDirection:'column',justifyContent:'space-around',padding:'4px 0'}},
+    data.map((d,i)=>e('div',{key:i,style:{display:'flex',alignItems:'center',gap:8}},
+      e('div',{style:{color:C.dim,fontSize:9,width:70,textAlign:'right',flexShrink:0}},d.cat),
+      e('div',{style:{flex:1,background:C.border,borderRadius:3,height:14,overflow:'hidden'}},
+        e('div',{style:{width:Math.max(4,Math.round(((d.total||0)/max)*100))+'%',height:'100%',
+          background:C.purple,borderRadius:3,transition:'width .4s ease'}}))
+    ))
+  );
+}
+
+function AreaChartSimple({data, height=130}) {
+  if(!data||data.length===0) return null;
+  const vals = data.map(d=>d.valor||0);
+  const max = Math.max(...vals,1);
+  const min = Math.min(...vals,0);
+  const range = max-min||1;
+  const w=300, h=height-20, pts=data.map((d,i)=>({
+    x:Math.round(i*(w/(data.length-1||1))),
+    y:Math.round(h-((d.valor-min)/range)*h)
+  }));
+  const linePts = pts.map(p=>p.x+','+p.y).join(' ');
+  const areaPts = '0,'+h+' '+linePts+' '+w+','+h;
+  return e('div',{style:{overflowX:'auto'}},
+    e('svg',{width:'100%',height,viewBox:'0 0 '+w+' '+height,preserveAspectRatio:'none'},
+      e('defs',null,e('linearGradient',{id:'ag',x1:'0',y1:'0',x2:'0',y2:'1'},
+        e('stop',{offset:'5%',stopColor:C.accent,stopOpacity:0.25}),
+        e('stop',{offset:'95%',stopColor:C.accent,stopOpacity:0})
+      )),
+      e('polygon',{points:areaPts,fill:'url(#ag)'}),
+      e('polyline',{points:linePts,fill:'none',stroke:C.accent,strokeWidth:2}),
+      data.map((d,i)=>e('text',{key:i,x:pts[i].x,y:height-2,textAnchor:'middle',
+        fill:C.dim,fontSize:9},d.mes))
+    )
+  );
+}
+
+
 
 // ── Storage ──────────────────────────────────────────────────────────────────
 const KEY = 'fintrack-v1';
@@ -319,27 +391,12 @@ function Dashboard({data,setData}) {
     e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}},
       e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},'Evolució patrimoni'),
-        e(ResponsiveContainer,{width:'100%',height:130},
-          e(AreaChart,{data:evoActual},
-            e('defs',null,e('linearGradient',{id:'grad',x1:'0',y1:'0',x2:'0',y2:'1'},
-              e('stop',{offset:'5%',stopColor:C.accent,stopOpacity:.2}),
-              e('stop',{offset:'95%',stopColor:C.accent,stopOpacity:0})
-            )),
-            e(XAxis,{dataKey:'mes',tick:{fill:C.dim,fontSize:9},axisLine:false,tickLine:false}),
-            e(YAxis,{hide:true}),
-            e(Tooltip,{contentStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11},formatter:v=>[fmt(v),'Patrimoni']}),
-            e(Area,{type:'monotone',dataKey:'valor',stroke:C.accent,strokeWidth:2,fill:'url(#grad)'})
-          )
-        )
+        e(AreaChartSimple,{data:evoActual,height:130})
       ),
       e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},'Distribució'),
         e('div',{style:{display:'flex',alignItems:'center',gap:8}},
-          e(ResponsiveContainer,{width:100,height:100},
-            e(PieChart,null,e(Pie,{data:distrib,cx:'50%',cy:'50%',innerRadius:27,outerRadius:46,dataKey:'value',strokeWidth:0},
-              distrib.map((d,i)=>e(Cell,{key:i,fill:d.color}))
-            ))
-          ),
+          e(DonutChart,{data:distrib,size:100}),
           e('div',{style:{flex:1}},
             distrib.map(d=>e('div',{key:d.name,style:{display:'flex',justifyContent:'space-between',marginBottom:5}},
               e('div',{style:{display:'flex',alignItems:'center',gap:5}},
@@ -426,26 +483,9 @@ function GastosFixes({data,setData}) {
     data.gastosFixes.length>0 && e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:12}},
       e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Per categoria'),
-        e(ResponsiveContainer,{width:'100%',height:150},
-          e(BarChart,{data:byCat,layout:'vertical'},
-            e(XAxis,{type:'number',hide:true}),
-            e(YAxis,{dataKey:'cat',type:'category',tick:{fill:C.dim,fontSize:9},axisLine:false,tickLine:false,width:75}),
-            e(Tooltip,{contentStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11},formatter:v=>[fmt(v),''],cursor:{fill:C.border}}),
-            e(Bar,{dataKey:'total',fill:C.purple,radius:[0,5,5,0]})
-          )
-        )
-      ),
-      e(Card,null,
+        e(HBarChart,{data:byCat,height:150})
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Distribució'),
-        e(ResponsiveContainer,{width:'100%',height:150},
-          e(PieChart,null,
-            e(Pie,{data:data.gastosFixes,dataKey:'import',nameKey:'nom',cx:'50%',cy:'50%',outerRadius:55,strokeWidth:0},
-              data.gastosFixes.map((g,i)=>e(Cell,{key:i,fill:g.color}))
-            ),
-            e(Tooltip,{contentStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11},formatter:v=>[fmt(v),'']})
-          )
-        )
-      )
+        e(DonutChart,{data:data.gastosFixes.map(g=>({...g,value:g.import})),size:150})
     ),
     e('div',{style:{display:'grid',gap:7}},
       data.gastosFixes.length===0 && e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:24}},"Cap gasto fix. Afegeix-ne un!"),
@@ -518,14 +558,7 @@ function GastosVariables({data,setData}) {
     // Gràfica
     cats.length>0 && e(Card,{style:{marginBottom:12}},
       e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Gastat vs Pressupost'),
-      e(ResponsiveContainer,{width:'100%',height:150},
-        e(BarChart,{data:cats.map(c=>({nom:c.length>8?c.slice(0,7)+'…':c,gastat:mesDades[c]||0,pressupost:pressupostos[c]||0}))},
-          e(XAxis,{dataKey:'nom',tick:{fill:C.dim,fontSize:9},axisLine:false,tickLine:false}),
-          e(YAxis,{hide:true}),
-          e(Tooltip,{contentStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11},formatter:v=>[fmt(v),''],cursor:{fill:C.border}}),
-          e(Legend,{wrapperStyle:{color:C.dim,fontSize:10}}),
-          e(Bar,{dataKey:'pressupost',name:'Pressupost',fill:C.border,radius:[3,3,0,0]}),
-          e(Bar,{dataKey:'gastat',name:'Gastat',fill:C.accent,radius:[3,3,0,0]})
+        e(BarChartSimple,{data:cats.map(c=>({nom:c,pressupost:pressupostos[c]||0,gastat:mesDades[c]||0})),dataKeys:['pressupost','gastat'],colors:[C.border,C.accent],height:150})
         )
       )
     ),
@@ -747,10 +780,7 @@ function Inversions({data,setData}) {
       e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Per tipus'),
         e('div',{style:{display:'flex',alignItems:'center',gap:8}},
-          e(ResponsiveContainer,{width:90,height:90},
-            e(PieChart,null,e(Pie,{data:byTipus,cx:'50%',cy:'50%',innerRadius:24,outerRadius:42,dataKey:'value',strokeWidth:0},
-              byTipus.map((d,i)=>e(Cell,{key:i,fill:d.color}))
-            ))
+          e(DonutChart,{data:byTipus,size:90}),
           ),
           e('div',{style:{flex:1}},
             byTipus.map(d=>e('div',{key:d.name,style:{display:'flex',justifyContent:'space-between',marginBottom:4}},
@@ -1055,21 +1085,7 @@ function Fire({data,setData}) {
     ),
     e(Card,null,
       e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},'Projecció fins FIRE'),
-      e(ResponsiveContainer,{width:'100%',height:190},
-        e(AreaChart,{data:proj.filter((_,i)=>i%2===0||i<6)},
-          e('defs',null,e('linearGradient',{id:'gradF',x1:'0',y1:'0',x2:'0',y2:'1'},
-            e('stop',{offset:'5%',stopColor:C.green,stopOpacity:.2}),
-            e('stop',{offset:'95%',stopColor:C.green,stopOpacity:0})
-          )),
-          e(XAxis,{dataKey:'any',tick:{fill:C.dim,fontSize:9},axisLine:false,tickLine:false}),
-          e(YAxis,{hide:true}),
-          e(Tooltip,{contentStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:10},formatter:(v,n)=>[fmt(v),n==='valor'?'Patrimoni':'Objectiu']}),
-          e(ReferenceLine,{y:objectiu,stroke:C.accent,strokeDasharray:'4 4',strokeWidth:1}),
-          e(Area,{type:'monotone',dataKey:'valor',stroke:C.green,strokeWidth:2,fill:'url(#gradF)',name:'valor'}),
-          e(Area,{type:'monotone',dataKey:'objectiu',stroke:C.accent,strokeWidth:1,strokeDasharray:'4 4',fill:'none',name:'objectiu'})
-        )
-      ),
-      edatFire && e('div',{style:{textAlign:'center',marginTop:6,color:C.dim,fontSize:10}},'🎯 FIRE als ',e('span',{style:{color:C.accent,fontWeight:700}},`${edatFire} anys`),' — ',`${anysFire} anys des d'ara`),
+        e(AreaChartSimple,{data:proj.filter((_,i)=>i%2===0||i<6).map(d=>({...d,mes:String(d.any),valor:d.valor})),height:190})
       e('div',{style:{marginTop:10,padding:10,background:C.bg,borderRadius:9}},
         e('div',{style:{fontWeight:700,fontSize:9,color:C.dim,marginBottom:7,textTransform:'uppercase'}},'Projecció per fites'),
         e('div',{style:{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:8}},
