@@ -1103,65 +1103,46 @@ function Fire({data,setData}) {
   );
 }
 
-// ── GOOGLE DRIVE HELPERS ─────────────────────────────────────────────────────
-const GD_CLIENT_ID = ''; // Opcional: posa aquí el teu Client ID de Google
-const GD_SCOPE = 'https://www.googleapis.com/auth/drive.appdata';
-const GD_FILE_NAME = 'fintrack-backup.json';
+// ── SUPABASE CONFIG ───────────────────────────────────────────────────────────
+const SB_URL = 'https://fscforkcwwoywadwkinr.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZzY2Zvcmtjd3dveXdhZHdraW5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MTEyOTAsImV4cCI6MjA5MzE4NzI5MH0.v63aTLKvkt2YcUlzl9H02AHHITHi5YwQ4w_M9benJEQ';
+const SB_TABLE = 'fintrack_data';
+const SB_ROW_ID = 1; // Fila única per usuari
 
-async function gdSave(json) {
-  if(!window.gapi||!window.gapi.auth2) return {ok:false,msg:'Google API no disponible'};
+async function sbSave(data) {
   try {
-    const auth = window.gapi.auth2.getAuthInstance();
-    if(!auth.isSignedIn.get()) await auth.signIn();
-    const token = auth.currentUser.get().getAuthResponse().access_token;
-    // Search for existing file
-    const search = await fetch(
-      'https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name="'+GD_FILE_NAME+'"',
-      {headers:{Authorization:'Bearer '+token}}
-    );
-    const files = await search.json();
-    const fileId = files.files?.[0]?.id;
-    const metadata = {name:GD_FILE_NAME,parents:fileId?undefined:['appDataFolder']};
-    const form = new FormData();
-    form.append('metadata',new Blob([JSON.stringify(metadata)],{type:'application/json'}));
-    form.append('file',new Blob([json],{type:'application/json'}));
-    const url = fileId
-      ? 'https://www.googleapis.com/upload/drive/v3/files/'+fileId+'?uploadType=multipart'
-      : 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id';
-    const method = fileId ? 'PATCH' : 'POST';
-    const resp = await fetch(url,{method,headers:{Authorization:'Bearer '+token},body:form});
-    if(!resp.ok) throw new Error('HTTP '+resp.status);
-    return {ok:true,msg:'✓ Desat a Google Drive'};
+    const json = JSON.stringify(data);
+    const resp = await fetch(SB_URL + '/rest/v1/' + SB_TABLE, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({ id: SB_ROW_ID, data: json, updated_at: new Date().toISOString() })
+    });
+    if(!resp.ok) { const e = await resp.text(); throw new Error(e); }
+    return { ok: true, msg: 'ok Desat a Supabase' };
   } catch(err) {
-    return {ok:false,msg:'✗ Error Drive: '+err.message};
+    return { ok: false, msg: 'Error Supabase: ' + err.message };
   }
 }
 
-async function gdLoad(setData) {
-  if(!window.gapi||!window.gapi.auth2) return {ok:false,msg:'Google API no disponible'};
+async function sbLoad(setData) {
   try {
-    const auth = window.gapi.auth2.getAuthInstance();
-    if(!auth.isSignedIn.get()) await auth.signIn();
-    const token = auth.currentUser.get().getAuthResponse().access_token;
-    const search = await fetch(
-      'https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name="'+GD_FILE_NAME+'"&fields=files(id,modifiedTime)',
-      {headers:{Authorization:'Bearer '+token}}
-    );
-    const files = await search.json();
-    if(!files.files?.length) return {ok:false,msg:'Cap backup trobat a Drive'};
-    const fileId = files.files[0].id;
-    const modTime = new Date(files.files[0].modifiedTime).toLocaleString('ca-ES');
-    const content = await fetch(
-      'https://www.googleapis.com/drive/v3/files/'+fileId+'?alt=media',
-      {headers:{Authorization:'Bearer '+token}}
-    );
-    const json = await content.text();
-    const parsed = JSON.parse(json);
-    if(typeof parsed.ingressos==='undefined') throw new Error('Format invàlid');
-    setData({...INIT,...parsed});
-    return {ok:true,msg:'✓ Restaurat des de Drive ('+modTime+')'};
+    const resp = await fetch(SB_URL + '/rest/v1/' + SB_TABLE + '?id=eq.' + SB_ROW_ID + '&select=data,updated_at', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    if(!resp.ok) throw new Error('HTTP ' + resp.status);
+    const rows = await resp.json();
+    if(!rows.length) return { ok: false, msg: 'Cap dada al servidor' };
+    const parsed = JSON.parse(rows[0].data);
+    const ts = new Date(rows[0].updated_at).toLocaleString('ca-ES');
+    setData({ ...INIT, ...parsed });
+    return { ok: true, msg: 'ok Restaurat (' + ts + ')' };
   } catch(err) {
-    return {ok:false,msg:'✗ Error: '+err.message};
+    return { ok: false, msg: 'Error: ' + err.message };
   }
 }
 
@@ -1238,28 +1219,12 @@ function BackupModal({data,setData,onClose}) {
   const [tab,setTab]=useState('backup');
   const [backupText,setBackupText]=useState('');
   const [msg,setMsg]=useState('');
-  const [gdStatus,setGdStatus]=useState('idle'); // idle | loading | ok | error
-  const [gdMsg,setGdMsg]=useState('');
+  const [sbStatus,setSbStatus]=useState('idle'); // idle | loading | ok | error
+  const [sbMsg,setSbMsg]=useState('');
   const [diagIssues,setDiagIssues]=useState(null);
-  const [gapiReady,setGapiReady]=useState(false);
+  const [sbReady,setSbReady]=useState(true);
 
-  // Load Google API
-  useEffect(()=>{
-    if(GD_CLIENT_ID && !window.gapi) {
-      const s=document.createElement('script');
-      s.src='https://apis.google.com/js/api.js';
-      s.onload=()=>{
-        window.gapi.load('auth2',()=>{
-          window.gapi.auth2.init({client_id:GD_CLIENT_ID,scope:GD_SCOPE})
-            .then(()=>setGapiReady(true))
-            .catch(()=>{});
-        });
-      };
-      document.head.appendChild(s);
-    } else if(window.gapi?.auth2) {
-      setGapiReady(true);
-    }
-  },[]);
+
 
   // Run diagnostic on mount
   useEffect(()=>{
@@ -1288,16 +1253,16 @@ function BackupModal({data,setData,onClose}) {
     }catch(err){setMsg('✗ Error: '+err.message);}
   };
 
-  const handleGdSave=async()=>{
-    setGdStatus('loading');setGdMsg('Desant a Drive...');
-    const r=await gdSave(JSON.stringify(data,null,2));
-    setGdStatus(r.ok?'ok':'error');setGdMsg(r.msg);
+  const handleSbSave=async()=>{
+    setSbStatus('loading');setSbMsg('Desant...');
+    const r=await sbSave(data);
+    setSbStatus(r.ok?'ok':'error');setSbMsg(r.msg);
   };
 
-  const handleGdLoad=async()=>{
-    setGdStatus('loading');setGdMsg('Carregant des de Drive...');
-    const r=await gdLoad(setData);
-    setGdStatus(r.ok?'ok':'error');setGdMsg(r.msg);
+  const handleSbLoad=async()=>{
+    setSbStatus('loading');setSbMsg('Carregant...');
+    const r=await sbLoad(setData);
+    setSbStatus(r.ok?'ok':'error');setSbMsg(r.msg);
     if(r.ok) setTimeout(onClose,1200);
   };
 
@@ -1315,7 +1280,7 @@ function BackupModal({data,setData,onClose}) {
     // Tabs
     e('div',{style:{display:'flex',borderBottom:`1px solid ${C.border}`,marginBottom:18,marginTop:-6}},
       tabBtn('backup','💾 Backup'),
-      tabBtn('drive','☁️ Google Drive'),
+      tabBtn('drive','☁️ Supabase'),
       tabBtn('diagnostic','🔍 Diagnòstic')
     ),
 
@@ -1336,40 +1301,29 @@ function BackupModal({data,setData,onClose}) {
       msg && e('div',{style:{marginTop:12,background:msg.startsWith('✓')?C.green+'22':C.red+'22',border:`1px solid ${msg.startsWith('✓')?C.green:C.red}44`,borderRadius:8,padding:'8px 12px',color:msg.startsWith('✓')?C.green:C.red,fontSize:12}},msg)
     ),
 
-    // ── GOOGLE DRIVE TAB ──
+    // ── SUPABASE TAB ──
     tab==='drive' && e('div',null,
-      GD_CLIENT_ID
-        ? e('div',null,
-            e('div',{style:{background:C.surface,border:'1px solid '+C.border,borderRadius:10,padding:14,marginBottom:12,display:'flex',alignItems:'center',gap:10}},
-              e('div',{style:{width:8,height:8,borderRadius:'50%',background:gapiReady?C.green:C.dim,flexShrink:0}}),
-              e('span',{style:{color:gapiReady?C.green:C.dim,fontSize:12}},gapiReady?'Connectat a Google':'Connectant...')
-            ),
-            e('button',{onClick:handleGdSave,disabled:!gapiReady||gdStatus==='loading',
-              style:{width:'100%',background:C.accent,color:C.bg,border:'none',borderRadius:10,padding:'11px 0',fontWeight:800,fontSize:13,cursor:(!gapiReady||gdStatus==='loading')?'not-allowed':'pointer',fontFamily:'inherit',marginBottom:10,opacity:(!gapiReady||gdStatus==='loading')?.6:1}},
-              gdStatus==='loading'?'Desant...':'Desar a Google Drive'
-            ),
-            e('button',{onClick:handleGdLoad,disabled:!gapiReady||gdStatus==='loading',
-              style:{width:'100%',background:'transparent',border:'1px solid '+C.border,color:C.dim,borderRadius:10,padding:'10px 0',fontWeight:700,fontSize:12,cursor:(!gapiReady||gdStatus==='loading')?'not-allowed':'pointer',fontFamily:'inherit',opacity:(!gapiReady||gdStatus==='loading')?.6:1}},
-              'Restaurar des de Drive'
-            ),
-            gdMsg && e('div',{style:{marginTop:12,background:gdMsg.startsWith('ok')?C.green+'22':C.red+'22',border:'1px solid '+(gdMsg.startsWith('ok')?C.green:C.red)+'44',borderRadius:8,padding:'8px 12px',color:gdMsg.startsWith('ok')?C.green:C.red,fontSize:12}},gdMsg)
-          )
-        : e('div',null,
-            e('div',{style:{background:C.yellow+'18',border:'1px solid '+C.yellow+'44',borderRadius:10,padding:16,marginBottom:14}},
-              e('div',{style:{color:C.yellow,fontWeight:700,fontSize:13,marginBottom:8}},'Configuracio necessaria'),
-              e('div',{style:{color:C.dim,fontSize:12,lineHeight:1.7}},
-                'Per usar Drive necessites un Client ID de Google OAuth2.',e('br'),
-                '1. Ves a console.cloud.google.com',e('br'),
-                '2. Crea projecte - Drive API - Activa',e('br'),
-                '3. Credencials - OAuth 2.0 - Web application',e('br'),
-                '4. Copia el Client ID i enganxa-lo al fitxer HTML a la linia GD_CLIENT_ID'
-              )
-            ),
-            e('div',{style:{background:C.surface,border:'1px solid '+C.border,borderRadius:10,padding:14}},
-              e('div',{style:{color:C.green,fontSize:12,fontWeight:700,marginBottom:6}},'Alternativa senzilla'),
-              e('div',{style:{color:C.dim,fontSize:12,lineHeight:1.6}},'Usa la pestanya Backup per descarregar un .json i desa-lo a Google Drive manualment.')
-            )
-          )
+      e('div',{style:{background:C.green+'18',border:'1px solid '+C.green+'44',borderRadius:10,padding:'10px 14px',marginBottom:14,display:'flex',alignItems:'center',gap:8}},
+        e('div',{style:{width:8,height:8,borderRadius:'50%',background:C.green,flexShrink:0}}),
+        e('span',{style:{color:C.green,fontSize:12,fontWeight:600}},'Connectat a Supabase'),
+        e('span',{style:{color:C.dim,fontSize:11}},'Sincronitzacio entre dispositius activa')
+      ),
+      e('button',{onClick:handleSbSave,disabled:sbStatus==='loading',
+        style:{width:'100%',background:C.accent,color:C.bg,border:'none',borderRadius:10,padding:'11px 0',fontWeight:800,fontSize:13,cursor:sbStatus==='loading'?'not-allowed':'pointer',fontFamily:'inherit',marginBottom:10,opacity:sbStatus==='loading'?.6:1}},
+        sbStatus==='loading'?'Desant...':'Desar al servidor ara'
+      ),
+      e('button',{onClick:handleSbLoad,disabled:sbStatus==='loading',
+        style:{width:'100%',background:'transparent',border:'1px solid '+C.border,color:C.dim,borderRadius:10,padding:'10px 0',fontWeight:700,fontSize:12,cursor:sbStatus==='loading'?'not-allowed':'pointer',fontFamily:'inherit',marginBottom:12,opacity:sbStatus==='loading'?.6:1}},
+        'Carregar del servidor'
+      ),
+      e('div',{style:{background:C.surface,border:'1px solid '+C.border,borderRadius:10,padding:14}},
+        e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:8,textTransform:'uppercase'}},'Com funciona'),
+        e('div',{style:{color:C.dim,fontSize:12,lineHeight:1.7}},
+          'Les dades es guarden automaticament al servidor cada cop que fas un canvi.',e('br'),
+          'Per sincronitzar entre dispositius: clica "Carregar del servidor" quan canvies de dispositiu.'
+        )
+      ),
+      sbMsg && e('div',{style:{marginTop:12,background:sbMsg.startsWith('ok')?C.green+'22':C.red+'22',border:'1px solid '+(sbMsg.startsWith('ok')?C.green:C.red)+'44',borderRadius:8,padding:'8px 12px',color:sbMsg.startsWith('ok')?C.green:C.red,fontSize:12}},sbMsg)
     ),
 
     // ── DIAGNOSTIC TAB ──
@@ -1434,10 +1388,8 @@ function App() {
     const t=setTimeout(async()=>{
       save(data);
       setSaveStatus('ok');
-      // Auto-desar a Drive si està configurat i autenticat
-      if(GD_CLIENT_ID && window.gapi?.auth2?.getAuthInstance()?.isSignedIn?.get()) {
-        gdSave(JSON.stringify(data,null,2)).catch(()=>{});
-      }
+      // Auto-desar a Supabase
+      sbSave(data).catch(()=>{});
     },800);
     return ()=>clearTimeout(t);
   },[data]);
