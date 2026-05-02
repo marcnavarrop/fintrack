@@ -124,39 +124,81 @@ function BarChartSimple({data, dataKeys, colors, height=150}) {
 
 function HBarChart({data, height=160}) {
   if(!data||data.length===0) return null;
+  const totalSum = data.reduce((s,d)=>s+(d.total||0),0);
   const max = Math.max(...data.map(d=>d.total||0), 1);
-  return e('div',{style:{height,display:'flex',flexDirection:'column',justifyContent:'space-around',padding:'4px 0'}},
-    data.map((d,i)=>e('div',{key:i,style:{display:'flex',alignItems:'center',gap:8}},
-      e('div',{style:{color:C.dim,fontSize:9,width:70,textAlign:'right',flexShrink:0}},d.cat),
-      e('div',{style:{flex:1,background:C.border,borderRadius:3,height:14,overflow:'hidden'}},
-        e('div',{style:{width:Math.max(4,Math.round(((d.total||0)/max)*100))+'%',height:'100%',
-          background:C.purple,borderRadius:3,transition:'width .4s ease'}}))
-    ))
+  return e('div',{style:{display:'flex',flexDirection:'column',gap:8,padding:'4px 0'}},
+    data.map((d,i)=>{
+      const pct = totalSum>0?Math.round((d.total||0)/totalSum*100):0;
+      const barColor = d.color||C.purple;
+      return e('div',{key:i},
+        e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:3}},
+          e('div',{style:{display:'flex',alignItems:'center',gap:5}},
+            e('div',{style:{width:7,height:7,borderRadius:2,background:barColor,flexShrink:0}}),
+            e('span',{style:{color:C.text,fontSize:10,fontWeight:600}},d.cat)
+          ),
+          e('div',{style:{display:'flex',alignItems:'center',gap:6}},
+            e('span',{style:{color:C.text,fontSize:10,fontFamily:'monospace'}},fmt(d.total||0)),
+            e('span',{style:{background:barColor+'22',color:barColor,borderRadius:4,padding:'0 5px',fontSize:9,fontWeight:700}},pct+'%')
+          )
+        ),
+        e('div',{style:{background:C.border,borderRadius:4,height:6,overflow:'hidden'}},
+          e('div',{style:{width:Math.max(4,pct)+'%',height:'100%',background:barColor,borderRadius:4,transition:'width .5s ease'}})
+        )
+      );
+    })
   );
 }
 
-function AreaChartSimple({data, height=130}) {
-  if(!data||data.length===0) return null;
+function AreaChartSimple({data, height=160}) {
+  if(!data||data.length===0) return e('div',{style:{height,display:'flex',alignItems:'center',justifyContent:'center',color:C.dim,fontSize:11}},'Sense dades encara');
   const vals = data.map(d=>d.valor||0);
-  const max = Math.max(...vals,1);
-  const min = Math.min(...vals,0);
-  const range = max-min||1;
-  const w=300, h=height-20, pts=data.map((d,i)=>({
-    x:Math.round(i*(w/(data.length-1||1))),
-    y:Math.round(h-((d.valor-min)/range)*h)
+  const maxV = Math.max(...vals,1);
+  const minV = Math.min(...vals,0);
+  const range = maxV-minV||1;
+  const w=320, h=height-36, pad=8;
+  const pts = data.map((d,i)=>({
+    x: Math.round(pad + i*((w-pad*2)/(data.length-1||1))),
+    y: Math.round(h - ((d.valor-minV)/range)*(h-10) + 5),
+    val: d.valor, mes: d.mes
   }));
   const linePts = pts.map(p=>p.x+','+p.y).join(' ');
-  const areaPts = '0,'+h+' '+linePts+' '+w+','+h;
-  return e('div',{style:{overflowX:'auto'}},
-    e('svg',{width:'100%',height,viewBox:'0 0 '+w+' '+height,preserveAspectRatio:'none'},
-      e('defs',null,e('linearGradient',{id:'ag',x1:'0',y1:'0',x2:'0',y2:'1'},
-        e('stop',{offset:'5%',stopColor:C.accent,stopOpacity:0.25}),
-        e('stop',{offset:'95%',stopColor:C.accent,stopOpacity:0})
-      )),
-      e('polygon',{points:areaPts,fill:'url(#ag)'}),
-      e('polyline',{points:linePts,fill:'none',stroke:C.accent,strokeWidth:2}),
-      data.map((d,i)=>e('text',{key:i,x:pts[i].x,y:height-2,textAnchor:'middle',
-        fill:C.dim,fontSize:9},d.mes))
+  const areaPts = pts[0].x+','+(h+5)+' '+linePts+' '+pts[pts.length-1].x+','+(h+5);
+  const last = pts[pts.length-1];
+  const prev = pts[pts.length-2];
+  const trend = prev ? last.val - prev.val : 0;
+  return e('div',{style:{position:'relative'}},
+    e('svg',{width:'100%',height,viewBox:'0 0 '+w+' '+height,preserveAspectRatio:'xMidYMid meet'},
+      e('defs',null,
+        e('linearGradient',{id:'ag2',x1:'0',y1:'0',x2:'0',y2:'1'},
+          e('stop',{offset:'0%',stopColor:C.accent,stopOpacity:.3}),
+          e('stop',{offset:'100%',stopColor:C.accent,stopOpacity:.02})
+        )
+      ),
+      // Grid lines
+      [0.25,0.5,0.75,1].map(f=>e('line',{key:f,
+        x1:pad,y1:Math.round(h*(1-f)+5),x2:w-pad,y2:Math.round(h*(1-f)+5),
+        stroke:C.border,strokeWidth:.5,strokeDasharray:'3 3'
+      })),
+      // Y axis labels
+      [0.5,1].map(f=>e('text',{key:f,
+        x:pad,y:Math.round(h*(1-f)+4),fill:C.dim,fontSize:7,textAnchor:'start'
+      },fmt(minV+range*f,0))),
+      // Area fill
+      e('polygon',{points:areaPts,fill:'url(#ag2)'}),
+      // Line
+      e('polyline',{points:linePts,fill:'none',stroke:C.accent,strokeWidth:2.5,strokeLinejoin:'round',strokeLinecap:'round'}),
+      // Dots + labels
+      pts.map((p,i)=>e('g',{key:i},
+        e('circle',{cx:p.x,cy:p.y,r:i===pts.length-1?5:3,fill:i===pts.length-1?C.accent:C.bg,stroke:C.accent,strokeWidth:i===pts.length-1?0:1.5}),
+        e('text',{x:p.x,y:h+18,textAnchor:'middle',fill:C.dim,fontSize:8},p.mes),
+        i===pts.length-1 && e('text',{x:p.x,y:p.y-10,textAnchor:'middle',fill:C.accent,fontSize:8,fontWeight:'bold'},
+          fmt(p.val,0)
+        )
+      ))
+    ),
+    // Trend badge
+    trend!==0 && e('div',{style:{position:'absolute',top:4,right:4,background:(trend>0?C.green:C.red)+'22',color:trend>0?C.green:C.red,borderRadius:5,padding:'2px 6px',fontSize:9,fontWeight:700}},
+      (trend>0?'▲ +':'▼ ')+fmt(trend,0),' vs mes anterior'
     )
   );
 }
@@ -198,7 +240,8 @@ const mesLabel = key => { const [y,m]=key.split('-'); return new Date(+y,+m-1,1)
 
 // ── Initial data ─────────────────────────────────────────────────────────────
 const INIT = {
-  ingressos:0, gastosFixes:[], pressupostosVariables:{}, historialVariables:{},
+  ingressos:0,
+  historialNomines:{}, // {YYYY-MM: import} gastosFixes:[], pressupostosVariables:{}, historialVariables:{},
   inversions:[], bens:[], objectius:[], transaccions:[], evolucioPat:[],
   fire:{edatActual:30, despesesAnuals:18000, rendimentEsperatPct:7, inflacio:2.5, reglaPct:4}
 };
@@ -353,27 +396,31 @@ function Dashboard({data,setData,setTab=()=>{}}) {
   const [errObj,setErrObj]=useState({});
 
   const totalInv = data.inversions.reduce((s,i)=>s+i.valor,0);
-  const totalBens = data.bens.reduce((s,b)=>s+b.valorActual,0);
-  const totalDeute = data.bens.reduce((s,b)=>s+(b.deute||0),0);
+  // Cash = béns de tipus Compte
+  const totalCash = data.bens.filter(b=>b.tipus==='Compte').reduce((s,b)=>s+b.valorActual,0);
+  const totalBens = data.bens.filter(b=>b.tipus!=='Compte').reduce((s,b)=>s+b.valorActual,0);
+  const totalDeute = data.bens.filter(b=>b.tipus!=='Compte').reduce((s,b)=>s+(b.deute||0),0);
   const iMensual = g => g.periodicitat==='anual' ? g.import/12 : g.import;
   const totalFixes = data.gastosFixes.reduce((s,g)=>s+iMensual(g),0);
   const totalVars = Object.values(data.historialVariables?.[mesKey()]||{}).reduce((s,v)=>s+v,0);
   const estalvi = data.ingressos - totalFixes - totalVars;
-  const patrimoni = totalInv + totalBens - totalDeute;
+  const patrimoni = totalInv + totalBens - totalDeute + totalCash;
   const guanyInv = data.inversions.reduce((s,i)=>s+(i.valor-i.cost),0);
   const pctInv = gainPct(totalInv, data.inversions.reduce((s,i)=>s+i.cost,0));
 
+  const distribTotal = totalInv + Math.max(0,totalBens-totalDeute) + totalCash;
   const distrib = [
-    {name:'Inversions',value:totalInv,color:C.accent},
-    {name:'Béns nets',value:Math.max(0,totalBens-totalDeute),color:C.purple},
-    {name:'Estalvi 6m',value:Math.max(0,estalvi*6),color:C.green},
+    {name:'Inversions',value:totalInv,color:C.accent,pct:distribTotal>0?Math.round(totalInv/distribTotal*100):0},
+    {name:'Bens nets',value:Math.max(0,totalBens-totalDeute),color:C.purple,pct:distribTotal>0?Math.round((totalBens-totalDeute)/distribTotal*100):0},
+    {name:'Cash',value:totalCash,color:C.green,pct:distribTotal>0?Math.round(totalCash/distribTotal*100):0},
   ].filter(d=>d.value>0);
 
+  // Evolució: construeix historial des de les nomines guardades
   const mesAbr = new Date().toLocaleString('ca-ES',{month:'short'}).slice(0,3);
   const evo = data.evolucioPat||[];
   const evoActual = evo.length && evo[evo.length-1].mes===mesAbr
     ? evo.map((x,i)=>i===evo.length-1?{...x,valor:Math.round(patrimoni)}:x)
-    : [...evo.slice(-6),{mes:mesAbr,valor:Math.round(patrimoni)}];
+    : [...evo.slice(-11),{mes:mesAbr,valor:Math.round(patrimoni)}];
 
   const desarObj = () => {
     const er={};
@@ -396,32 +443,62 @@ function Dashboard({data,setData,setTab=()=>{}}) {
         `${pctInv>=0?'▲':'▼'} ${Math.abs(pctInv).toFixed(1)}% rendiment inversions · ${guanyInv>=0?'+':''}`,e(Money,null,fmt(guanyInv)),' total'
       )
     ),
-    // Nòmina
+    // Nòmina amb historial
     e(Card,{style:{marginBottom:12,padding:'12px 14px'}},
-      e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},
+      e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}},
         e('div',null,
-          e('div',{style:{color:C.dim,fontSize:10,letterSpacing:.8,textTransform:'uppercase',marginBottom:3}},'💼 Nòmina mensual'),
+          e('div',{style:{color:C.dim,fontSize:10,letterSpacing:.8,textTransform:'uppercase',marginBottom:3}},'💼 Nomina mensual'),
           editIng
             ? e('div',{style:{display:'flex',alignItems:'center',gap:7,marginTop:3}},
                 e('input',{value:tempIng,onChange:ev=>setTempIng(ev.target.value),type:'number',autoFocus:true,
-                  onKeyDown:ev=>{if(ev.key==='Enter'){const v=parseFloat(tempIng);if(!isNaN(v)&&v>=0)setData(d=>({...d,ingressos:v}));setEditIng(false);}if(ev.key==='Escape')setEditIng(false);},
-                  style:{background:C.bg,border:`1px solid ${C.accent}`,borderRadius:7,color:C.text,padding:'6px 10px',fontSize:14,width:110,outline:'none',fontFamily:'monospace',fontWeight:700}}),
-                e('button',{onClick:()=>{const v=parseFloat(tempIng);if(!isNaN(v)&&v>=0)setData(d=>({...d,ingressos:v}));setEditIng(false);},
-                  style:{background:C.accent,border:'none',color:C.bg,borderRadius:7,padding:'6px 10px',cursor:'pointer',fontSize:12,fontWeight:800,fontFamily:'inherit'}},'✓'),
+                  onKeyDown:ev=>{
+                    if(ev.key==='Enter'){
+                      const v=parseFloat(tempIng);
+                      if(!isNaN(v)&&v>=0){
+                        const mk=mesKey();
+                        setData(d=>({...d,ingressos:v,historialNomines:{...(d.historialNomines||{}),[mk]:v}}));
+                      }
+                      setEditIng(false);
+                    }
+                    if(ev.key==='Escape')setEditIng(false);
+                  },
+                  style:{background:C.bg,border:'1px solid '+C.accent,borderRadius:7,color:C.text,padding:'6px 10px',fontSize:14,width:110,outline:'none',fontFamily:'monospace',fontWeight:700}}),
+                e('button',{onClick:()=>{
+                    const v=parseFloat(tempIng);
+                    if(!isNaN(v)&&v>=0){
+                      const mk=mesKey();
+                      setData(d=>({...d,ingressos:v,historialNomines:{...(d.historialNomines||{}),[mk]:v}}));
+                    }
+                    setEditIng(false);
+                  },style:{background:C.accent,border:'none',color:C.bg,borderRadius:7,padding:'6px 10px',cursor:'pointer',fontSize:12,fontWeight:800,fontFamily:'inherit'}},'OK'),
                 e('button',{onClick:()=>setEditIng(false),style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:14}},'✕')
               )
             : e('div',{style:{display:'flex',alignItems:'center',gap:8,marginTop:2}},
                 e('span',{style:{color:C.green,fontSize:18,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(data.ingressos))),
                 e('button',{onClick:()=>{setTempIng(String(data.ingressos));setEditIng(true);},
-                  style:{background:C.accentDim,border:`1px solid ${C.accent}33`,color:C.accent,borderRadius:6,padding:'2px 8px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600}},'Editar')
+                  style:{background:C.accentDim,border:'1px solid '+C.accent+'33',color:C.accent,borderRadius:6,padding:'2px 8px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600}},'Editar')
               )
         ),
         e('div',{style:{textAlign:'right'}},
           e('div',{style:{color:C.dim,fontSize:10}},'Taxa estalvi'),
           e('div',{style:{color:estalvi>0?C.green:C.red,fontSize:16,fontWeight:800,fontFamily:'monospace'}},
-            `${data.ingressos>0?Math.round((estalvi/data.ingressos)*100):0}%`
+            (data.ingressos>0?Math.round((estalvi/data.ingressos)*100):0)+'%'
           ),
           e('div',{style:{color:C.dim,fontSize:10}},e(Money,null,fmt(estalvi)),'/mes')
+        )
+      ),
+      // Historial nomines
+      Object.keys(data.historialNomines||{}).length>1 && e('div',{
+        style:{borderTop:'1px solid '+C.border,paddingTop:8,marginTop:4}
+      },
+        e('div',{style:{color:C.dim,fontSize:9,fontWeight:600,marginBottom:6,textTransform:'uppercase','letterSpacing':.5}},'Historic nomines'),
+        e('div',{style:{display:'flex',gap:6,overflowX:'auto',paddingBottom:2}},
+          Object.entries(data.historialNomines||{}).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,6).map(([k,v])=>
+            e('div',{key:k,style:{background:C.bg,borderRadius:7,padding:'5px 9px',flexShrink:0,textAlign:'center'}},
+              e('div',{style:{color:C.dim,fontSize:8}},mesLabel(k).slice(0,3)+' '+k.slice(0,4)),
+              e('div',{style:{color:C.green,fontSize:11,fontWeight:700,fontFamily:'monospace'}},e(Money,null,fmt(v)))
+            )
+          )
         )
       )
     ),
@@ -431,7 +508,8 @@ function Dashboard({data,setData,setTab=()=>{}}) {
       e(StatBox,{label:'Variables',value:e(Money,null,fmt(totalVars)),sub:mesLabel(mesKey()),color:C.orange,icon:'📊',onClick:()=>setTab('variables')}),
       e(StatBox,{label:'Estalvi net',value:e(Money,null,fmt(estalvi)),sub:estalvi>0?'superavit':'deficit',color:estalvi>0?C.green:C.red,icon:'🏦'}),
       e(StatBox,{label:'Inversions',value:e(Money,null,fmt(totalInv)),sub:e('span',null,(guanyInv>=0?'+':''),e(Money,null,fmt(guanyInv))),color:C.accent,icon:'📈',onClick:()=>setTab('inversions')}),
-      e(StatBox,{label:'Béns nets',value:e(Money,null,fmt(totalBens-totalDeute)),color:C.purple,icon:'🏛️',onClick:()=>setTab('bens')})
+      e(StatBox,{label:'Bens nets',value:e(Money,null,fmt(totalBens-totalDeute)),color:C.purple,icon:'🏛️',onClick:()=>setTab('bens')}),
+      totalCash>0 && e(StatBox,{label:'Cash',value:e(Money,null,fmt(totalCash)),sub:'comptes bancaris',color:C.green,icon:'💰',onClick:()=>setTab('bens')})
     ),
     // Charts
     e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}},
@@ -440,19 +518,26 @@ function Dashboard({data,setData,setTab=()=>{}}) {
         e(AreaChartSimple,{data:evoActual,height:130})
       ),
       e(Card,null,
-        e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},'Distribució'),
-        e('div',{style:{display:'flex',alignItems:'center',gap:8}},
-          e(DonutChart,{data:distrib,size:100}),
-          e('div',{style:{flex:1}},
-            distrib.map(d=>e('div',{key:d.name,style:{display:'flex',justifyContent:'space-between',marginBottom:5}},
-              e('div',{style:{display:'flex',alignItems:'center',gap:5}},
-                e('div',{style:{width:6,height:6,borderRadius:'50%',background:d.color}}),
-                e('span',{style:{color:C.dim,fontSize:10}},d.name)
+        e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},'Distribucio patrimoni'),
+        distrib.length===0
+          ? e('div',{style:{color:C.dim,fontSize:11,textAlign:'center',padding:16}},'Afegeix dades')
+          : e('div',null,
+              // Donut gran centrat
+              e('div',{style:{display:'flex',justifyContent:'center',marginBottom:10,position:'relative'}},
+                e(DonutChart,{data:distrib,size:120}),
+                e('div',{style:{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',textAlign:'center'}},
+                  e('div',{style:{color:C.text,fontFamily:'monospace',fontWeight:800,fontSize:11}},e(Money,null,fmt(distribTotal))),
+                  e('div',{style:{color:C.dim,fontSize:8}},'total')
+                )
               ),
-              e('span',{style:{color:C.text,fontSize:10,fontFamily:'monospace'}},e(Money,null,fmt(d.value)))
-            ))
-          )
-        )
+              // Llegenda amb % i valor
+              distrib.map(d=>e('div',{key:d.name,style:{display:'flex',alignItems:'center',gap:6,marginBottom:6}},
+                e('div',{style:{width:8,height:8,borderRadius:2,background:d.color,flexShrink:0}}),
+                e('span',{style:{color:C.dim,fontSize:10,flex:1}},d.name),
+                e('span',{style:{color:C.text,fontSize:10,fontFamily:'monospace'}},e(Money,null,fmt(d.value))),
+                e('span',{style:{background:d.color+'22',color:d.color,borderRadius:4,padding:'0 5px',fontSize:9,fontWeight:700,marginLeft:3}},d.pct+'%')
+              ))
+            )
       )
     ),
     // Objectius
@@ -718,8 +803,53 @@ function GastosVariables({data,setData}) {
     ),
     // Gràfica
     cats.length>0 && e(Card,{style:{marginBottom:12}},
-      e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Gastat vs Pressupost'),
-        e(BarChartSimple,{data:cats.map(c=>({nom:c,pressupost:pressupostos[c]||0,gastat:mesDades[c]||0})),dataKeys:['pressupost','gastat'],colors:[C.border,C.accent],height:150})
+      e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}},
+        e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,textTransform:'uppercase'}},'Resum del mes'),
+        e('div',{style:{display:'flex',gap:8}},
+          e('span',{style:{color:C.dim,fontSize:10}},'Gastat: ',e('span',{style:{color:tG>tP?C.red:C.text,fontWeight:700}},fmt(totalG))),
+          tP>0 && e('span',{style:{color:C.dim,fontSize:10}},'/ ',e('span',{style:{color:C.dim}},fmt(tP)))
+        )
+      ),
+      // Barra global
+      tP>0 && e('div',{style:{marginBottom:12}},
+        e('div',{style:{background:C.border,borderRadius:5,height:8,overflow:'hidden',marginBottom:3}},
+          e('div',{style:{width:Math.min(100,(totalG/tP)*100)+'%',height:'100%',
+            background:totalG>tP?C.red:totalG>tP*.8?C.yellow:C.green,
+            borderRadius:5,transition:'width .5s ease'}})
+        ),
+        e('div',{style:{display:'flex',justifyContent:'space-between'}},
+          e('span',{style:{color:C.dim,fontSize:9}},(totalG/tP*100).toFixed(0)+'% del pressupost total'),
+          e('span',{style:{color:totalG>tP?C.red:C.green,fontSize:9,fontWeight:700}},
+            totalG>tP?'+'+(fmt(totalG-tP))+' per sobre':fmt(tP-totalG)+' disponible'
+          )
+        )
+      ),
+      // Per categoria
+      e('div',{style:{display:'grid',gap:7}},
+        cats.map(c=>{
+          const g=mesDades[c]||0, p=pressupostos[c]||0;
+          const over=p>0&&g>p;
+          const pct=p>0?Math.min(100,(g/p)*100):null;
+          return e('div',{key:c},
+            e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:2}},
+              e('div',{style:{display:'flex',alignItems:'center',gap:5}},
+                e('div',{style:{width:7,height:7,borderRadius:2,background:colorPerCat(c)}}),
+                e('span',{style:{color:C.text,fontSize:11,fontWeight:600}},c)
+              ),
+              e('div',{style:{display:'flex',alignItems:'center',gap:5}},
+                e('span',{style:{color:over?C.red:C.text,fontFamily:'monospace',fontSize:11,fontWeight:700}},fmt(g)),
+                p>0 && e('span',{style:{color:C.dim,fontSize:10}},' / '+fmt(p)),
+                pct!==null && e('span',{style:{background:(over?C.red:pct>80?C.yellow:C.green)+'22',color:over?C.red:pct>80?C.yellow:C.green,borderRadius:4,padding:'0 5px',fontSize:9,fontWeight:700}},
+                  pct.toFixed(0)+'%'
+                )
+              )
+            ),
+            p>0 && e('div',{style:{background:C.border,borderRadius:3,height:4,overflow:'hidden'}},
+              e('div',{style:{width:pct+'%',height:'100%',background:over?C.red:pct>80?C.yellow:colorPerCat(c),borderRadius:3,transition:'width .5s'}})
+            )
+          );
+        })
+      )
     ),
     // Categories
     e('div',{style:{display:'grid',gap:7}},
