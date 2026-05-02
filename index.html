@@ -391,6 +391,8 @@ function RowBtns({onSave,onCancel}) {
 function Dashboard({data,setData,setTab=()=>{}}) {
   const [editIng,setEditIng]=useState(false);
   const [tempIng,setTempIng]=useState('');
+  const [editCash,setEditCash]=useState(false);
+  const [tempCash,setTempCash]=useState('');
   const [modalObj,setModalObj]=useState(null);
   const [fObj,setFObj]=useState({nom:'',meta:'',actual:'',icona:'🎯'});
   const [errObj,setErrObj]=useState({});
@@ -502,6 +504,59 @@ function Dashboard({data,setData,setTab=()=>{}}) {
         )
       )
     ),
+    // Cash card (editable directament)
+    e(Card,{style:{marginBottom:12,padding:'12px 14px'}},
+      e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},
+        e('div',null,
+          e('div',{style:{color:C.dim,fontSize:10,letterSpacing:.8,textTransform:'uppercase',marginBottom:3}},'💰 Cash disponible'),
+          editCash
+            ? e('div',{style:{display:'flex',alignItems:'center',gap:7,marginTop:3}},
+                e('input',{value:tempCash,onChange:ev=>setTempCash(ev.target.value),type:'number',autoFocus:true,
+                  onKeyDown:ev=>{
+                    if(ev.key==='Enter'){
+                      const v=parseFloat(tempCash);
+                      if(!isNaN(v)&&v>=0){
+                        setData(d=>{
+                          const cashBe=d.bens.find(b=>b.tipus==='Compte');
+                          if(cashBe){
+                            return {...d,bens:d.bens.map(b=>b.id===cashBe.id?{...b,valorActual:v}:b)};
+                          } else {
+                            return {...d,bens:[...d.bens,{id:uid(),nom:'Cash / Compte',tipus:'Compte',valorActual:v,valorCompra:0,deute:0,mensualitat:0,anysFi:'',icona:'💰'}]};
+                          }
+                        });
+                      }
+                      setEditCash(false);
+                    }
+                    if(ev.key==='Escape')setEditCash(false);
+                  },
+                  style:{background:C.bg,border:'1px solid '+C.accent,borderRadius:7,color:C.text,padding:'6px 10px',fontSize:14,width:120,outline:'none',fontFamily:'monospace',fontWeight:700}}),
+                e('button',{onClick:()=>{
+                    const v=parseFloat(tempCash);
+                    if(!isNaN(v)&&v>=0){
+                      setData(d=>{
+                        const cashBe=d.bens.find(b=>b.tipus==='Compte');
+                        if(cashBe) return {...d,bens:d.bens.map(b=>b.id===cashBe.id?{...b,valorActual:v}:b)};
+                        return {...d,bens:[...d.bens,{id:uid(),nom:'Cash / Compte',tipus:'Compte',valorActual:v,valorCompra:0,deute:0,mensualitat:0,anysFi:'',icona:'💰'}]};
+                      });
+                    }
+                    setEditCash(false);
+                  },style:{background:C.accent,border:'none',color:C.bg,borderRadius:7,padding:'6px 10px',cursor:'pointer',fontSize:12,fontWeight:800,fontFamily:'inherit'}},'OK'),
+                e('button',{onClick:()=>setEditCash(false),style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:14}},'✕')
+              )
+            : e('div',{style:{display:'flex',alignItems:'center',gap:8,marginTop:2}},
+                e('span',{style:{color:C.green,fontSize:18,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(totalCash))),
+                e('button',{onClick:()=>{setTempCash(String(totalCash));setEditCash(true);},
+                  style:{background:C.accentDim,border:'1px solid '+C.accent+'33',color:C.accent,borderRadius:6,padding:'2px 8px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600}},'Editar')
+              )
+        ),
+        e('div',{style:{textAlign:'right'}},
+          e('div',{style:{color:C.dim,fontSize:10}},'del patrimoni'),
+          e('div',{style:{color:C.green,fontSize:16,fontWeight:800,fontFamily:'monospace'}},
+            distribTotal>0?Math.round(totalCash/distribTotal*100):0,'%'
+          )
+        )
+      )
+    ),
     // Stats grid
     e('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:9,marginBottom:12}},
       e(StatBox,{label:'Fixes',value:e(Money,null,fmt(totalFixes)),sub:'mensual',color:C.red,icon:'📌',onClick:()=>setTab('fixes')}),
@@ -514,8 +569,20 @@ function Dashboard({data,setData,setTab=()=>{}}) {
     // Charts
     e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}},
       e(Card,null,
-        e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},'Evolució patrimoni'),
-        e(AreaChartSimple,{data:evoActual,height:130})
+        e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}},
+          e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,textTransform:'uppercase'}},'Evolució patrimoni'),
+          e('button',{
+            onClick:()=>setData(d=>({...d,evolucioPat:evoActual})),
+            title:'Desar punt actual',
+            style:{background:C.accentDim,border:'1px solid '+C.accent+'33',color:C.accent,borderRadius:5,padding:'2px 8px',fontSize:9,cursor:'pointer',fontFamily:'inherit',fontWeight:600}
+          },'+ Desar punt')
+        ),
+        evoActual.length<2
+          ? e('div',{style:{height:130,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:6}},
+              e('div',{style:{color:C.dim,fontSize:11}},'Ves afegint punts cada mes'),
+              e('div',{style:{color:C.dim,fontSize:9}},'Clica "+ Desar punt" per guardar el patrimoni actual')
+            )
+          : e(AreaChartSimple,{data:evoActual,height:130})
       ),
       e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},'Distribucio patrimoni'),
@@ -806,21 +873,21 @@ function GastosVariables({data,setData}) {
       e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}},
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,textTransform:'uppercase'}},'Resum del mes'),
         e('div',{style:{display:'flex',gap:8}},
-          e('span',{style:{color:C.dim,fontSize:10}},'Gastat: ',e('span',{style:{color:tG>tP?C.red:C.text,fontWeight:700}},fmt(totalG))),
-          tP>0 && e('span',{style:{color:C.dim,fontSize:10}},'/ ',e('span',{style:{color:C.dim}},fmt(tP)))
+          e('span',{style:{color:C.dim,fontSize:10}},'Gastat: ',e('span',{style:{color:totalG>totalP?C.red:C.text,fontWeight:700}},fmt(totalG))),
+          totalP>0 && e('span',{style:{color:C.dim,fontSize:10}},'/ ',e('span',{style:{color:C.dim}},fmt(totalP)))
         )
       ),
       // Barra global
-      tP>0 && e('div',{style:{marginBottom:12}},
+      totalP>0 && e('div',{style:{marginBottom:12}},
         e('div',{style:{background:C.border,borderRadius:5,height:8,overflow:'hidden',marginBottom:3}},
-          e('div',{style:{width:Math.min(100,(totalG/tP)*100)+'%',height:'100%',
-            background:totalG>tP?C.red:totalG>tP*.8?C.yellow:C.green,
+          e('div',{style:{width:Math.min(100,(totalG/totalP)*100)+'%',height:'100%',
+            background:totalG>totalP?C.red:totalG>totalP*.8?C.yellow:C.green,
             borderRadius:5,transition:'width .5s ease'}})
         ),
         e('div',{style:{display:'flex',justifyContent:'space-between'}},
-          e('span',{style:{color:C.dim,fontSize:9}},(totalG/tP*100).toFixed(0)+'% del pressupost total'),
-          e('span',{style:{color:totalG>tP?C.red:C.green,fontSize:9,fontWeight:700}},
-            totalG>tP?'+'+(fmt(totalG-tP))+' per sobre':fmt(tP-totalG)+' disponible'
+          e('span',{style:{color:C.dim,fontSize:9}},(totalG/totalP*100).toFixed(0)+'% del pressupost total'),
+          e('span',{style:{color:totalG>totalP?C.red:C.green,fontSize:9,fontWeight:700}},
+            totalG>totalP?'+'+(fmt(totalG-totalP))+' per sobre':fmt(totalP-totalG)+' disponible'
           )
         )
       ),
@@ -1933,6 +2000,26 @@ function App() {
   const [loaded, setLoaded] = useState(false);
   const [loadError, setLoadError] = useState('');
   const [userHasEdited, setUserHasEdited] = useState(false);
+
+  // ── Auto-actualitza deutes d'immobles cada mes ───────────────────────────
+  useEffect(()=>{
+    if(!loaded) return;
+    const mk = mesKey();
+    const lastUpdate = data._lastDeuteUpdate;
+    if(lastUpdate === mk) return; // ja fet aquest mes
+    // Redueix el deute de cada bé amb mensualitat
+    const bensActualitzats = data.bens.map(b=>{
+      if(!b.mensualitat || b.mensualitat<=0 || !b.deute || b.deute<=0) return b;
+      const nouDeute = Math.max(0, Math.round((b.deute - b.mensualitat)*100)/100);
+      return {...b, deute: nouDeute};
+    });
+    const changed = bensActualitzats.some((b,i)=>b.deute !== data.bens[i].deute);
+    if(changed){
+      setDataSafe(d=>({...d, bens:bensActualitzats, _lastDeuteUpdate:mk}));
+    } else {
+      setDataSafe(d=>({...d, _lastDeuteUpdate:mk}));
+    }
+  },[loaded]);
 
   // ── Càrrega inicial des de Supabase ───────────────────────────────────────
   useEffect(()=>{
