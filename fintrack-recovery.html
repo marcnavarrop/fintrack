@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"/>
+<title>fintrack - Recuperació</title>
+<style>
+body{background:#0a0e1a;color:#e8f0fe;font-family:monospace;padding:20px;max-width:600px;margin:0 auto;}
+pre{background:#111827;padding:15px;border-radius:8px;overflow-x:auto;font-size:11px;white-space:pre-wrap;word-break:break-all;}
+button{background:#00e5ff;color:#0a0e1a;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:700;margin:5px 0;width:100%;font-size:13px;}
+button.sec{background:transparent;color:#6b7fa3;border:1px solid #1e2d45;}
+.ok{color:#00c896;} .err{color:#ff4d6d;} .warn{color:#ffd166;}
+h2{color:#00e5ff;margin-bottom:4px;}
+.box{background:#111827;border:1px solid #1e2d45;border-radius:10px;padding:14px;margin:10px 0;}
+</style></head>
+<body>
+<h2>fintrack — Recuperació de dades</h2>
+
+<div class="box">
+  <div class="warn" style="margin-bottom:10px">⚠️ Intent de recuperació</div>
+  <button onclick="tryRecover()">🔍 1. Intentar recuperar de Supabase</button>
+  <button onclick="checkAllKeys()" class="sec">🗂️ 2. Cercar en tot el localStorage</button>
+</div>
+
+<div id="out"></div>
+
+<script>
+const SB_URL = 'https://fscforkcwwoywadwkinr.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZzY2Zvcmtjd3dveXdhZHdraW5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MTEyOTAsImV4cCI6MjA5MzE4NzI5MH0.v63aTLKvkt2YcUlzl9H02AHHITHi5YwQ4w_M9benJEQ';
+
+function log(msg, cls='') {
+  const d = document.createElement('div');
+  d.className = cls;
+  d.innerHTML = msg;
+  document.getElementById('out').appendChild(d);
+}
+
+async function tryRecover() {
+  document.getElementById('out').innerHTML = '';
+  log('Connectant a Supabase...','warn');
+  
+  try {
+    // Try all rows, not just id=1
+    const r = await fetch(SB_URL+'/rest/v1/fintrack_data?select=*&order=updated_at.desc', {
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    
+    log('HTTP: '+r.status, r.ok?'ok':'err');
+    const rows = await r.json();
+    log('Files a Supabase: '+rows.length, rows.length>0?'ok':'err');
+    
+    if(rows.length === 0) {
+      log('❌ Supabase està buit. Les dades es van sobreescriure.','err');
+      log('','');
+      log('ℹ️ Opcions per recuperar:','warn');
+      log('1. Si tens Time Machine o backup del Mac, busca fintrack_*.json','warn');
+      log('2. Si tenies iCloud Drive actiu al mòbil, busca als Fitxers','warn');
+      log('3. Si tens captures de pantalla de l'app, podem reconstruir les dades manualment','warn');
+      return;
+    }
+    
+    rows.forEach((row, i) => {
+      log('--- Fila '+i+' (updated_at: '+row.updated_at+') ---','warn');
+      try {
+        const d = typeof row.data === 'string' ? JSON.parse(row.data) : row.data;
+        const inv = d.inversions?.length || 0;
+        const bens = d.bens?.length || 0;
+        const fixes = d.gastosFixes?.length || 0;
+        const vars = Object.keys(d.pressupostosVariables||{}).length;
+        log('inversions: '+inv+' | béns: '+bens+' | gastos fixes: '+fixes+' | categories variables: '+vars,
+          (inv+bens+fixes+vars>0)?'ok':'err');
+        
+        if(inv+bens+fixes+vars > 0) {
+          log('✅ DADES TROBADES! Fent download...','ok');
+          // Download this data as JSON
+          const blob = new Blob([JSON.stringify(d,null,2)], {type:'application/json'});
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'fintrack_recovered_'+row.updated_at.slice(0,16).replace('T','_').replace(/:/g,'-')+'.json';
+          a.textContent = '⬇️ DESCARREGAR dades recuperades ('+a.download+')';
+          a.style.cssText = 'display:block;background:#00c896;color:#0a0e1a;padding:12px;border-radius:8px;text-decoration:none;font-weight:700;margin:8px 0;text-align:center;';
+          document.getElementById('out').appendChild(a);
+          a.click();
+        } else {
+          log('Fila buida (dades a 0)','err');
+          log('<pre>'+JSON.stringify(d,null,2).substring(0,300)+'</pre>');
+        }
+      } catch(e) {
+        log('Error parsejant: '+e.message,'err');
+        log('<pre>'+(row.data||'').substring(0,200)+'</pre>');
+      }
+    });
+    
+  } catch(e) {
+    log('Error connectant: '+e.message,'err');
+    log('Nota: obre aquesta pàgina des de marcnavarrop.github.io, no com a fitxer local','warn');
+  }
+}
+
+function checkAllKeys() {
+  document.getElementById('out').innerHTML = '';
+  log('Cercant en localStorage...','warn');
+  let found = 0;
+  for(let i=0; i<localStorage.length; i++) {
+    const k = localStorage.key(i);
+    const v = localStorage.getItem(k);
+    try {
+      const d = JSON.parse(v);
+      if(d && typeof d === 'object') {
+        const inv = d.inversions?.length || 0;
+        const bens = d.bens?.length || 0;
+        const fixes = d.gastosFixes?.length || 0;
+        if(inv+bens+fixes > 0) {
+          log('✅ DADES TROBADES a "'+k+'"!','ok');
+          log('inversions:'+inv+' béns:'+bens+' fixes:'+fixes,'ok');
+          found++;
+          const blob = new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href=url; a.download='fintrack_localStorage_'+k+'.json';
+          a.textContent='⬇️ Descarregar dades de "'+k+'"';
+          a.style.cssText='display:block;background:#00c896;color:#0a0e1a;padding:12px;border-radius:8px;text-decoration:none;font-weight:700;margin:8px 0;text-align:center;';
+          document.getElementById('out').appendChild(a);
+        } else {
+          log('Clau "'+k+'": present però buida','err');
+        }
+      }
+    } catch {}
+  }
+  if(found === 0) log('No s'han trobat dades a localStorage','err');
+  log('Total claus: '+localStorage.length);
+}
+</script>
+</body></html>
