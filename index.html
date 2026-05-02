@@ -528,22 +528,7 @@ function Dashboard({data,setData,setTab=()=>{}}) {
           e('div',{style:{color:C.dim,fontSize:10}},e(Money,null,fmt(estalvi)),'/mes')
         )
       ),
-      // Historial nòmines (scrollable)
-      Object.keys(data.historialNomines||{}).length>0 && e('div',{
-        style:{borderTop:'1px solid '+C.border,paddingTop:8,marginTop:8}
-      },
-        e('div',{style:{color:C.dim,fontSize:9,fontWeight:600,marginBottom:6,textTransform:'uppercase',letterSpacing:.5}},'Historic nomines'),
-        e('div',{style:{display:'flex',gap:5,overflowX:'auto',paddingBottom:2}},
-          Object.entries(data.historialNomines||{}).sort((a,b)=>b[0].localeCompare(a[0])).map(([k,v])=>
-            e('button',{key:k,onClick:()=>{const idx2=mesosDisp.indexOf(k);if(idx2>=0)setMesSelec(k);},
-              style:{background:k===mesSelec?C.accentDim:C.bg,border:'1px solid '+(k===mesSelec?C.accent+'55':C.border),
-                borderRadius:7,padding:'5px 9px',flexShrink:0,textAlign:'center',cursor:'pointer',transition:'all .15s'}},
-              e('div',{style:{color:C.dim,fontSize:8}},mesLabel(k).slice(0,3)+' '+k.slice(0,4)),
-              e('div',{style:{color:C.green,fontSize:11,fontWeight:700,fontFamily:'monospace'}},e(Money,null,fmt(v)))
-            )
-          )
-        )
-      )
+
     ),
 
     // Cash card
@@ -1858,7 +1843,7 @@ function PinChange({onSavePin=()=>{}, currentPin=DEFAULT_PIN}) {
     setErr(false);setMsg('');
     if(next.length===4){
       if(step==='current'){
-        const stored = localStorage.getItem('fintrack-pin')||DEFAULT_PIN;
+        const stored = currentPin||DEFAULT_PIN;
         if(next===stored){setStep('new');setCurrent(next);}
         else{setErr(true);setMsg('PIN incorrecte');setTimeout(()=>{setCurrent('');setErr(false);},600);}
       } else if(step==='new'){
