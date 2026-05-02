@@ -76,6 +76,17 @@ let C = {...DARK};
 const ThemeCtx = createContext('dark');
 const PAL = [C.accent,C.purple,C.green,C.yellow,C.red,C.orange,'#ff6eb4','#4ecdc4'];
 
+// Color consistent per categoria de gasto (sempre el mateix color per la mateixa categoria)
+const CAT_COLORS = {};
+const TIPUS_COLORS = {
+  'ETF':C.accent, 'Fons':C.purple, 'Accions':C.green,
+  'Cripto':C.yellow, 'Pensions':C.orange, 'Bons':'#4ecdc4', 'Altres':C.dim
+};
+function colorPerCat(cat) {
+  if(!CAT_COLORS[cat]) CAT_COLORS[cat] = PAL[Object.keys(CAT_COLORS).length % PAL.length];
+  return CAT_COLORS[cat];
+}
+
 // ── Pure CSS/SVG Charts (no external library) ──────────────────────────────
 
 function DonutChart({data, size=100}) {
@@ -461,62 +472,169 @@ function Dashboard({data,setData}) {
 // ── GASTOS FIXES ──────────────────────────────────────────────────────────────
 function GastosFixes({data,setData}) {
   const [modal,setModal]=useState(null);
-  const [form,setForm]=useState({nom:'',import:'',categoria:''});
+  const [form,setForm]=useState({nom:'',import:'',categoria:'',periodicitat:'mensual'});
   const [errs,setErrs]=useState({});
-  const total=data.gastosFixes.reduce((s,g)=>s+g.import,0);
-  const cats=[...new Set(data.gastosFixes.map(g=>g.categoria))];
-  const byCat=cats.map(c=>({cat:c,total:data.gastosFixes.filter(g=>g.categoria===c).reduce((s,g)=>s+g.import,0)}));
+  const [filtreCat,setFiltreCat]=useState('Tots');
+
+  // Preomple colors de categories existents per consistència
+  data.gastosFixes.forEach(g=>{ if(g.categoria) colorPerCat(g.categoria); });
+
+  // Import mensual equivalent (anual / 12)
+  const importMensual = g => g.periodicitat==='anual' ? g.import/12 : g.import;
+  const total = data.gastosFixes.reduce((s,g)=>s+importMensual(g),0);
+
+  const cats = ['Tots',...new Set(data.gastosFixes.map(g=>g.categoria))];
+  const fixesFiltrats = filtreCat==='Tots'
+    ? data.gastosFixes
+    : data.gastosFixes.filter(g=>g.categoria===filtreCat);
+
+  // Agrupats per categoria per gràfiques
+  const catsList = [...new Set(data.gastosFixes.map(g=>g.categoria))];
+  const byCat = catsList.map(c=>({
+    cat:c,
+    total:data.gastosFixes.filter(g=>g.categoria===c).reduce((s,g)=>s+importMensual(g),0),
+    color:colorPerCat(c)
+  }));
 
   const obrir=(g)=>{
-    if(g==='nou'){setForm({nom:'',import:'',categoria:''});setErrs({});setModal('nou');}
-    else{setForm({nom:g.nom,import:String(g.import),categoria:g.categoria});setErrs({});setModal(g.id);}
+    if(g==='nou'){setForm({nom:'',import:'',categoria:'',periodicitat:'mensual'});setErrs({});setModal('nou');}
+    else{setForm({nom:g.nom,import:String(g.import),categoria:g.categoria,periodicitat:g.periodicitat||'mensual'});setErrs({});setModal(g.id);}
   };
+
   const desar=()=>{
     const er={};
     if(!form.nom.trim())er.nom='Obligatori';
     if(!form.import||isNaN(form.import)||+form.import<=0)er.import='Import vàlid';
     if(Object.keys(er).length){setErrs(er);return;}
-    const item={id:modal==='nou'?uid():modal,nom:form.nom.trim(),import:+form.import,categoria:form.categoria.trim()||'Altres',color:PAL[data.gastosFixes.length%PAL.length]};
+    const cat=form.categoria.trim()||'Altres';
+    const color=colorPerCat(cat);
+    const item={
+      id:modal==='nou'?uid():modal,
+      nom:form.nom.trim(),
+      import:+form.import,
+      categoria:cat,
+      periodicitat:form.periodicitat,
+      color
+    };
     setData(d=>({...d,gastosFixes:modal==='nou'?[...d.gastosFixes,item]:d.gastosFixes.map(g=>g.id===modal?{...g,...item}:g)}));
     setModal(null);
   };
 
   return e('div',null,
+    // Header
     e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}},
       e('div',null,
-        e('div',{style:{color:C.dim,fontSize:10,letterSpacing:1}},'TOTAL MENSUAL'),
+        e('div',{style:{color:C.dim,fontSize:10,letterSpacing:1}},'TOTAL MENSUAL EQUIVALENT'),
         e('div',{style:{color:C.red,fontSize:24,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(total)))
       ),
       e(Btn,{onClick:()=>obrir('nou')},'+ Afegir')
     ),
+
+    // Gràfiques
     data.gastosFixes.length>0 && e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:12}},
       e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Per categoria'),
-        e(HBarChart,{data:byCat,height:150})
+        e(HBarChart,{data:byCat,height:Math.max(80,byCat.length*30)})
       ),
       e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Distribució'),
-        e(DonutChart,{data:data.gastosFixes.map(g=>({...g,value:g.import})),size:150})
+        e(DonutChart,{data:data.gastosFixes.map(g=>({value:importMensual(g),color:g.color||colorPerCat(g.categoria)})),size:150})
       )
     ),
-    e('div',{style:{display:'grid',gap:7}},
-      data.gastosFixes.length===0 && e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:24}},"Cap gasto fix. Afegeix-ne un!"),
-      data.gastosFixes.map(g=>e(Card,{key:g.id,style:{padding:'10px 12px'},onClick:()=>obrir(g)},
-        e('div',{style:{display:'flex',alignItems:'center',gap:9}},
-          e('div',{style:{width:3,height:28,borderRadius:2,background:g.color,flexShrink:0}}),
-          e('div',{style:{flex:1}},
-            e('div',{style:{fontWeight:600,color:C.text,fontSize:12}},g.nom),
-            e(Badge,{color:g.color},g.categoria)
-          ),
-          e('div',{style:{color:C.red,fontFamily:'monospace',fontWeight:700,fontSize:13}},e(Money,null,fmt(g.import)),'/mes'),
-          e(DeleteBtn,{nom:g.nom,onDelete:()=>setData(d=>({...d,gastosFixes:d.gastosFixes.filter(x=>x.id!==g.id)}))})
-        )
-      ))
+
+    // Filtre categories
+    cats.length>2 && e('div',{style:{display:'flex',gap:5,marginBottom:10,flexWrap:'wrap'}},
+      cats.map(c=>e('button',{key:c,onClick:()=>setFiltreCat(c),style:{
+        background:filtreCat===c?colorPerCat(c==='Tots'?'':c)+'33':'transparent',
+        color:filtreCat===c?(c==='Tots'?C.accent:colorPerCat(c)):C.dim,
+        border:'1px solid '+(filtreCat===c?(c==='Tots'?C.accent:colorPerCat(c))+'66':C.border),
+        borderRadius:7,padding:'4px 10px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600
+      }},c==='Tots'?'Tots':e('span',null,
+        e('span',{style:{width:6,height:6,borderRadius:'50%',background:colorPerCat(c),display:'inline-block',marginRight:5,verticalAlign:'middle'}}),
+        c
+      )))
     ),
+
+    // Agrupat per categoria
+    e('div',{style:{display:'grid',gap:16}},
+      data.gastosFixes.length===0
+        ? e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:24}},'Cap gasto fix. Afegeix-ne un!')
+        : catsList
+            .filter(c=>filtreCat==='Tots'||c===filtreCat)
+            .map(cat=>{
+              const gastosDelCat = data.gastosFixes.filter(g=>g.categoria===cat);
+              const totalCat = gastosDelCat.reduce((s,g)=>s+importMensual(g),0);
+              const col = colorPerCat(cat);
+              return e('div',{key:cat},
+                // Capçalera categoria
+                e('div',{style:{display:'flex',alignItems:'center',gap:8,marginBottom:6}},
+                  e('div',{style:{width:10,height:10,borderRadius:'50%',background:col}}),
+                  e('span',{style:{color:C.text,fontWeight:700,fontSize:12}},cat),
+                  e('span',{style:{color:C.dim,fontSize:11,marginLeft:'auto'}},e(Money,null,fmt(totalCat)),'/mes')
+                ),
+                // Gastos de la categoria
+                e('div',{style:{display:'grid',gap:5,paddingLeft:18}},
+                  gastosDelCat.map(g=>{
+                    const mensual = importMensual(g);
+                    return e(Card,{key:g.id,style:{padding:'9px 12px'},onClick:()=>obrir(g)},
+                      e('div',{style:{display:'flex',alignItems:'center',gap:9}},
+                        e('div',{style:{width:3,height:24,borderRadius:2,background:col,flexShrink:0}}),
+                        e('div',{style:{flex:1}},
+                          e('div',{style:{fontWeight:600,color:C.text,fontSize:12}},g.nom),
+                          g.periodicitat==='anual' && e(Badge,{color:C.yellow},'Anual')
+                        ),
+                        e('div',{style:{textAlign:'right'}},
+                          e('div',{style:{color:C.red,fontFamily:'monospace',fontWeight:700,fontSize:13}},e(Money,null,fmt(mensual)),'/mes'),
+                          g.periodicitat==='anual' && e('div',{style:{color:C.dim,fontSize:9}},e(Money,null,fmt(g.import)),'/any')
+                        ),
+                        e(DeleteBtn,{nom:g.nom,onDelete:()=>setData(d=>({...d,gastosFixes:d.gastosFixes.filter(x=>x.id!==g.id)}))})
+                      )
+                    );
+                  })
+                )
+              );
+            })
+    ),
+
+    // Modal
     modal && e(Modal,{title:modal==='nou'?'Nou gasto fix':'Editar gasto fix',onClose:()=>setModal(null)},
-      e(Input,{label:'Nom',value:form.nom,onChange:v=>setForm(f=>({...f,nom:v})),placeholder:'Ex: Lloguer',error:errs.nom}),
-      e(Input,{label:'Import mensual (€)',type:'number',value:form.import,onChange:v=>setForm(f=>({...f,import:v})),error:errs.import}),
-      e(Input,{label:'Categoria',value:form.categoria,onChange:v=>setForm(f=>({...f,categoria:v})),placeholder:'Ex: Habitatge'}),
+      e(Input,{label:'Nom',value:form.nom,onChange:v=>setForm(f=>({...f,nom:v})),placeholder:'Ex: Hipoteca',error:errs.nom}),
+      e('div',{style:{marginBottom:11}},
+        e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:3,textTransform:'uppercase'}},'Categoria'),
+        e('div',{style:{display:'flex',gap:6,flexWrap:'wrap',marginBottom:6}},
+          [...new Set(data.gastosFixes.map(g=>g.categoria))].filter(Boolean).map(c=>
+            e('button',{key:c,onClick:()=>setForm(f=>({...f,categoria:c})),style:{
+              background:form.categoria===c?colorPerCat(c)+'33':'transparent',
+              color:form.categoria===c?colorPerCat(c):C.dim,
+              border:'1px solid '+(form.categoria===c?colorPerCat(c)+'66':C.border),
+              borderRadius:6,padding:'3px 9px',cursor:'pointer',fontSize:11,fontFamily:'inherit',fontWeight:600
+            }},c)
+          )
+        ),
+        e('input',{value:form.categoria,onChange:ev=>setForm(f=>({...f,categoria:ev.target.value})),
+          placeholder:'O escriu una categoria nova',
+          style:{width:'100%',background:C.bg,border:'1px solid '+C.border,borderRadius:8,color:C.text,padding:'8px 11px',fontSize:13,outline:'none',fontFamily:'inherit'}})
+      ),
+      e('div',{style:{marginBottom:11}},
+        e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:6,textTransform:'uppercase'}},'Periodicitat'),
+        e('div',{style:{display:'flex',gap:8}},
+          ['mensual','anual'].map(p=>e('button',{key:p,onClick:()=>setForm(f=>({...f,periodicitat:p})),style:{
+            flex:1,background:form.periodicitat===p?C.accentDim:'transparent',
+            color:form.periodicitat===p?C.accent:C.dim,
+            border:'1px solid '+(form.periodicitat===p?C.accent+'55':C.border),
+            borderRadius:8,padding:'8px 0',cursor:'pointer',fontFamily:'inherit',fontWeight:700,fontSize:12
+          }},p==='mensual'?'Mensual':'Anual'))
+        )
+      ),
+      e(Input,{
+        label:form.periodicitat==='anual'?'Import anual (€)':'Import mensual (€)',
+        type:'number',value:form.import,
+        onChange:v=>setForm(f=>({...f,import:v})),
+        error:errs.import
+      }),
+      form.periodicitat==='anual' && form.import && !isNaN(form.import) && e('div',{style:{color:C.dim,fontSize:11,marginBottom:8,marginTop:-6}},
+        'Equivalent mensual: ',e('span',{style:{color:C.accent,fontWeight:700}},e(Money,null,fmt(+form.import/12)),'/mes')
+      ),
       e(RowBtns,{onSave:desar,onCancel:()=>setModal(null)})
     )
   );
@@ -745,9 +863,9 @@ function Inversions({data,setData}) {
   const totalCost=data.inversions.reduce((s,i)=>s+i.cost,0);
   const guany=total-totalCost;
   const pctG=gainPct(total,totalCost);
-  const byTipus=['ETF','Accions','Cripto','Pensions','Bons','Altres'].map(t=>({
+  const byTipus=['ETF','Fons','Accions','Cripto','Pensions','Bons','Altres'].map(t=>({
     name:t,value:data.inversions.filter(i=>i.tipus===t).reduce((s,i)=>s+i.valor,0),
-    color:{ETF:C.accent,Accions:C.green,Cripto:C.yellow,Pensions:C.purple,Bons:C.orange,Altres:C.dim}[t]
+    color:TIPUS_COLORS[t]||C.dim
   })).filter(d=>d.value>0);
 
   const obrir=(inv)=>{
@@ -757,7 +875,7 @@ function Inversions({data,setData}) {
   const desar=()=>{
     const er={};if(!form.nom.trim())er.nom='Obligatori';if(!form.valor||isNaN(form.valor)||+form.valor<0)er.valor='Import vàlid';if(!form.cost||isNaN(form.cost)||+form.cost<0)er.cost='Import vàlid';
     if(Object.keys(er).length){setErrs(er);return;}
-    const item={id:modal==='nou'?uid():modal,nom:form.nom.trim(),ticker:form.ticker.trim()||null,tipus:form.tipus,valor:+form.valor,cost:+form.cost,color:PAL[data.inversions.length%PAL.length]};
+    const item={id:modal==='nou'?uid():modal,nom:form.nom.trim(),ticker:form.ticker.trim()||null,tipus:form.tipus,valor:+form.valor,cost:+form.cost,color:TIPUS_COLORS[form.tipus]||PAL[data.inversions.length%PAL.length]};
     setData(d=>({...d,inversions:modal==='nou'?[...d.inversions,item]:d.inversions.map(i=>i.id===modal?{...i,...item}:i)}));
     setModal(null);
   };
@@ -822,7 +940,7 @@ function Inversions({data,setData}) {
     modal && e(Modal,{title:modal==='nou'?'Nova inversió':'Editar inversió',onClose:()=>setModal(null)},
       e(Input,{label:'Nom',value:form.nom,onChange:v=>setForm(f=>({...f,nom:v})),placeholder:'Ex: MSCI World ETF',error:errs.nom}),
       e(Input,{label:'Ticker (per actualitzar preus)',value:form.ticker,onChange:v=>setForm(f=>({...f,ticker:v})),placeholder:'Ex: IWDA, AAPL, BTC-EUR'}),
-      e(Select,{label:'Tipus',value:form.tipus,onChange:v=>setForm(f=>({...f,tipus:v})),options:['ETF','Accions','Cripto','Pensions','Bons','Altres']}),
+      e(Select,{label:'Tipus',value:form.tipus,onChange:v=>setForm(f=>({...f,tipus:v})),options:['ETF','Fons','Accions','Cripto','Pensions','Bons','Altres']}),
       e(Input,{label:'Valor actual (€)',type:'number',value:form.valor,onChange:v=>setForm(f=>({...f,valor:v})),error:errs.valor}),
       e(Input,{label:"Cost d'adquisició (€)",type:'number',value:form.cost,onChange:v=>setForm(f=>({...f,cost:v})),error:errs.cost}),
       e(RowBtns,{onSave:desar,onCancel:()=>setModal(null)})
