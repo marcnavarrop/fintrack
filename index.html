@@ -242,7 +242,8 @@ const mesLabel = key => { const [y,m]=key.split('-'); return new Date(+y,+m-1,1)
 const INIT = {
   ingressos:0,
   cash:0,
-  historialNomines:{}, // {YYYY-MM: import} gastosFixes:[], pressupostosVariables:{}, historialVariables:{},
+  historialNomines:{},
+  snapshotMesos:{}, // {YYYY-MM: import} gastosFixes:[], pressupostosVariables:{}, historialVariables:{},
   inversions:[], bens:[], objectius:[], transaccions:[], evolucioPat:[],
   fire:{edatActual:30, despesesAnuals:18000, rendimentEsperatPct:7, inflacio:2.5, reglaPct:4}
 };
@@ -390,6 +391,15 @@ function RowBtns({onSave,onCancel}) {
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
 function Dashboard({data,setData,setTab=()=>{}}) {
+  const avuiKey = mesKey();
+  const snapshots = data.snapshotMesos||{};
+
+  // Mesos disponibles: actual + tots els que tenen snapshot
+  const mesosDisp = [...new Set([...Object.keys(snapshots), avuiKey])].sort();
+  const [mesSelec, setMesSelec] = useState(avuiKey);
+  const mesIdx = mesosDisp.indexOf(mesSelec);
+  const esActual = mesSelec === avuiKey;
+
   const [editIng,setEditIng]=useState(false);
   const [tempIng,setTempIng]=useState('');
   const [editCash,setEditCash]=useState(false);
@@ -398,27 +408,48 @@ function Dashboard({data,setData,setTab=()=>{}}) {
   const [fObj,setFObj]=useState({nom:'',meta:'',actual:'',icona:'🎯'});
   const [errObj,setErrObj]=useState({});
 
-  const totalInv = data.inversions.reduce((s,i)=>s+i.valor,0);
-  // Cash = béns de tipus Compte
-  const totalCash = data.cash||0;
-  const totalBens = data.bens.reduce((s,b)=>s+b.valorActual,0);
-  const totalDeute = data.bens.reduce((s,b)=>s+(b.deute||0),0);
+  // Dades del mes seleccionat (live si actual, snapshot si passat)
   const iMensual = g => g.periodicitat==='anual' ? g.import/12 : g.import;
-  const totalFixes = data.gastosFixes.reduce((s,g)=>s+iMensual(g),0);
-  const totalVars = Object.values(data.historialVariables?.[mesKey()]||{}).reduce((s,v)=>s+v,0);
-  const estalvi = data.ingressos - totalFixes - totalVars;
-  const patrimoni = totalInv + totalBens - totalDeute + totalCash;
-  const guanyInv = data.inversions.reduce((s,i)=>s+(i.valor-i.cost),0);
-  const pctInv = gainPct(totalInv, data.inversions.reduce((s,i)=>s+i.cost,0));
+  const snap = esActual ? null : snapshots[mesSelec];
+
+  const totalInv   = esActual ? data.inversions.reduce((s,i)=>s+i.valor,0)     : (snap?.totalInv||0);
+  const totalCash  = esActual ? (data.cash||0)                                  : (snap?.cash||0);
+  const totalBens  = esActual ? data.bens.reduce((s,b)=>s+b.valorActual,0)      : (snap?.totalBens||0);
+  const totalDeute = esActual ? data.bens.reduce((s,b)=>s+(b.deute||0),0)       : (snap?.totalDeute||0);
+  const totalFixes = esActual ? data.gastosFixes.reduce((s,g)=>s+iMensual(g),0) : (snap?.totalFixes||0);
+  const totalVars  = esActual
+    ? Object.values(data.historialVariables?.[avuiKey]||{}).reduce((s,v)=>s+v,0)
+    : (snap?.totalVars||0);
+  const nomina     = esActual ? data.ingressos : (snap?.ingressos||data.ingressos);
+  const estalvi    = nomina - totalFixes - totalVars;
+  const patrimoni  = totalInv + totalBens - totalDeute + totalCash;
+  const guanyInv   = esActual ? data.inversions.reduce((s,i)=>s+(i.valor-i.cost),0) : (snap?.guanyInv||0);
+  const pctInv     = esActual ? gainPct(totalInv, data.inversions.reduce((s,i)=>s+i.cost,0)) : (snap?.pctInv||0);
+
+  // Guardar snapshot del mes actual (es crida quan es canvia de mes)
+  const desarSnapshot = (mk) => {
+    const s = {
+      ingressos: data.ingressos,
+      totalInv: data.inversions.reduce((s,i)=>s+i.valor,0),
+      totalBens: data.bens.reduce((s,b)=>s+b.valorActual,0),
+      totalDeute: data.bens.reduce((s,b)=>s+(b.deute||0),0),
+      totalFixes: data.gastosFixes.reduce((s,g)=>s+iMensual(g),0),
+      totalVars: Object.values(data.historialVariables?.[mk]||{}).reduce((s,v)=>s+v,0),
+      cash: data.cash||0,
+      guanyInv: data.inversions.reduce((s,i)=>s+(i.valor-i.cost),0),
+      pctInv: gainPct(data.inversions.reduce((s,i)=>s+i.valor,0), data.inversions.reduce((s,i)=>s+i.cost,0)),
+      patrimoni: Math.round(data.inversions.reduce((s,i)=>s+i.valor,0) + data.bens.reduce((s,b)=>s+b.valorActual,0) - data.bens.reduce((s,b)=>s+(b.deute||0),0) + (data.cash||0))
+    };
+    setData(d=>({...d,snapshotMesos:{...(d.snapshotMesos||{}),[mk]:s}}));
+  };
 
   const distribTotal = totalInv + Math.max(0,totalBens-totalDeute) + totalCash;
   const distrib = [
     {name:'Inversions',value:totalInv,color:C.accent,pct:distribTotal>0?Math.round(totalInv/distribTotal*100):0},
-    {name:'Bens nets',value:Math.max(0,totalBens-totalDeute),color:C.purple,pct:distribTotal>0?Math.round((totalBens-totalDeute)/distribTotal*100):0},
+    {name:'Bens nets',value:Math.max(0,totalBens-totalDeute),color:C.purple,pct:distribTotal>0?Math.round(Math.max(0,totalBens-totalDeute)/distribTotal*100):0},
     {name:'Cash',value:totalCash,color:C.green,pct:distribTotal>0?Math.round(totalCash/distribTotal*100):0},
   ].filter(d=>d.value>0);
 
-  // Evolució: construeix historial des de les nomines guardades
   const now2 = new Date();
   const mesAbr = now2.toLocaleString('ca-ES',{month:'short'}).slice(0,3)+' '+now2.getFullYear().toString().slice(2);
   const evo = data.evolucioPat||[];
@@ -437,68 +468,81 @@ function Dashboard({data,setData,setTab=()=>{}}) {
   };
 
   return e('div',null,
+    // Selector de mes
+    e('div',{style:{display:'flex',alignItems:'center',gap:8,marginBottom:14,background:C.surface,borderRadius:10,padding:'8px 12px',border:'1px solid '+C.border}},
+      e('button',{onClick:()=>setMesSelec(mesosDisp[mesIdx-1]),disabled:mesIdx===0,
+        style:{background:'none',border:'1px solid '+C.border,color:mesIdx===0?C.border:C.dim,borderRadius:7,width:28,height:28,cursor:mesIdx===0?'default':'pointer',fontSize:14,display:'flex',alignItems:'center',justifyContent:'center'}},'‹'),
+      e('div',{style:{flex:1,textAlign:'center'}},
+        e('div',{style:{color:esActual?C.accent:C.text,fontWeight:700,fontSize:13}},
+          esActual ? 'Mes actual — '+mesLabel(avuiKey) : mesLabel(mesSelec)
+        ),
+        !esActual && e('div',{style:{color:C.dim,fontSize:9}},'foto del mes · clica ‹ › per navegar')
+      ),
+      e('button',{onClick:()=>setMesSelec(mesosDisp[mesIdx+1]),disabled:mesIdx===mesosDisp.length-1,
+        style:{background:'none',border:'1px solid '+C.border,color:mesIdx===mesosDisp.length-1?C.border:C.dim,borderRadius:7,width:28,height:28,cursor:mesIdx===mesosDisp.length-1?'default':'pointer',fontSize:14,display:'flex',alignItems:'center',justifyContent:'center'}},'›'),
+      // Guardar foto manual del mes actual
+      esActual && e('button',{
+        onClick:()=>desarSnapshot(avuiKey),
+        title:'Guardar foto del mes actual',
+        style:{background:C.accentDim,border:'1px solid '+C.accent+'44',color:C.accent,borderRadius:7,padding:'3px 9px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:700,marginLeft:4}
+      },'📸 Foto')
+    ),
+
     // Hero patrimoni
-    e('div',{style:{marginBottom:16,paddingBottom:16,borderBottom:`1px solid ${C.border}`}},
-      e('div',{style:{color:C.dim,fontSize:10,letterSpacing:1.5,textTransform:'uppercase',marginBottom:2}},'Patrimoni net total'),
+    e('div',{style:{marginBottom:16,paddingBottom:16,borderBottom:'1px solid '+C.border}},
+      e('div',{style:{color:C.dim,fontSize:10,letterSpacing:1.5,textTransform:'uppercase',marginBottom:2}},
+        esActual?'Patrimoni net total':'Patrimoni net — '+mesLabel(mesSelec)
+      ),
       e('div',{style:{fontSize:32,fontWeight:900,color:C.white,fontFamily:"'DM Mono',monospace",letterSpacing:-1}},
         e(Money,null,fmt(patrimoni))
       ),
       e('div',{style:{color:pctInv>=0?C.green:C.red,fontSize:11,marginTop:2}},
-        `${pctInv>=0?'▲':'▼'} ${Math.abs(pctInv).toFixed(1)}% rendiment inversions · ${guanyInv>=0?'+':''}`,e(Money,null,fmt(guanyInv)),' total'
+        (pctInv>=0?'▲':'▼')+' '+Math.abs(pctInv).toFixed(1)+'% rendiment inversions · '+(guanyInv>=0?'+':''),
+        e(Money,null,fmt(guanyInv)),' total'
       )
     ),
-    // Nòmina amb historial
+
+    // Nòmina + estalvi
     e(Card,{style:{marginBottom:12,padding:'12px 14px'}},
-      e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}},
+      e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},
         e('div',null,
           e('div',{style:{color:C.dim,fontSize:10,letterSpacing:.8,textTransform:'uppercase',marginBottom:3}},'💼 Nomina mensual'),
-          editIng
+          esActual && editIng
             ? e('div',{style:{display:'flex',alignItems:'center',gap:7,marginTop:3}},
                 e('input',{value:tempIng,onChange:ev=>setTempIng(ev.target.value),type:'number',autoFocus:true,
                   onKeyDown:ev=>{
-                    if(ev.key==='Enter'){
-                      const v=parseFloat(tempIng);
-                      if(!isNaN(v)&&v>=0){
-                        const mk=mesKey();
-                        setData(d=>({...d,ingressos:v,historialNomines:{...(d.historialNomines||{}),[mk]:v}}));
-                      }
-                      setEditIng(false);
-                    }
+                    if(ev.key==='Enter'){const v=parseFloat(tempIng);if(!isNaN(v)&&v>=0){const mk=mesKey();setData(d=>({...d,ingressos:v,historialNomines:{...(d.historialNomines||{}),[mk]:v}}));}setEditIng(false);}
                     if(ev.key==='Escape')setEditIng(false);
                   },
                   style:{background:C.bg,border:'1px solid '+C.accent,borderRadius:7,color:C.text,padding:'6px 10px',fontSize:14,width:110,outline:'none',fontFamily:'monospace',fontWeight:700}}),
-                e('button',{onClick:()=>{
-                    const v=parseFloat(tempIng);
-                    if(!isNaN(v)&&v>=0){
-                      const mk=mesKey();
-                      setData(d=>({...d,ingressos:v,historialNomines:{...(d.historialNomines||{}),[mk]:v}}));
-                    }
-                    setEditIng(false);
-                  },style:{background:C.accent,border:'none',color:C.bg,borderRadius:7,padding:'6px 10px',cursor:'pointer',fontSize:12,fontWeight:800,fontFamily:'inherit'}},'OK'),
+                e('button',{onClick:()=>{const v=parseFloat(tempIng);if(!isNaN(v)&&v>=0){const mk=mesKey();setData(d=>({...d,ingressos:v,historialNomines:{...(d.historialNomines||{}),[mk]:v}}));}setEditIng(false);},
+                  style:{background:C.accent,border:'none',color:C.bg,borderRadius:7,padding:'6px 10px',cursor:'pointer',fontSize:12,fontWeight:800,fontFamily:'inherit'}},'OK'),
                 e('button',{onClick:()=>setEditIng(false),style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:14}},'✕')
               )
             : e('div',{style:{display:'flex',alignItems:'center',gap:8,marginTop:2}},
-                e('span',{style:{color:C.green,fontSize:18,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(data.ingressos))),
-                e('button',{onClick:()=>{setTempIng(String(data.ingressos));setEditIng(true);},
+                e('span',{style:{color:C.green,fontSize:18,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(nomina))),
+                esActual && e('button',{onClick:()=>{setTempIng(String(nomina));setEditIng(true);},
                   style:{background:C.accentDim,border:'1px solid '+C.accent+'33',color:C.accent,borderRadius:6,padding:'2px 8px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600}},'Editar')
               )
         ),
         e('div',{style:{textAlign:'right'}},
           e('div',{style:{color:C.dim,fontSize:10}},'Taxa estalvi'),
           e('div',{style:{color:estalvi>0?C.green:C.red,fontSize:16,fontWeight:800,fontFamily:'monospace'}},
-            (data.ingressos>0?Math.round((estalvi/data.ingressos)*100):0)+'%'
+            (nomina>0?Math.round((estalvi/nomina)*100):0)+'%'
           ),
           e('div',{style:{color:C.dim,fontSize:10}},e(Money,null,fmt(estalvi)),'/mes')
         )
       ),
-      // Historial nomines
-      Object.keys(data.historialNomines||{}).length>1 && e('div',{
-        style:{borderTop:'1px solid '+C.border,paddingTop:8,marginTop:4}
+      // Historial nòmines (scrollable)
+      Object.keys(data.historialNomines||{}).length>0 && e('div',{
+        style:{borderTop:'1px solid '+C.border,paddingTop:8,marginTop:8}
       },
-        e('div',{style:{color:C.dim,fontSize:9,fontWeight:600,marginBottom:6,textTransform:'uppercase','letterSpacing':.5}},'Historic nomines'),
-        e('div',{style:{display:'flex',gap:6,overflowX:'auto',paddingBottom:2}},
-          Object.entries(data.historialNomines||{}).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,6).map(([k,v])=>
-            e('div',{key:k,style:{background:C.bg,borderRadius:7,padding:'5px 9px',flexShrink:0,textAlign:'center'}},
+        e('div',{style:{color:C.dim,fontSize:9,fontWeight:600,marginBottom:6,textTransform:'uppercase',letterSpacing:.5}},'Historic nomines'),
+        e('div',{style:{display:'flex',gap:5,overflowX:'auto',paddingBottom:2}},
+          Object.entries(data.historialNomines||{}).sort((a,b)=>b[0].localeCompare(a[0])).map(([k,v])=>
+            e('button',{key:k,onClick:()=>{const idx2=mesosDisp.indexOf(k);if(idx2>=0)setMesSelec(k);},
+              style:{background:k===mesSelec?C.accentDim:C.bg,border:'1px solid '+(k===mesSelec?C.accent+'55':C.border),
+                borderRadius:7,padding:'5px 9px',flexShrink:0,textAlign:'center',cursor:'pointer',transition:'all .15s'}},
               e('div',{style:{color:C.dim,fontSize:8}},mesLabel(k).slice(0,3)+' '+k.slice(0,4)),
               e('div',{style:{color:C.green,fontSize:11,fontWeight:700,fontFamily:'monospace'}},e(Money,null,fmt(v)))
             )
@@ -506,67 +550,55 @@ function Dashboard({data,setData,setTab=()=>{}}) {
         )
       )
     ),
-    // Cash card (editable directament)
+
+    // Cash card
     e(Card,{style:{marginBottom:12,padding:'12px 14px'}},
       e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},
         e('div',null,
           e('div',{style:{color:C.dim,fontSize:10,letterSpacing:.8,textTransform:'uppercase',marginBottom:3}},'💰 Cash disponible'),
-          editCash
+          esActual && editCash
             ? e('div',{style:{display:'flex',alignItems:'center',gap:7,marginTop:3}},
                 e('input',{value:tempCash,onChange:ev=>setTempCash(ev.target.value),type:'number',autoFocus:true,
-                  onKeyDown:ev=>{
-                    if(ev.key==='Enter'){
-                      const v=parseFloat(tempCash);
-                      if(!isNaN(v)&&v>=0){
-                        setData(d=>({...d,cash:v}));
-                      }
-                      setEditCash(false);
-                    }
-                    if(ev.key==='Escape')setEditCash(false);
-                  },
+                  onKeyDown:ev=>{if(ev.key==='Enter'){const v=parseFloat(tempCash);if(!isNaN(v)&&v>=0)setData(d=>({...d,cash:v}));setEditCash(false);}if(ev.key==='Escape')setEditCash(false);},
                   style:{background:C.bg,border:'1px solid '+C.accent,borderRadius:7,color:C.text,padding:'6px 10px',fontSize:14,width:120,outline:'none',fontFamily:'monospace',fontWeight:700}}),
-                e('button',{onClick:()=>{
-                    const v=parseFloat(tempCash);
-                    if(!isNaN(v)&&v>=0){
-                      setData(d=>({...d,cash:v}));
-                    }
-                    setEditCash(false);
-                  },style:{background:C.accent,border:'none',color:C.bg,borderRadius:7,padding:'6px 10px',cursor:'pointer',fontSize:12,fontWeight:800,fontFamily:'inherit'}},'OK'),
+                e('button',{onClick:()=>{const v=parseFloat(tempCash);if(!isNaN(v)&&v>=0)setData(d=>({...d,cash:v}));setEditCash(false);},
+                  style:{background:C.accent,border:'none',color:C.bg,borderRadius:7,padding:'6px 10px',cursor:'pointer',fontSize:12,fontWeight:800,fontFamily:'inherit'}},'OK'),
                 e('button',{onClick:()=>setEditCash(false),style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:14}},'✕')
               )
             : e('div',{style:{display:'flex',alignItems:'center',gap:8,marginTop:2}},
                 e('span',{style:{color:C.green,fontSize:18,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(totalCash))),
-                e('button',{onClick:()=>{setTempCash(String(data.cash||0));setEditCash(true);},
+                esActual && e('button',{onClick:()=>{setTempCash(String(data.cash||0));setEditCash(true);},
                   style:{background:C.accentDim,border:'1px solid '+C.accent+'33',color:C.accent,borderRadius:6,padding:'2px 8px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600}},'Editar')
               )
         ),
         e('div',{style:{textAlign:'right'}},
           e('div',{style:{color:C.dim,fontSize:10}},'del patrimoni'),
           e('div',{style:{color:C.green,fontSize:16,fontWeight:800,fontFamily:'monospace'}},
-            distribTotal>0?Math.round(totalCash/distribTotal*100):0,'%'
+            (distribTotal>0?Math.round(totalCash/distribTotal*100):0)+'%'
           )
         )
       )
     ),
-    // Stats grid
+
+    // Stats grid (sense estalvi net)
     e('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:9,marginBottom:12}},
-      e(StatBox,{label:'Fixes',value:e(Money,null,fmt(totalFixes)),sub:'mensual',color:C.red,icon:'📌',onClick:()=>setTab('fixes')}),
-      e(StatBox,{label:'Variables',value:e(Money,null,fmt(totalVars)),sub:mesLabel(mesKey()),color:C.orange,icon:'📊',onClick:()=>setTab('variables')}),
-      e(StatBox,{label:'Estalvi net',value:e(Money,null,fmt(estalvi)),sub:estalvi>0?'superavit':'deficit',color:estalvi>0?C.green:C.red,icon:'🏦'}),
-      e(StatBox,{label:'Inversions',value:e(Money,null,fmt(totalInv)),sub:e('span',null,(guanyInv>=0?'+':''),e(Money,null,fmt(guanyInv))),color:C.accent,icon:'📈',onClick:()=>setTab('inversions')}),
-      e(StatBox,{label:'Bens nets',value:e(Money,null,fmt(totalBens-totalDeute)),color:C.purple,icon:'🏛️',onClick:()=>setTab('bens')})
+      e(StatBox,{label:'Fixes',value:e(Money,null,fmt(totalFixes)),sub:'mensual',color:C.red,icon:'📌',onClick:esActual?()=>setTab('fixes'):null}),
+      e(StatBox,{label:'Variables',value:e(Money,null,fmt(totalVars)),sub:mesLabel(mesSelec),color:C.orange,icon:'📊',onClick:esActual?()=>setTab('variables'):null}),
+      e(StatBox,{label:'Inversions',value:e(Money,null,fmt(totalInv)),sub:e('span',null,(guanyInv>=0?'+':''),e(Money,null,fmt(guanyInv))),color:C.accent,icon:'📈',onClick:esActual?()=>setTab('inversions'):null}),
+      e(StatBox,{label:'Bens nets',value:e(Money,null,fmt(totalBens-totalDeute)),color:C.purple,icon:'🏛️',onClick:esActual?()=>setTab('bens'):null})
     ),
+
     // Charts
     e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}},
       e(Card,null,
         e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}},
-          e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,textTransform:'uppercase'}},'Evolució patrimoni'),
+          e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,textTransform:'uppercase'}},'Evolucio patrimoni'),
           e('span',{style:{color:C.dim,fontSize:9}},'Auto: dia 1 cada mes')
         ),
         evoActual.length<2
           ? e('div',{style:{height:130,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:6}},
-              e('div',{style:{color:C.dim,fontSize:11}},'Ves afegint punts cada mes'),
-              e('div',{style:{color:C.dim,fontSize:9}},'Clica "+ Desar punt" per guardar el patrimoni actual')
+              e('div',{style:{color:C.dim,fontSize:11}},'Ves afegint fotos cada mes'),
+              e('div',{style:{color:C.dim,fontSize:9}},'Clica "Foto" per guardar el mes actual')
             )
           : e(AreaChartSimple,{data:evoActual,height:130})
       ),
@@ -575,7 +607,6 @@ function Dashboard({data,setData,setTab=()=>{}}) {
         distrib.length===0
           ? e('div',{style:{color:C.dim,fontSize:11,textAlign:'center',padding:16}},'Afegeix dades')
           : e('div',null,
-              // Donut gran centrat
               e('div',{style:{display:'flex',justifyContent:'center',marginBottom:10,position:'relative'}},
                 e(DonutChart,{data:distrib,size:120}),
                 e('div',{style:{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',textAlign:'center'}},
@@ -583,7 +614,6 @@ function Dashboard({data,setData,setTab=()=>{}}) {
                   e('div',{style:{color:C.dim,fontSize:8}},'total')
                 )
               ),
-              // Llegenda amb % i valor
               distrib.map(d=>e('div',{key:d.name,style:{display:'flex',alignItems:'center',gap:6,marginBottom:6}},
                 e('div',{style:{width:8,height:8,borderRadius:2,background:d.color,flexShrink:0}}),
                 e('span',{style:{color:C.dim,fontSize:10,flex:1}},d.name),
@@ -593,13 +623,14 @@ function Dashboard({data,setData,setTab=()=>{}}) {
             )
       )
     ),
+
     // Objectius
     e(Card,null,
       e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}},
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,textTransform:'uppercase'}},"Objectius d'estalvi"),
         e(Btn,{onClick:()=>{setFObj({nom:'',meta:'',actual:'',icona:'🎯'});setErrObj({});setModalObj('nou');},style:{padding:'4px 10px',fontSize:10}},'+ Nou')
       ),
-      data.objectius.length===0 && e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:16}},"Cap objectiu. Afegeix-ne un!"),
+      data.objectius.length===0 && e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:16}},'Cap objectiu. Afegeix-ne un!'),
       data.objectius.map(o=>{
         const prog=(o.actual/o.meta)*100;
         return e('div',{key:o.id,style:{marginBottom:12}},
@@ -617,7 +648,7 @@ function Dashboard({data,setData,setTab=()=>{}}) {
             )
           ),
           e(ProgressBar,{value:o.actual,max:o.meta,color:prog>=100?C.green:C.accent}),
-          e('div',{style:{color:C.dim,fontSize:10,marginTop:2}},`${prog.toFixed(0)}% · Falta `,e(Money,null,fmt(Math.max(0,o.meta-o.actual))))
+          e('div',{style:{color:C.dim,fontSize:10,marginTop:2}},prog.toFixed(0)+'% · Falta ',e(Money,null,fmt(Math.max(0,o.meta-o.actual))))
         );
       })
     ),
@@ -2115,6 +2146,29 @@ function App() {
         return {...b, deute: Math.max(0, Math.round((b.deute-b.mensualitat)*100)/100)};
       });
       updates.bens = bensActualitzats;
+    }
+
+    // Desa snapshot del mes anterior (dia 1 de cada mes)
+    if(isDay1) {
+      const prevDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
+      const prevMk = mesKey(prevDate);
+      const snapshots2 = data.snapshotMesos||{};
+      if(!snapshots2[prevMk]) {
+        const iM = g => g.periodicitat==='anual' ? g.import/12 : g.import;
+        const s2 = {
+          ingressos: (data.historialNomines||{})[prevMk]||data.ingressos,
+          totalInv: (data.inversions||[]).reduce((s,i)=>s+i.valor,0),
+          totalBens: (data.bens||[]).reduce((s,b)=>s+b.valorActual,0),
+          totalDeute: (data.bens||[]).reduce((s,b)=>s+(b.deute||0),0),
+          totalFixes: (data.gastosFixes||[]).reduce((s,g)=>s+iM(g),0),
+          totalVars: Object.values(data.historialVariables?.[prevMk]||{}).reduce((s,v)=>s+v,0),
+          cash: data.cash||0,
+          guanyInv: (data.inversions||[]).reduce((s,i)=>s+(i.valor-i.cost),0),
+          pctInv: gainPct((data.inversions||[]).reduce((s,i)=>s+i.valor,0),(data.inversions||[]).reduce((s,i)=>s+i.cost,0)),
+          patrimoni: Math.round((data.inversions||[]).reduce((s,i)=>s+i.valor,0)+(data.bens||[]).reduce((s,b)=>s+b.valorActual,0)-(data.bens||[]).reduce((s,b)=>s+(b.deute||0),0)+(data.cash||0))
+        };
+        updates.snapshotMesos = {...snapshots2, [prevMk]: s2};
+      }
     }
 
     // Desa punt d'evolució del patrimoni (dia 1 de cada mes)
