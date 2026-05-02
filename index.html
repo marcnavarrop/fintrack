@@ -1179,6 +1179,40 @@ function Transaccions({data,setData}) {
 }
 
 // ── FIRE ──────────────────────────────────────────────────────────────────────
+// ── FireInput: uncontrolled input for FIRE params ────────────────────────────
+function FireInput({label,unit,value,onSave}) {
+  const [localVal,setLocalVal] = useState(String(value));
+  const [focused,setFocused] = useState(false);
+
+  // Keep in sync when value changes externally (but not while typing)
+  useEffect(()=>{
+    if(!focused) setLocalVal(String(value));
+  },[value,focused]);
+
+  const commit = (raw) => {
+    const v = parseFloat(raw.replace(',','.'));
+    if(!isNaN(v) && v > 0) onSave(v);
+    else setLocalVal(String(value)); // revert if invalid
+  };
+
+  return e('div',null,
+    e('div',{style:{color:C.dim,fontSize:9,fontWeight:600,marginBottom:3,textTransform:'uppercase'}},label),
+    e('div',{style:{display:'flex',alignItems:'center',gap:5}},
+      e('input',{
+        type:'text',
+        inputMode:'decimal',
+        value:localVal,
+        onChange:ev=>setLocalVal(ev.target.value),
+        onFocus:ev=>{setFocused(true);ev.target.select();},
+        onBlur:ev=>{setFocused(false);commit(ev.target.value);},
+        onKeyDown:ev=>{if(ev.key==='Enter'){commit(ev.target.value);ev.target.blur();}},
+        style:{flex:1,background:C.bg,border:'1px solid '+C.border,borderRadius:7,color:C.text,padding:'6px 9px',fontSize:12,outline:'none',fontFamily:'monospace',fontWeight:700}
+      }),
+      e('span',{style:{color:C.dim,fontSize:10,minWidth:20}},unit)
+    )
+  );
+}
+
 function Fire({data,setData}) {
   const f=data.fire;
   const setF=vals=>setData(d=>({...d,fire:{...d.fire,...vals}}));
@@ -1320,7 +1354,7 @@ function runDiagnostic(data) {
 
 // ── BACKUP + DIAGNOSTIC MODAL ─────────────────────────────────────────────────
 function BackupModal({data,setData,onClose}) {
-  const [tab,setTab]=useState('backup');
+  const [tab,setTab]=useState('drive');
   const [backupText,setBackupText]=useState('');
   const [msg,setMsg]=useState('');
   const [sbStatus,setSbStatus]=useState('idle'); // idle | loading | ok | error
@@ -1387,27 +1421,9 @@ function BackupModal({data,setData,onClose}) {
 
   return e(Modal,{title:'',onClose,width:480},
     // Tabs
-    e('div',{style:{display:'flex',borderBottom:`1px solid ${C.border}`,marginBottom:18,marginTop:-6}},
-      tabBtn('backup','💾 Backup'),
+    e('div',{style:{display:'flex',borderBottom:'1px solid '+C.border,marginBottom:18,marginTop:-6}},
       tabBtn('drive','☁️ Supabase'),
       tabBtn('diagnostic','🔍 Diagnòstic')
-    ),
-
-    // ── BACKUP TAB ──
-    tab==='backup' && e('div',null,
-      e('button',{onClick:exportar,style:{width:'100%',background:C.accent,color:C.bg,border:'none',borderRadius:10,padding:'11px 0',fontWeight:800,fontSize:13,cursor:'pointer',fontFamily:'inherit',marginBottom:12}},'⬇️ Descarregar backup (.json)'),
-      e('div',{style:{borderTop:`1px solid ${C.border}`,paddingTop:14}},
-        e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:10,textTransform:'uppercase'}},'Restaurar des de fitxer'),
-        e('label',{style:{display:'block',width:'100%',background:C.bg,border:`1px dashed ${C.border}`,borderRadius:9,padding:'12px 0',textAlign:'center',cursor:'pointer',color:C.dim,fontSize:12,marginBottom:10}},
-          '📂 Selecciona fintrack_*.json',
-          e('input',{type:'file',accept:'.json',onChange:importarFitxer,style:{display:'none'}})
-        ),
-        backupText && e('div',null,
-          e('div',{style:{color:C.green,fontSize:11,marginBottom:8}},'✓ Fitxer carregat ('+( backupText.length/1024).toFixed(1)+' KB)'),
-          e('button',{onClick:importar,style:{width:'100%',background:C.green,color:C.bg,border:'none',borderRadius:9,padding:'10px 0',fontWeight:800,fontSize:12,cursor:'pointer',fontFamily:'inherit'}},'⬆️ Restaurar ara')
-        )
-      ),
-      msg && e('div',{style:{marginTop:12,background:msg.startsWith('✓')?C.green+'22':C.red+'22',border:`1px solid ${msg.startsWith('✓')?C.green:C.red}44`,borderRadius:8,padding:'8px 12px',color:msg.startsWith('✓')?C.green:C.red,fontSize:12}},msg)
     ),
 
     // ── SUPABASE TAB ──
@@ -1665,38 +1681,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(
 } // end startApp
 </script>
 </body>
-</html>// ── FireInput: uncontrolled input for FIRE params ────────────────────────────
-function FireInput({label,unit,value,onSave}) {
-  const [localVal,setLocalVal] = useState(String(value));
-  const [focused,setFocused] = useState(false);
-
-  // Keep in sync when value changes externally (but not while typing)
-  useEffect(()=>{
-    if(!focused) setLocalVal(String(value));
-  },[value,focused]);
-
-  const commit = (raw) => {
-    const v = parseFloat(raw.replace(',','.'));
-    if(!isNaN(v) && v > 0) onSave(v);
-    else setLocalVal(String(value)); // revert if invalid
-  };
-
-  return e('div',null,
-    e('div',{style:{color:C.dim,fontSize:9,fontWeight:600,marginBottom:3,textTransform:'uppercase'}},label),
-    e('div',{style:{display:'flex',alignItems:'center',gap:5}},
-      e('input',{
-        type:'text',
-        inputMode:'decimal',
-        value:localVal,
-        onChange:ev=>setLocalVal(ev.target.value),
-        onFocus:ev=>{setFocused(true);ev.target.select();},
-        onBlur:ev=>{setFocused(false);commit(ev.target.value);},
-        onKeyDown:ev=>{if(ev.key==='Enter'){commit(ev.target.value);ev.target.blur();}},
-        style:{flex:1,background:C.bg,border:'1px solid '+C.border,borderRadius:7,color:C.text,padding:'6px 9px',fontSize:12,outline:'none',fontFamily:'monospace',fontWeight:700}
-      }),
-      e('span',{style:{color:C.dim,fontSize:10,minWidth:20}},unit)
-    )
-  );
-}
-
-
+</html>
