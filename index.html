@@ -1370,6 +1370,7 @@ const TABS=[
 
 // ── AUTH SCREEN (Login / Register) ───────────────────────────────────────────
 function AuthScreen({onAuth}) {
+  const lang = useContext(LangCtx);
   const [mode,setMode] = useState('login');
   const [email,setEmail] = useState('');
   const [pass,setPass] = useState('');
