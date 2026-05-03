@@ -267,187 +267,78 @@ const BlurCtx = createContext(false);
 
 // ── TRADUCCIONS ───────────────────────────────────────────────────────────────
 const T = {
-  ca:{
-    // Nav
-    dashboard:'Dashboard',fixes:'Fixes',variables:'Variables',
-    inversions:'Inversions',bens:'Bens',fire:'FIRE',
-    // Dashboard
-    patrimoni:t(lang,'patrimoni'),rendiment:'rendiment inversions',
-    nomina:'Nomina mensual',taxaEstalvi:t(lang,'taxaEstalvi'),
-    cash:'Cash disponible',delPatrimoni:'del patrimoni',
-    mesActual:'Mes actual',fotoMes:'foto del mes',
-    evolucio:t(lang,'evolucio'),autoMes:'Auto: dia 1 cada mes',
-    distribucio:t(lang,'distribucio'),objectius:t(lang,'objectius'),
-    capObjectiu:'Cap objectiu. Afegeix-ne un!',
-    nouObjectiu:'Nou objectiu',editarObjectiu:'Editar objectiu',falta:'Falta',
-    // Actions
-    editar:'Editar',desar:'Desar',cancelar:'Cancel·lar',afegir:'+ Afegir',
-    carregant:t(lang,'carregant'),
-    // Fixes
-    totalMensual:t(lang,'totalMensual'),
-    perCategoria:t(lang,'perCategoria'),
-    nouGastoFix:'Nou gasto fix',editarGastoFix:'Editar gasto fix',
-    nomLabel:'Nom',importMensual:'Import mensual (€)',importAnual:'Import anual (€)',
-    categoriaLabel:'Categoria',periodicitatLabel:'Periodicitat',
-    mensual:'Mensual',anual:'Anual',equivMensual:'Equivalent mensual',
-    capGasto:'Cap gasto fix. Afegeix-ne un!',
-    // Variables
-    nouaDespesa:'+ Despesa',novaCategoria:'+ Categoria',
-    resumMes:t(lang,'resumMes'),gastat:'Gastat',pressupost:'Pressupost',
+  ca:{ dashboard:'Dashboard',fixes:'Fixes',variables:'Variables',
+    inversions:'Inversions',bens:'Béns',fire:'FIRE',
+    nomina:'Nòmina mensual',taxaEstalvi:'Taxa estalvi',cash:'Cash disponible',
+    delPatrimoni:'del patrimoni',
+    patrimoni:'Patrimoni net total',evolucio:'Evolució patrimoni',
+    distribucio:'Distribució patrimoni',objectius:"Objectius d'estalvi",
+    carteraTotal:'CARTERA TOTAL',totalMensual:'TOTAL MENSUAL',
+    resumMes:'Resum del mes',gastat:'Gastat',pressupost:'Pressupost',
     disponible:'disponible',perSobre:'per sobre',
-    capCategoria:'Cap categoria. Afegeix-ne una!',
-    nouaDespesaTitle:'Nova despesa',quinActiu:'Quin actiu?',
-    // Inversions
-    carteraTotal:t(lang,'carteraTotal'),nouActiu:'+ Nou actiu',
-    novaAportacio:'+ Aportacio',actualitzarTots:'Actualitzar tots',
-    capInversio:'Cap inversio. Afegeix-ne una!',
-    novaInversio:'Nova inversio',editarInversio:'Editar inversio',
-    // Bens
-    patrimoniNetLabel:'PATRIMONI NET',actius:'Actius',deutes:'Deutes',
-    capBe:'Cap be registrat. Afegeix-ne un!',
-    nouElement:'Nou element',editarElement:'Editar element',
-    mensualitat:'Mensualitat',pagat:'Pagat',
-    valorActual:'Valor actual (€)',valorCompra:'Valor de compra (€)',
-    deutePendent:'Deute pendent (€)',anyFi:'Any fi del deute',
-    // FIRE
-    calculadoraFire:'CALCULADORA FIRE',objectiuFire:'Objectiu FIRE',
-    edatFire:'Edat FIRE est.',rendaMes:'Renda/mes FIRE',
-    parametres:'Parametres',edatActual:'Edat actual',
-    despesesAnuals:'Despeses anuals',rendimentEsperat:'Rendiment esperat',
-    inflacioLabel:'Inflacio',reglaRetirada:'Regla retirada',
-    projeccio:'Projeccio fins FIRE',anysFire:"anys des d'ara",
-    // Auth
-    entrar:t(lang,'entrar'),crearCompte:t(lang,'crearCompte'),
-    correuElectronic:t(lang,'correuElectronic'),contrasenya:t(lang,'contrasenya'),
-    confirmaContrasenya:t(lang,'confirmaContrasenya'),
-    compteCreat:'Compte creat! Comprova el correu per confirmar-lo, despres torna a entrar.',
-    gestorPersonal:t(lang,'gestorPersonal'),
-    // Header/misc
-    sortir:'Sortir',tancarSessio:'Vols tancar la sessio?',
-    desant:'desant...', desat:'desat',
-    esborraDades:t(lang,'esborraDades'),zonaPerill:t(lang,'zonaPerill'),
+    sortir:'Sortir',tancarSessio:'Vols tancar la sessió?',
+    entrar:'Entrar',crearCompte:'Crear compte',
+    correuElectronic:'Correu electrònic',contrasenya:'Contrasenya',
+    confirmaContrasenya:'Confirma la contrasenya',carregant:'Carregant...',
+    gestorPersonal:'Gestor financer personal',
+    supabaseTab:'Supabase',diagnosticTab:'Diagnòstic',dadesTab:'Dades',
+    zonaPerill:'Zona de perill',connectat:'Connectat a Supabase',
+    desaServidor:'Desar al servidor ara',carregaServidor:'Carregar del servidor',
+    totCorrecte:'Tot correcte!',desant:'desant...',desat:'desat',
+    esborraDades:'Esborrar totes les dades',
     confirmaEsborrar:'Segur que vols esborrar TOTES les dades?',
-    confirmaEsborrar2:'Confirma: esborrar tot definitament?',
-    connectat:t(lang,'connectat'),
-    desaServidor:t(lang,'desaServidor'),carregaServidor:t(lang,'carregaServidor'),
-    totCorrecte:t(lang,'totCorrecte'),noErrores:'No shan detectat errors.',
-    // Backup modal tabs
-    supabaseTab:'Supabase',diagnosticTab:'Diagnostic',dadesTab:'Dades',
+    confirmaEsborrar2:'Confirma: esborrar tot definitivament?',
+    perCategoria:'Per categoria',
   },
-  es:{
-    dashboard:'Resumen',fixes:'Gastos fijos',variables:'Variables',
+  es:{ dashboard:'Resumen',fixes:'Gastos fijos',variables:'Variables',
     inversions:'Inversiones',bens:'Bienes',fire:'FIRE',
-    patrimoni:'Patrimonio neto total',rendiment:'rendimiento inversiones',
-    nomina:'Nomina mensual',taxaEstalvi:'Tasa ahorro',
-    cash:'Efectivo disponible',delPatrimoni:'del patrimonio',
-    mesActual:'Mes actual',fotoMes:'foto del mes',
-    evolucio:'Evolucion patrimonio',autoMes:'Auto: dia 1 cada mes',
-    distribucio:'Distribucion patrimonio',objectius:'Objetivos de ahorro',
-    capObjectiu:'Sin objetivos. Anade uno!',
-    nouObjectiu:'Nuevo objetivo',editarObjectiu:'Editar objetivo',falta:'Falta',
-    editar:'Editar',desar:'Guardar',cancelar:'Cancelar',afegir:'+ Anadir',
-    carregant:'Cargando...',
-    totalMensual:'TOTAL MENSUAL EQUIVALENTE',
-    perCategoria:'Por categoria',
-    nouGastoFix:'Nuevo gasto fijo',editarGastoFix:'Editar gasto fijo',
-    nomLabel:'Nombre',importMensual:'Importe mensual (€)',importAnual:'Importe anual (€)',
-    categoriaLabel:'Categoria',periodicitatLabel:'Periodicidad',
-    mensual:'Mensual',anual:'Anual',equivMensual:'Equivalente mensual',
-    capGasto:'Sin gastos fijos. Anade uno!',
-    nouaDespesa:'+ Gasto',novaCategoria:'+ Categoria',
+    nomina:'Nómina mensual',taxaEstalvi:'Tasa ahorro',cash:'Efectivo disponible',
+    delPatrimoni:'del patrimonio',
+    patrimoni:'Patrimonio neto total',evolucio:'Evolución patrimonio',
+    distribucio:'Distribución patrimonio',objectius:'Objetivos de ahorro',
+    carteraTotal:'CARTERA TOTAL',totalMensual:'TOTAL MENSUAL',
     resumMes:'Resumen del mes',gastat:'Gastado',pressupost:'Presupuesto',
     disponible:'disponible',perSobre:'por encima',
-    capCategoria:'Sin categorias. Anade una!',
-    nouaDespesaTitle:'Nuevo gasto',quinActiu:'Que activo?',
-    carteraTotal:t(lang,'carteraTotal'),nouActiu:'+ Nuevo activo',
-    novaAportacio:'+ Aportacion',actualitzarTots:'Actualizar todos',
-    capInversio:'Sin inversiones. Anade una!',
-    novaInversio:'Nueva inversion',editarInversio:'Editar inversion',
-    patrimoniNetLabel:'PATRIMONIO NETO',actius:'Activos',deutes:'Deudas',
-    capBe:'Sin bienes registrados. Anade uno!',
-    nouElement:'Nuevo elemento',editarElement:'Editar elemento',
-    mensualitat:'Cuota mensual',pagat:'Pagado',
-    valorActual:'Valor actual (€)',valorCompra:'Valor de compra (€)',
-    deutePendent:'Deuda pendiente (€)',anyFi:'Ano fin deuda',
-    calculadoraFire:'CALCULADORA FIRE',objectiuFire:'Objetivo FIRE',
-    edatFire:'Edad FIRE est.',rendaMes:'Renta/mes FIRE',
-    parametres:'Parametros',edatActual:'Edad actual',
-    despesesAnuals:'Gastos anuales',rendimentEsperat:'Rendimiento esperado',
-    inflacioLabel:'Inflacion',reglaRetirada:'Regla retirada',
-    projeccio:'Proyeccion hasta FIRE',anysFire:'anos desde ahora',
-    entrar:t(lang,'entrar'),crearCompte:'Crear cuenta',
-    correuElectronic:'Correo electronico',contrasenya:'Contrasena',
-    confirmaContrasenya:'Confirma la contrasena',
-    compteCreat:'Cuenta creada! Revisa el correo para confirmarla, luego vuelve a entrar.',
+    sortir:'Salir',tancarSessio:'¿Quieres cerrar sesión?',
+    entrar:'Entrar',crearCompte:'Crear cuenta',
+    correuElectronic:'Correo electrónico',contrasenya:'Contraseña',
+    confirmaContrasenya:'Confirma la contraseña',carregant:'Cargando...',
     gestorPersonal:'Gestor financiero personal',
-    sortir:'Salir',tancarSessio:'Quieres cerrar sesion?',
-    desant:'guardando...', desat:'guardado',
-    esborraDades:'Borrar todos los datos',zonaPerill:'Zona de peligro',
-    confirmaEsborrar:'Seguro que quieres borrar TODOS los datos?',
-    confirmaEsborrar2:'Confirma: borrar todo definitivamente?',
-    connectat:'Conectado a Supabase',
+    supabaseTab:'Supabase',diagnosticTab:'Diagnóstico',dadesTab:'Datos',
+    zonaPerill:'Zona de peligro',connectat:'Conectado a Supabase',
     desaServidor:'Guardar en servidor ahora',carregaServidor:'Cargar del servidor',
-    totCorrecte:'Todo correcto!',noErrores:'No se han detectado errores.',
-    supabaseTab:'Supabase',diagnosticTab:'Diagnostico',dadesTab:'Datos',
+    totCorrecte:'¡Todo correcto!',desant:'guardando...',desat:'guardado',
+    esborraDades:'Borrar todos los datos',
+    confirmaEsborrar:'¿Seguro que quieres borrar TODOS los datos?',
+    confirmaEsborrar2:'Confirma: ¿borrar todo definitivamente?',
+    perCategoria:'Por categoría',
   },
-  en:{
-    dashboard:'Dashboard',fixes:'Fixed costs',variables:'Variable costs',
+  en:{ dashboard:'Dashboard',fixes:'Fixed costs',variables:'Variable costs',
     inversions:'Investments',bens:'Assets',fire:'FIRE',
-    patrimoni:'Total net worth',rendiment:'investment return',
-    nomina:'Monthly income',taxaEstalvi:'Savings rate',
-    cash:'Available cash',delPatrimoni:'of portfolio',
-    mesActual:'Current month',fotoMes:'month snapshot',
-    evolucio:'Portfolio evolution',autoMes:'Auto: 1st of each month',
+    nomina:'Monthly income',taxaEstalvi:'Savings rate',cash:'Available cash',
+    delPatrimoni:'of portfolio',
+    patrimoni:'Total net worth',evolucio:'Portfolio evolution',
     distribucio:'Portfolio distribution',objectius:'Savings goals',
-    capObjectiu:'No goals yet. Add one!',
-    nouObjectiu:'New goal',editarObjectiu:'Edit goal',falta:'Remaining',
-    editar:'Edit',desar:'Save',cancelar:'Cancel',afegir:'+ Add',
-    carregant:'Loading...',
-    totalMensual:'MONTHLY TOTAL',
-    perCategoria:'By category',
-    nouGastoFix:'New fixed expense',editarGastoFix:'Edit fixed expense',
-    nomLabel:'Name',importMensual:'Monthly amount (€)',importAnual:'Annual amount (€)',
-    categoriaLabel:'Category',periodicitatLabel:'Frequency',
-    mensual:'Monthly',anual:'Annual',equivMensual:'Monthly equivalent',
-    capGasto:'No fixed expenses. Add one!',
-    nouaDespesa:'+ Expense',novaCategoria:'+ Category',
+    carteraTotal:'TOTAL PORTFOLIO',totalMensual:'MONTHLY TOTAL',
     resumMes:'Month summary',gastat:'Spent',pressupost:'Budget',
     disponible:'available',perSobre:'over budget',
-    capCategoria:'No categories. Add one!',
-    nouaDespesaTitle:'New expense',quinActiu:'Which asset?',
-    carteraTotal:'TOTAL PORTFOLIO',nouActiu:'+ New asset',
-    novaAportacio:'+ Contribution',actualitzarTots:'Update all',
-    capInversio:'No investments. Add one!',
-    novaInversio:'New investment',editarInversio:'Edit investment',
-    patrimoniNetLabel:'NET WORTH',actius:'Assets',deutes:'Debts',
-    capBe:'No assets recorded. Add one!',
-    nouElement:'New item',editarElement:'Edit item',
-    mensualitat:'Monthly payment',pagat:'Paid',
-    valorActual:'Current value (€)',valorCompra:'Purchase value (€)',
-    deutePendent:'Outstanding debt (€)',anyFi:'Debt end year',
-    calculadoraFire:'FIRE CALCULATOR',objectiuFire:'FIRE target',
-    edatFire:'Est. FIRE age',rendaMes:'Monthly FIRE income',
-    parametres:'Parameters',edatActual:'Current age',
-    despesesAnuals:'Annual expenses',rendimentEsperat:'Expected return',
-    inflacioLabel:'Inflation',reglaRetirada:'Withdrawal rule',
-    projeccio:'Projection to FIRE',anysFire:'years from now',
+    sortir:'Sign out',tancarSessio:'Do you want to sign out?',
     entrar:'Sign in',crearCompte:'Create account',
     correuElectronic:'Email address',contrasenya:'Password',
-    confirmaContrasenya:'Confirm password',
-    compteCreat:'Account created! Check your email to confirm, then sign in.',
+    confirmaContrasenya:'Confirm password',carregant:'Loading...',
     gestorPersonal:'Personal finance manager',
-    sortir:'Sign out',tancarSessio:'Do you want to sign out?',
-    desant:'saving...', desat:'saved',
-    esborraDades:'Delete all data',zonaPerill:'Danger zone',
+    supabaseTab:'Supabase',diagnosticTab:'Diagnostic',dadesTab:'Data',
+    zonaPerill:'Danger zone',connectat:'Connected to Supabase',
+    desaServidor:'Save to server now',carregaServidor:'Load from server',
+    totCorrecte:'All good!',desant:'saving...',desat:'saved',
+    esborraDades:'Delete all data',
     confirmaEsborrar:'Are you sure you want to delete ALL data?',
     confirmaEsborrar2:'Confirm: delete everything permanently?',
-    connectat:'Connected to Supabase',
-    desaServidor:'Save to server now',carregaServidor:'Load from server',
-    totCorrecte:'All good!',noErrores:'No errors or inconsistencies found.',
-    supabaseTab:'Supabase',diagnosticTab:'Diagnostic',dadesTab:'Data',
+    perCategoria:'By category',
   }
 };
 const LangCtx = createContext('ca');
+const t = (lang, key) => T[lang]?.[key] || T.ca[key] || key;
 
 function Money({children}) {
   const blur = useContext(BlurCtx);
@@ -465,140 +356,98 @@ function Card({children, style={}, onClick}) {
       borderRadius:13, padding:14, cursor:onClick?'pointer':'default', transition:'all .2s', ...style}
   }, children);
 }
-
 function Badge({children,color=C.accent}) {
   return e('span',{style:{background:color+'22',color,borderRadius:5,padding:'1px 6px',fontSize:10,fontWeight:700}},children);
 }
-
 function ProgressBar({value,max,color=C.accent,height=5}) {
   const pct = Math.min(100,Math.max(0,(value/max)*100));
   return e('div',{style:{background:C.border,borderRadius:999,height,overflow:'hidden'}},
-    e('div',{style:{width:`${pct}%`,height:'100%',background:color,borderRadius:999,transition:'width .5s ease'}})
-  );
+    e('div',{style:{width:`${pct}%`,height:'100%',background:color,borderRadius:999,transition:'width .5s ease'}}));
 }
-
 function Btn({children,onClick,color=C.accent,secondary=false,danger=false,disabled=false,style={}}) {
   const [hov,setHov]=useState(false);
-  const bg = danger?C.red:secondary?'transparent':color;
-  const cl = danger?'#fff':secondary?C.dim:C.bg;
-  return e('button',{
-    onClick, disabled,
-    onMouseEnter:()=>setHov(true), onMouseLeave:()=>setHov(false),
+  const bg=danger?C.red:secondary?'transparent':color;
+  const cl=danger?'#fff':secondary?C.dim:C.bg;
+  return e('button',{onClick,disabled,onMouseEnter:()=>setHov(true),onMouseLeave:()=>setHov(false),
     style:{background:bg,color:cl,border:secondary?`1px solid ${C.border}`:'none',borderRadius:8,
       padding:'8px 14px',fontWeight:700,fontSize:12,cursor:disabled?'not-allowed':'pointer',
       opacity:disabled?(hov?.4:.5):(hov?.82:1),transition:'opacity .2s',fontFamily:'inherit',...style}
-  }, children);
+  },children);
 }
-
 function Input({label,value,onChange,type='text',placeholder,error}) {
   const [foc,setFoc]=useState(false);
   return e('div',{style:{marginBottom:11}},
-    label && e('div',{style:{color:error?C.red:C.dim,fontSize:10,fontWeight:600,marginBottom:3,textTransform:'uppercase',letterSpacing:.4}},
-      label+(error?` — ${error}`:'')
-    ),
-    e('input',{
-      value:value??'', onChange:ev=>onChange(ev.target.value),
-      type, placeholder, onFocus:()=>setFoc(true), onBlur:()=>setFoc(false),
+    label&&e('div',{style:{color:error?C.red:C.dim,fontSize:10,fontWeight:600,marginBottom:3,textTransform:'uppercase',letterSpacing:.4}},
+      label+(error?` — ${error}`:'')),
+    e('input',{value:value??'',onChange:ev=>onChange(ev.target.value),type,placeholder,
+      onFocus:()=>setFoc(true),onBlur:()=>setFoc(false),
       style:{width:'100%',background:C.bg,border:`1px solid ${foc?(error?C.red:C.accent):(error?C.red:C.border)}`,
-        borderRadius:8,color:C.text,padding:'8px 11px',fontSize:13,outline:'none',boxSizing:'border-box',fontFamily:'inherit'}
-    })
-  );
+        borderRadius:8,color:C.text,padding:'8px 11px',fontSize:13,outline:'none',boxSizing:'border-box',fontFamily:'inherit'}}));
 }
-
 function Select({label,value,onChange,options}) {
   return e('div',{style:{marginBottom:11}},
-    label && e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:3,textTransform:'uppercase'}},label),
+    label&&e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:3,textTransform:'uppercase'}},label),
     e('select',{value,onChange:ev=>onChange(ev.target.value),
       style:{width:'100%',background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,
         padding:'8px 11px',fontSize:13,outline:'none',fontFamily:'inherit'}},
-      options.map(o => typeof o==='string'
-        ? e('option',{key:o,value:o},o)
-        : e('option',{key:o.v,value:o.v},o.l)
-      )
-    )
-  );
+      options.map(o=>typeof o==='string'?e('option',{key:o,value:o},o):e('option',{key:o.v,value:o.v},o.l))));
 }
-
 function StatBox({label,value,sub,color=C.accent,icon,onClick}) {
   return e(Card,{onClick,style:{cursor:onClick?'pointer':'default'}},
     e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}},
       e('div',null,
         e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,letterSpacing:.8,textTransform:'uppercase',marginBottom:3}},label),
         e('div',{style:{color,fontSize:18,fontWeight:800,fontFamily:"'DM Mono',monospace"}},value),
-        sub && e('div',{style:{color:C.dim,fontSize:10,marginTop:2}},sub)
-      ),
+        sub&&e('div',{style:{color:C.dim,fontSize:10,marginTop:2}},sub)),
       e('div',{style:{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:4}},
-        icon && e('div',{style:{fontSize:20,opacity:.6}},icon),
-        onClick && e('div',{style:{color:C.accent,fontSize:9,opacity:.7}},'veure →')
-      )
-    )
-  );
+        icon&&e('div',{style:{fontSize:20,opacity:.6}},icon),
+        onClick&&e('div',{style:{color:C.accent,fontSize:9,opacity:.7}},'veure →'))));
 }
-
-// ── Confirm Delete ─────────────────────────────────────────────────────────────
 function ConfirmDelete({nom,onConfirm,onCancel}) {
   return e('div',{onClick:onCancel,style:{position:'fixed',inset:0,background:'#000d',zIndex:2000,display:'flex',alignItems:'center',justifyContent:'center'}},
     e('div',{onClick:ev=>ev.stopPropagation(),style:{background:C.surface,border:`1px solid ${C.red}55`,borderRadius:16,padding:24,width:'min(88vw,340px)',textAlign:'center'}},
       e('div',{style:{width:40,height:40,borderRadius:'50%',background:C.red+'20',border:`1px solid ${C.red}44`,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 12px',fontSize:18,color:C.red,fontWeight:800}},'✕'),
       e('div',{style:{fontWeight:700,color:C.text,fontSize:14,marginBottom:6}},'Eliminar element?'),
       e('div',{style:{color:C.dim,fontSize:12,marginBottom:20,lineHeight:1.5}},
-        'Segur que vols eliminar ',e('span',{style:{color:C.white,fontWeight:600}},`"${nom}"`,'?'),e('br'),
-        'Aquesta acció no es pot desfer.'
-      ),
+        'Segur que vols eliminar ',e('span',{style:{color:C.white,fontWeight:600}},`"${nom}"`,'?'),e('br'),'Aquesta acció no es pot desfer.'),
       e('div',{style:{display:'flex',gap:8}},
         e('button',{onClick:onCancel,style:{flex:1,background:'transparent',border:`1px solid ${C.border}`,color:C.dim,borderRadius:9,padding:'9px 0',cursor:'pointer',fontSize:12,fontFamily:'inherit',fontWeight:600}},'Cancel·lar'),
-        e('button',{onClick:onConfirm,style:{flex:1,background:C.red,border:'none',color:'#fff',borderRadius:9,padding:'9px 0',cursor:'pointer',fontSize:12,fontFamily:'inherit',fontWeight:700}},'Sí, eliminar')
-      )
-    )
-  );
+        e('button',{onClick:onConfirm,style:{flex:1,background:C.red,border:'none',color:'#fff',borderRadius:9,padding:'9px 0',cursor:'pointer',fontSize:12,fontFamily:'inherit',fontWeight:700}},'Sí, eliminar'))));
 }
-
 function DeleteBtn({nom,onDelete}) {
   const [confirm,setConfirm]=useState(false);
   const [hov,setHov]=useState(false);
   return e(React.Fragment,null,
-    e('button',{
-      onClick:ev=>{ev.stopPropagation();setConfirm(true);},
-      onMouseEnter:()=>setHov(true), onMouseLeave:()=>setHov(false),
+    e('button',{onClick:ev=>{ev.stopPropagation();setConfirm(true);},
+      onMouseEnter:()=>setHov(true),onMouseLeave:()=>setHov(false),
       style:{background:hov?C.red+'1a':'none',border:`1px solid ${hov?C.red+'44':'transparent'}`,
         color:hov?C.red:C.red+'66',borderRadius:6,width:26,height:26,cursor:'pointer',
         display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:800,
-        transition:'all .15s',flexShrink:0}
-    },'✕'),
-    confirm && e(ConfirmDelete,{nom,onConfirm:()=>{onDelete();setConfirm(false);},onCancel:()=>setConfirm(false)})
-  );
+        transition:'all .15s',flexShrink:0}},'✕'),
+    confirm&&e(ConfirmDelete,{nom,onConfirm:()=>{onDelete();setConfirm(false);},onCancel:()=>setConfirm(false)}));
 }
-
 function Modal({title,onClose,children}) {
   return e('div',{onClick:onClose,style:{position:'fixed',inset:0,background:'#000b',zIndex:1000,display:'flex',alignItems:'center',justifyContent:'center',padding:'0 12px'}},
     e('div',{onClick:ev=>ev.stopPropagation(),style:{background:C.surface,border:`1px solid ${C.border}`,borderRadius:16,padding:22,width:'100%',maxWidth:440,maxHeight:'88vh',overflowY:'auto'}},
       e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}},
         e('div',{style:{fontWeight:800,fontSize:14,color:C.text}},title),
-        e('button',{onClick:onClose,style:{background:'none',border:'none',color:C.dim,fontSize:16,cursor:'pointer'}},'✕')
-      ),
-      children
-    )
-  );
+        e('button',{onClick:onClose,style:{background:'none',border:'none',color:C.dim,fontSize:16,cursor:'pointer'}},'✕')),
+      children));
 }
-
 function RowBtns({onSave,onCancel}) {
   return e('div',{style:{display:'flex',gap:7,marginTop:8}},
     e(Btn,{onClick:onSave,style:{flex:1}},'💾 Desar'),
-    e(Btn,{onClick:onCancel,secondary:true,style:{flex:1}},'Cancel·lar')
-  );
+    e(Btn,{onClick:onCancel,secondary:true,style:{flex:1}},'Cancel·lar'));
 }
 
 // ── DASHBOARD ─────────────────────────────────────────────────────────────────
 function Dashboard({data,setData,setTab=()=>{}}) {
   const avuiKey = mesKey();
   const snapshots = data.snapshotMesos||{};
-
-  // Mesos disponibles: actual + tots els que tenen snapshot
   const mesosDisp = [...new Set([...Object.keys(snapshots), avuiKey])].sort();
   const [mesSelec, setMesSelec] = useState(avuiKey);
   const mesIdx = mesosDisp.indexOf(mesSelec);
   const esActual = mesSelec === avuiKey;
-
   const [editIng,setEditIng]=useState(false);
   const [tempIng,setTempIng]=useState('');
   const [editCash,setEditCash]=useState(false);
@@ -606,56 +455,31 @@ function Dashboard({data,setData,setTab=()=>{}}) {
   const [modalObj,setModalObj]=useState(null);
   const [fObj,setFObj]=useState({nom:'',meta:'',actual:'',icona:'🎯'});
   const [errObj,setErrObj]=useState({});
-
-  // Dades del mes seleccionat (live si actual, snapshot si passat)
   const iMensual = g => g.periodicitat==='anual' ? g.import/12 : g.import;
   const snap = esActual ? null : snapshots[mesSelec];
-
   const totalInv   = esActual ? data.inversions.reduce((s,i)=>s+i.valor,0)     : (snap?.totalInv||0);
   const totalCash  = esActual ? (data.cash||0)                                  : (snap?.cash||0);
   const totalBens  = esActual ? data.bens.reduce((s,b)=>s+b.valorActual,0)      : (snap?.totalBens||0);
   const totalDeute = esActual ? data.bens.reduce((s,b)=>s+(b.deute||0),0)       : (snap?.totalDeute||0);
   const totalFixes = esActual ? data.gastosFixes.reduce((s,g)=>s+iMensual(g),0) : (snap?.totalFixes||0);
-  const totalVars  = esActual
-    ? Object.values(data.historialVariables?.[avuiKey]||{}).reduce((s,v)=>s+v,0)
-    : (snap?.totalVars||0);
+  const totalVars  = esActual ? Object.values(data.historialVariables?.[avuiKey]||{}).reduce((s,v)=>s+v,0) : (snap?.totalVars||0);
   const nomina     = esActual ? data.ingressos : (snap?.ingressos||data.ingressos);
   const estalvi    = nomina - totalFixes - totalVars;
   const patrimoni  = totalInv + totalBens - totalDeute + totalCash;
   const guanyInv   = esActual ? data.inversions.reduce((s,i)=>s+(i.valor-i.cost),0) : (snap?.guanyInv||0);
   const pctInv     = esActual ? gainPct(totalInv, data.inversions.reduce((s,i)=>s+i.cost,0)) : (snap?.pctInv||0);
-
-  // Guardar snapshot del mes actual (es crida quan es canvia de mes)
-  const desarSnapshot = (mk) => {
-    const s = {
-      ingressos: data.ingressos,
-      totalInv: data.inversions.reduce((s,i)=>s+i.valor,0),
-      totalBens: data.bens.reduce((s,b)=>s+b.valorActual,0),
-      totalDeute: data.bens.reduce((s,b)=>s+(b.deute||0),0),
-      totalFixes: data.gastosFixes.reduce((s,g)=>s+iMensual(g),0),
-      totalVars: Object.values(data.historialVariables?.[mk]||{}).reduce((s,v)=>s+v,0),
-      cash: data.cash||0,
-      guanyInv: data.inversions.reduce((s,i)=>s+(i.valor-i.cost),0),
-      pctInv: gainPct(data.inversions.reduce((s,i)=>s+i.valor,0), data.inversions.reduce((s,i)=>s+i.cost,0)),
-      patrimoni: Math.round(data.inversions.reduce((s,i)=>s+i.valor,0) + data.bens.reduce((s,b)=>s+b.valorActual,0) - data.bens.reduce((s,b)=>s+(b.deute||0),0) + (data.cash||0))
-    };
-    setData(d=>({...d,snapshotMesos:{...(d.snapshotMesos||{}),[mk]:s}}));
-  };
-
   const distribTotal = totalInv + Math.max(0,totalBens-totalDeute) + totalCash;
   const distrib = [
     {name:'Inversions',value:totalInv,color:C.accent,pct:distribTotal>0?Math.round(totalInv/distribTotal*100):0},
     {name:'Bens nets',value:Math.max(0,totalBens-totalDeute),color:C.purple,pct:distribTotal>0?Math.round(Math.max(0,totalBens-totalDeute)/distribTotal*100):0},
     {name:'Cash',value:totalCash,color:C.green,pct:distribTotal>0?Math.round(totalCash/distribTotal*100):0},
   ].filter(d=>d.value>0);
-
   const now2 = new Date();
   const mesAbr = now2.toLocaleString('ca-ES',{month:'short'}).slice(0,3)+' '+now2.getFullYear().toString().slice(2);
   const evo = data.evolucioPat||[];
   const evoActual = evo.length && evo[evo.length-1].mes===mesAbr
     ? evo.map((x,i)=>i===evo.length-1?{...x,valor:Math.round(patrimoni)}:x)
     : [...evo.slice(-11),{mes:mesAbr,valor:Math.round(patrimoni)}];
-
   const desarObj = () => {
     const er={};
     if(!fObj.nom.trim())er.nom='Obligatori';
@@ -665,37 +489,23 @@ function Dashboard({data,setData,setTab=()=>{}}) {
     setData(d=>({...d,objectius:modalObj==='nou'?[...d.objectius,obj]:d.objectius.map(o=>o.id===modalObj?obj:o),evolucioPat:evoActual}));
     setModalObj(null);
   };
-
   return e('div',null,
-    // Selector de mes
     e('div',{style:{display:'flex',alignItems:'center',gap:8,marginBottom:14,background:C.surface,borderRadius:10,padding:'8px 12px',border:'1px solid '+C.border}},
       e('button',{onClick:()=>setMesSelec(mesosDisp[mesIdx-1]),disabled:mesIdx===0,
         style:{background:'none',border:'1px solid '+C.border,color:mesIdx===0?C.border:C.dim,borderRadius:7,width:28,height:28,cursor:mesIdx===0?'default':'pointer',fontSize:14,display:'flex',alignItems:'center',justifyContent:'center'}},'‹'),
       e('div',{style:{flex:1,textAlign:'center'}},
         e('div',{style:{color:esActual?C.accent:C.text,fontWeight:700,fontSize:13}},
-          esActual ? 'Mes actual — '+mesLabel(avuiKey) : mesLabel(mesSelec)
-        ),
-        !esActual && e('div',{style:{color:C.dim,fontSize:9}},'foto del mes · clica ‹ › per navegar')
-      ),
+          esActual ? 'Mes actual — '+mesLabel(avuiKey) : mesLabel(mesSelec)),
+        !esActual && e('div',{style:{color:C.dim,fontSize:9}},'foto del mes · clica ‹ › per navegar')),
       e('button',{onClick:()=>setMesSelec(mesosDisp[mesIdx+1]),disabled:mesIdx===mesosDisp.length-1,
-        style:{background:'none',border:'1px solid '+C.border,color:mesIdx===mesosDisp.length-1?C.border:C.dim,borderRadius:7,width:28,height:28,cursor:mesIdx===mesosDisp.length-1?'default':'pointer',fontSize:14,display:'flex',alignItems:'center',justifyContent:'center'}},'›')
-    ),
-
-    // Hero patrimoni
+        style:{background:'none',border:'1px solid '+C.border,color:mesIdx===mesosDisp.length-1?C.border:C.dim,borderRadius:7,width:28,height:28,cursor:mesIdx===mesosDisp.length-1?'default':'pointer',fontSize:14,display:'flex',alignItems:'center',justifyContent:'center'}},'›')),
     e('div',{style:{marginBottom:16,paddingBottom:16,borderBottom:'1px solid '+C.border}},
       e('div',{style:{color:C.dim,fontSize:10,letterSpacing:1.5,textTransform:'uppercase',marginBottom:2}},
-        esActual?t(lang,'patrimoni'):'Patrimoni net — '+mesLabel(mesSelec)
-      ),
-      e('div',{style:{fontSize:32,fontWeight:900,color:C.white,fontFamily:"'DM Mono',monospace",letterSpacing:-1}},
-        e(Money,null,fmt(patrimoni))
-      ),
+        esActual?t(lang,'patrimoni'):'Patrimoni net — '+mesLabel(mesSelec)),
+      e('div',{style:{fontSize:32,fontWeight:900,color:C.white,fontFamily:"'DM Mono',monospace",letterSpacing:-1}},e(Money,null,fmt(patrimoni))),
       e('div',{style:{color:pctInv>=0?C.green:C.red,fontSize:11,marginTop:2}},
         (pctInv>=0?'▲':'▼')+' '+Math.abs(pctInv).toFixed(1)+'% rendiment inversions · '+(guanyInv>=0?'+':''),
-        e(Money,null,fmt(guanyInv)),' total'
-      )
-    ),
-
-    // Nòmina + estalvi
+        e(Money,null,fmt(guanyInv)),' total')),
     e(Card,{style:{marginBottom:12,padding:'12px 14px'}},
       e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},
         e('div',null,
@@ -703,33 +513,19 @@ function Dashboard({data,setData,setTab=()=>{}}) {
           esActual && editIng
             ? e('div',{style:{display:'flex',alignItems:'center',gap:7,marginTop:3}},
                 e('input',{value:tempIng,onChange:ev=>setTempIng(ev.target.value),type:'number',autoFocus:true,
-                  onKeyDown:ev=>{
-                    if(ev.key==='Enter'){const v=parseFloat(tempIng);if(!isNaN(v)&&v>=0){const mk=mesKey();setData(d=>({...d,ingressos:v,historialNomines:{...(d.historialNomines||{}),[mk]:v}}));}setEditIng(false);}
-                    if(ev.key==='Escape')setEditIng(false);
-                  },
+                  onKeyDown:ev=>{if(ev.key==='Enter'){const v=parseFloat(tempIng);if(!isNaN(v)&&v>=0){const mk=mesKey();setData(d=>({...d,ingressos:v,historialNomines:{...(d.historialNomines||{}),[mk]:v}}));}setEditIng(false);}if(ev.key==='Escape')setEditIng(false);},
                   style:{background:C.bg,border:'1px solid '+C.accent,borderRadius:7,color:C.text,padding:'6px 10px',fontSize:14,width:110,outline:'none',fontFamily:'monospace',fontWeight:700}}),
                 e('button',{onClick:()=>{const v=parseFloat(tempIng);if(!isNaN(v)&&v>=0){const mk=mesKey();setData(d=>({...d,ingressos:v,historialNomines:{...(d.historialNomines||{}),[mk]:v}}));}setEditIng(false);},
                   style:{background:C.accent,border:'none',color:C.bg,borderRadius:7,padding:'6px 10px',cursor:'pointer',fontSize:12,fontWeight:800,fontFamily:'inherit'}},'OK'),
-                e('button',{onClick:()=>setEditIng(false),style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:14}},'✕')
-              )
+                e('button',{onClick:()=>setEditIng(false),style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:14}},'✕'))
             : e('div',{style:{display:'flex',alignItems:'center',gap:8,marginTop:2}},
                 e('span',{style:{color:C.green,fontSize:18,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(nomina))),
-                esActual && e('button',{onClick:()=>{setTempIng(String(nomina));setEditIng(true);},
-                  style:{background:C.accentDim,border:'1px solid '+C.accent+'33',color:C.accent,borderRadius:6,padding:'2px 8px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600}},'Editar')
-              )
-        ),
+                esActual&&e('button',{onClick:()=>{setTempIng(String(nomina));setEditIng(true);},
+                  style:{background:C.accentDim,border:'1px solid '+C.accent+'33',color:C.accent,borderRadius:6,padding:'2px 8px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600}},'Editar'))),
         e('div',{style:{textAlign:'right'}},
           e('div',{style:{color:C.dim,fontSize:10}},t(lang,'taxaEstalvi')),
-          e('div',{style:{color:estalvi>0?C.green:C.red,fontSize:16,fontWeight:800,fontFamily:'monospace'}},
-            (nomina>0?Math.round((estalvi/nomina)*100):0)+'%'
-          ),
-          e('div',{style:{color:C.dim,fontSize:10}},e(Money,null,fmt(estalvi)),'/mes')
-        )
-      ),
-
-    ),
-
-    // Cash card
+          e('div',{style:{color:estalvi>0?C.green:C.red,fontSize:16,fontWeight:800,fontFamily:'monospace'}},(nomina>0?Math.round((estalvi/nomina)*100):0)+'%'),
+          e('div',{style:{color:C.dim,fontSize:10}},e(Money,null,fmt(estalvi)),'/mes')))),
     e(Card,{style:{marginBottom:12,padding:'12px 14px'}},
       e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},
         e('div',null,
@@ -741,45 +537,28 @@ function Dashboard({data,setData,setTab=()=>{}}) {
                   style:{background:C.bg,border:'1px solid '+C.accent,borderRadius:7,color:C.text,padding:'6px 10px',fontSize:14,width:120,outline:'none',fontFamily:'monospace',fontWeight:700}}),
                 e('button',{onClick:()=>{const v=parseFloat(tempCash);if(!isNaN(v)&&v>=0)setData(d=>({...d,cash:v}));setEditCash(false);},
                   style:{background:C.accent,border:'none',color:C.bg,borderRadius:7,padding:'6px 10px',cursor:'pointer',fontSize:12,fontWeight:800,fontFamily:'inherit'}},'OK'),
-                e('button',{onClick:()=>setEditCash(false),style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:14}},'✕')
-              )
+                e('button',{onClick:()=>setEditCash(false),style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:14}},'✕'))
             : e('div',{style:{display:'flex',alignItems:'center',gap:8,marginTop:2}},
                 e('span',{style:{color:C.green,fontSize:18,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(totalCash))),
-                esActual && e('button',{onClick:()=>{setTempCash(String(data.cash||0));setEditCash(true);},
-                  style:{background:C.accentDim,border:'1px solid '+C.accent+'33',color:C.accent,borderRadius:6,padding:'2px 8px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600}},'Editar')
-              )
-        ),
+                esActual&&e('button',{onClick:()=>{setTempCash(String(data.cash||0));setEditCash(true);},
+                  style:{background:C.accentDim,border:'1px solid '+C.accent+'33',color:C.accent,borderRadius:6,padding:'2px 8px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600}},'Editar'))),
         e('div',{style:{textAlign:'right'}},
-          e('div',{style:{color:C.dim,fontSize:10}},'del patrimoni'),
-          e('div',{style:{color:C.green,fontSize:16,fontWeight:800,fontFamily:'monospace'}},
-            (distribTotal>0?Math.round(totalCash/distribTotal*100):0)+'%'
-          )
-        )
-      )
-    ),
-
-    // Stats grid (sense estalvi net)
+          e('div',{style:{color:C.dim,fontSize:10}},t(lang,'delPatrimoni')),
+          e('div',{style:{color:C.green,fontSize:16,fontWeight:800,fontFamily:'monospace'}},(distribTotal>0?Math.round(totalCash/distribTotal*100):0)+'%')))),
     e('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(130px,1fr))',gap:9,marginBottom:12}},
-      e(StatBox,{label:'Fixes',value:e(Money,null,fmt(totalFixes)),sub:'mensual',color:C.red,icon:'📌',onClick:esActual?()=>setTab('fixes'):null}),
-      e(StatBox,{label:'Variables',value:e(Money,null,fmt(totalVars)),sub:mesLabel(mesSelec),color:C.orange,icon:'📊',onClick:esActual?()=>setTab('variables'):null}),
-      e(StatBox,{label:'Inversions',value:e(Money,null,fmt(totalInv)),sub:e('span',null,(guanyInv>=0?'+':''),e(Money,null,fmt(guanyInv))),color:C.accent,icon:'📈',onClick:esActual?()=>setTab('inversions'):null}),
-      e(StatBox,{label:'Bens nets',value:e(Money,null,fmt(totalBens-totalDeute)),color:C.purple,icon:'🏛️',onClick:esActual?()=>setTab('bens'):null})
-    ),
-
-    // Charts
+      e(StatBox,{label:t(lang,'fixes'),value:e(Money,null,fmt(totalFixes)),sub:'mensual',color:C.red,icon:'📌',onClick:esActual?()=>setTab('fixes'):null}),
+      e(StatBox,{label:t(lang,'variables'),value:e(Money,null,fmt(totalVars)),sub:mesLabel(mesSelec),color:C.orange,icon:'📊',onClick:esActual?()=>setTab('variables'):null}),
+      e(StatBox,{label:t(lang,'inversions'),value:e(Money,null,fmt(totalInv)),sub:e('span',null,(guanyInv>=0?'+':''),e(Money,null,fmt(guanyInv))),color:C.accent,icon:'📈',onClick:esActual?()=>setTab('inversions'):null}),
+      e(StatBox,{label:t(lang,'bens'),value:e(Money,null,fmt(totalBens-totalDeute)),color:C.purple,icon:'🏛️',onClick:esActual?()=>setTab('bens'):null})),
     e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}},
       e(Card,null,
         e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}},
           e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,textTransform:'uppercase'}},t(lang,'evolucio')),
-          e('span',{style:{color:C.dim,fontSize:9}},'Auto: dia 1 cada mes')
-        ),
+          e('span',{style:{color:C.dim,fontSize:9}},'Auto: dia 1 cada mes')),
         evoActual.length<2
           ? e('div',{style:{height:130,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:6}},
-              e('div',{style:{color:C.dim,fontSize:11}},'Ves afegint fotos cada mes'),
-              e('div',{style:{color:C.dim,fontSize:9}},'Clica "Foto" per guardar el mes actual')
-            )
-          : e(AreaChartSimple,{data:evoActual,height:130})
-      ),
+              e('div',{style:{color:C.dim,fontSize:11}},'Ves afegint fotos cada mes'))
+          : e(AreaChartSimple,{data:evoActual,height:130})),
       e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},t(lang,'distribucio')),
         distrib.length===0
@@ -789,26 +568,17 @@ function Dashboard({data,setData,setTab=()=>{}}) {
                 e(DonutChart,{data:distrib,size:120}),
                 e('div',{style:{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',textAlign:'center'}},
                   e('div',{style:{color:C.text,fontFamily:'monospace',fontWeight:800,fontSize:11}},e(Money,null,fmt(distribTotal))),
-                  e('div',{style:{color:C.dim,fontSize:8}},'total')
-                )
-              ),
+                  e('div',{style:{color:C.dim,fontSize:8}},'total'))),
               distrib.map(d=>e('div',{key:d.name,style:{display:'flex',alignItems:'center',gap:6,marginBottom:6}},
                 e('div',{style:{width:8,height:8,borderRadius:2,background:d.color,flexShrink:0}}),
                 e('span',{style:{color:C.dim,fontSize:10,flex:1}},d.name),
                 e('span',{style:{color:C.text,fontSize:10,fontFamily:'monospace'}},e(Money,null,fmt(d.value))),
-                e('span',{style:{background:d.color+'22',color:d.color,borderRadius:4,padding:'0 5px',fontSize:9,fontWeight:700,marginLeft:3}},d.pct+'%')
-              ))
-            )
-      )
-    ),
-
-    // Objectius
+                e('span',{style:{background:d.color+'22',color:d.color,borderRadius:4,padding:'0 5px',fontSize:9,fontWeight:700,marginLeft:3}},d.pct+'%')))))),
     e(Card,null,
       e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}},
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,textTransform:'uppercase'}},t(lang,'objectius')),
-        e(Btn,{onClick:()=>{setFObj({nom:'',meta:'',actual:'',icona:'🎯'});setErrObj({});setModalObj('nou');},style:{padding:'4px 10px',fontSize:10}},'+ Nou')
-      ),
-      data.objectius.length===0 && e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:16}},'Cap objectiu. Afegeix-ne un!'),
+        e(Btn,{onClick:()=>{setFObj({nom:'',meta:'',actual:'',icona:'🎯'});setErrObj({});setModalObj('nou');},style:{padding:'4px 10px',fontSize:10}},'+ Nou')),
+      data.objectius.length===0&&e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:16}},'Cap objectiu. Afegeix-ne un!'),
       data.objectius.map(o=>{
         const prog=(o.actual/o.meta)*100;
         return e('div',{key:o.id,style:{marginBottom:12}},
@@ -817,197 +587,94 @@ function Dashboard({data,setData,setTab=()=>{}}) {
               e('span',{style:{fontSize:14}},o.icona),
               e('span',{style:{color:C.text,fontWeight:600,fontSize:12}},o.nom),
               e('button',{onClick:()=>{setFObj({nom:o.nom,meta:String(o.meta),actual:String(o.actual),icona:o.icona});setErrObj({});setModalObj(o.id);},
-                style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:11,padding:0}},'✏️')
-            ),
+                style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:11,padding:0}},'✏️')),
             e('div',{style:{display:'flex',alignItems:'center',gap:8}},
               e('span',{style:{color:C.accent,fontFamily:'monospace',fontSize:11}},e(Money,null,fmt(o.actual))),
               e('span',{style:{color:C.dim,fontSize:10}},'/ ',e(Money,null,fmt(o.meta))),
-              e(DeleteBtn,{nom:o.nom,onDelete:()=>setData(d=>({...d,objectius:d.objectius.filter(x=>x.id!==o.id)}))})
-            )
-          ),
+              e(DeleteBtn,{nom:o.nom,onDelete:()=>setData(d=>({...d,objectius:d.objectius.filter(x=>x.id!==o.id)}))}))),
           e(ProgressBar,{value:o.actual,max:o.meta,color:prog>=100?C.green:C.accent}),
-          e('div',{style:{color:C.dim,fontSize:10,marginTop:2}},prog.toFixed(0)+'% · Falta ',e(Money,null,fmt(Math.max(0,o.meta-o.actual))))
-        );
-      })
-    ),
-    modalObj && e(Modal,{title:modalObj==='nou'?'Nou objectiu':'Editar objectiu',onClose:()=>setModalObj(null)},
+          e('div',{style:{color:C.dim,fontSize:10,marginTop:2}},prog.toFixed(0)+'% · Falta ',e(Money,null,fmt(Math.max(0,o.meta-o.actual)))));
+      })),
+    modalObj&&e(Modal,{title:modalObj==='nou'?'Nou objectiu':'Editar objectiu',onClose:()=>setModalObj(null)},
       e('div',{style:{display:'grid',gridTemplateColumns:'55px 1fr',gap:7}},
         e(Input,{label:'Icona',value:fObj.icona,onChange:v=>setFObj(f=>({...f,icona:v}))}),
-        e(Input,{label:'Nom',value:fObj.nom,onChange:v=>setFObj(f=>({...f,nom:v})),placeholder:'Ex: Vacances',error:errObj.nom})
-      ),
+        e(Input,{label:'Nom',value:fObj.nom,onChange:v=>setFObj(f=>({...f,nom:v})),placeholder:'Ex: Vacances',error:errObj.nom})),
       e(Input,{label:'Meta (€)',type:'number',value:fObj.meta,onChange:v=>setFObj(f=>({...f,meta:v})),placeholder:'5000',error:errObj.meta}),
       e(Input,{label:'Estalviat fins ara (€)',type:'number',value:fObj.actual,onChange:v=>setFObj(f=>({...f,actual:v})),placeholder:'0'}),
-      e(RowBtns,{onSave:desarObj,onCancel:()=>setModalObj(null)})
-    )
-  );
+      e(RowBtns,{onSave:desarObj,onCancel:()=>setModalObj(null)})));
 }
-
-// ── GASTOS FIXES ──────────────────────────────────────────────────────────────
 function GastosFixes({data,setData}) {
   const [modal,setModal]=useState(null);
-  const [form,setForm]=useState({nom:'',import:'',categoria:'',periodicitat:'mensual'});
+  const [form,setForm]=useState({nom:'',import:'',categoria:''});
   const [errs,setErrs]=useState({});
-  const [filtreCat,setFiltreCat]=useState('Tots');
-
-  // Preomple colors de categories existents per consistència
-  data.gastosFixes.forEach(g=>{ if(g.categoria) colorPerCat(g.categoria); });
-
-  // Import mensual equivalent (anual / 12)
-  const importMensual = g => g.periodicitat==='anual' ? g.import/12 : g.import;
-  const total = data.gastosFixes.reduce((s,g)=>s+importMensual(g),0);
-
-  const cats = ['Tots',...new Set(data.gastosFixes.map(g=>g.categoria))];
-  const fixesFiltrats = filtreCat==='Tots'
-    ? data.gastosFixes
-    : data.gastosFixes.filter(g=>g.categoria===filtreCat);
-
-  // Agrupats per categoria per gràfiques
-  const catsList = [...new Set(data.gastosFixes.map(g=>g.categoria))];
-  const byCat = catsList.map(c=>({
-    cat:c,
-    total:data.gastosFixes.filter(g=>g.categoria===c).reduce((s,g)=>s+importMensual(g),0),
-    color:colorPerCat(c)
-  }));
+  const total=data.gastosFixes.reduce((s,g)=>s+g.import,0);
+  const cats=[...new Set(data.gastosFixes.map(g=>g.categoria))];
+  const byCat=cats.map(c=>({cat:c,total:data.gastosFixes.filter(g=>g.categoria===c).reduce((s,g)=>s+g.import,0)}));
 
   const obrir=(g)=>{
-    if(g==='nou'){setForm({nom:'',import:'',categoria:'',periodicitat:'mensual'});setErrs({});setModal('nou');}
-    else{setForm({nom:g.nom,import:String(g.import),categoria:g.categoria,periodicitat:g.periodicitat||'mensual'});setErrs({});setModal(g.id);}
+    if(g==='nou'){setForm({nom:'',import:'',categoria:''});setErrs({});setModal('nou');}
+    else{setForm({nom:g.nom,import:String(g.import),categoria:g.categoria});setErrs({});setModal(g.id);}
   };
-
   const desar=()=>{
     const er={};
     if(!form.nom.trim())er.nom='Obligatori';
     if(!form.import||isNaN(form.import)||+form.import<=0)er.import='Import vàlid';
     if(Object.keys(er).length){setErrs(er);return;}
-    const cat=form.categoria.trim()||'Altres';
-    const color=colorPerCat(cat);
-    const item={
-      id:modal==='nou'?uid():modal,
-      nom:form.nom.trim(),
-      import:+form.import,
-      categoria:cat,
-      periodicitat:form.periodicitat,
-      color
-    };
+    const item={id:modal==='nou'?uid():modal,nom:form.nom.trim(),import:+form.import,categoria:form.categoria.trim()||'Altres',color:PAL[data.gastosFixes.length%PAL.length]};
     setData(d=>({...d,gastosFixes:modal==='nou'?[...d.gastosFixes,item]:d.gastosFixes.map(g=>g.id===modal?{...g,...item}:g)}));
     setModal(null);
   };
 
   return e('div',null,
-    // Header
     e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}},
       e('div',null,
-        e('div',{style:{color:C.dim,fontSize:10,letterSpacing:1}},t(lang,'totalMensual')),
+        e('div',{style:{color:C.dim,fontSize:10,letterSpacing:1}},'TOTAL MENSUAL'),
         e('div',{style:{color:C.red,fontSize:24,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(total)))
       ),
       e(Btn,{onClick:()=>obrir('nou')},'+ Afegir')
     ),
-
-    // Gràfiques
     data.gastosFixes.length>0 && e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:12}},
       e(Card,null,
-        e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},t(lang,'perCategoria')),
-        e(HBarChart,{data:byCat,height:Math.max(80,byCat.length*30)})
+        e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Per categoria'),
+        e(ResponsiveContainer,{width:'100%',height:150},
+          e(BarChart,{data:byCat,layout:'vertical'},
+            e(XAxis,{type:'number',hide:true}),
+            e(YAxis,{dataKey:'cat',type:'category',tick:{fill:C.dim,fontSize:9},axisLine:false,tickLine:false,width:75}),
+            e(Tooltip,{contentStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11},formatter:v=>[fmt(v),''],cursor:{fill:C.border}}),
+            e(Bar,{dataKey:'total',fill:C.purple,radius:[0,5,5,0]})
+          )
+        )
       ),
       e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Distribució'),
-        e(DonutChart,{data:data.gastosFixes.map(g=>({value:importMensual(g),color:g.color||colorPerCat(g.categoria)})),size:150})
+        e(ResponsiveContainer,{width:'100%',height:150},
+          e(PieChart,null,
+            e(Pie,{data:data.gastosFixes,dataKey:'import',nameKey:'nom',cx:'50%',cy:'50%',outerRadius:55,strokeWidth:0},
+              data.gastosFixes.map((g,i)=>e(Cell,{key:i,fill:g.color}))
+            ),
+            e(Tooltip,{contentStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11},formatter:v=>[fmt(v),'']})
+          )
+        )
       )
     ),
-
-    // Filtre categories
-    cats.length>2 && e('div',{style:{display:'flex',gap:5,marginBottom:10,flexWrap:'wrap'}},
-      cats.map(c=>e('button',{key:c,onClick:()=>setFiltreCat(c),style:{
-        background:filtreCat===c?colorPerCat(c==='Tots'?'':c)+'33':'transparent',
-        color:filtreCat===c?(c==='Tots'?C.accent:colorPerCat(c)):C.dim,
-        border:'1px solid '+(filtreCat===c?(c==='Tots'?C.accent:colorPerCat(c))+'66':C.border),
-        borderRadius:7,padding:'4px 10px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600
-      }},c==='Tots'?'Tots':e('span',null,
-        e('span',{style:{width:6,height:6,borderRadius:'50%',background:colorPerCat(c),display:'inline-block',marginRight:5,verticalAlign:'middle'}}),
-        c
-      )))
-    ),
-
-    // Agrupat per categoria
-    e('div',{style:{display:'grid',gap:16}},
-      data.gastosFixes.length===0
-        ? e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:24}},'Cap gasto fix. Afegeix-ne un!')
-        : catsList
-            .filter(c=>filtreCat==='Tots'||c===filtreCat)
-            .map(cat=>{
-              const gastosDelCat = data.gastosFixes.filter(g=>g.categoria===cat);
-              const totalCat = gastosDelCat.reduce((s,g)=>s+importMensual(g),0);
-              const col = colorPerCat(cat);
-              return e('div',{key:cat},
-                // Capçalera categoria
-                e('div',{style:{display:'flex',alignItems:'center',gap:8,marginBottom:6}},
-                  e('div',{style:{width:10,height:10,borderRadius:'50%',background:col}}),
-                  e('span',{style:{color:C.text,fontWeight:700,fontSize:12}},cat),
-                  e('span',{style:{color:C.dim,fontSize:11,marginLeft:'auto'}},e(Money,null,fmt(totalCat)),'/mes')
-                ),
-                // Gastos de la categoria
-                e('div',{style:{display:'grid',gap:5,paddingLeft:18}},
-                  gastosDelCat.map(g=>{
-                    const mensual = importMensual(g);
-                    return e(Card,{key:g.id,style:{padding:'9px 12px'},onClick:()=>obrir(g)},
-                      e('div',{style:{display:'flex',alignItems:'center',gap:9}},
-                        e('div',{style:{width:3,height:24,borderRadius:2,background:col,flexShrink:0}}),
-                        e('div',{style:{flex:1}},
-                          e('div',{style:{fontWeight:600,color:C.text,fontSize:12}},g.nom),
-                          g.periodicitat==='anual' && e(Badge,{color:C.yellow},'Anual')
-                        ),
-                        e('div',{style:{textAlign:'right'}},
-                          e('div',{style:{color:C.red,fontFamily:'monospace',fontWeight:700,fontSize:13}},e(Money,null,fmt(mensual)),'/mes'),
-                          g.periodicitat==='anual' && e('div',{style:{color:C.dim,fontSize:9}},e(Money,null,fmt(g.import)),'/any')
-                        ),
-                        e(DeleteBtn,{nom:g.nom,onDelete:()=>setData(d=>({...d,gastosFixes:d.gastosFixes.filter(x=>x.id!==g.id)}))})
-                      )
-                    );
-                  })
-                )
-              );
-            })
-    ),
-
-    // Modal
-    modal && e(Modal,{title:modal==='nou'?'Nou gasto fix':'Editar gasto fix',onClose:()=>setModal(null)},
-      e(Input,{label:'Nom',value:form.nom,onChange:v=>setForm(f=>({...f,nom:v})),placeholder:'Ex: Hipoteca',error:errs.nom}),
-      e('div',{style:{marginBottom:11}},
-        e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:3,textTransform:'uppercase'}},'Categoria'),
-        e('div',{style:{display:'flex',gap:6,flexWrap:'wrap',marginBottom:6}},
-          [...new Set(data.gastosFixes.map(g=>g.categoria))].filter(Boolean).map(c=>
-            e('button',{key:c,onClick:()=>setForm(f=>({...f,categoria:c})),style:{
-              background:form.categoria===c?colorPerCat(c)+'33':'transparent',
-              color:form.categoria===c?colorPerCat(c):C.dim,
-              border:'1px solid '+(form.categoria===c?colorPerCat(c)+'66':C.border),
-              borderRadius:6,padding:'3px 9px',cursor:'pointer',fontSize:11,fontFamily:'inherit',fontWeight:600
-            }},c)
-          )
-        ),
-        e('input',{value:form.categoria,onChange:ev=>setForm(f=>({...f,categoria:ev.target.value})),
-          placeholder:'O escriu una categoria nova',
-          style:{width:'100%',background:C.bg,border:'1px solid '+C.border,borderRadius:8,color:C.text,padding:'8px 11px',fontSize:13,outline:'none',fontFamily:'inherit'}})
-      ),
-      e('div',{style:{marginBottom:11}},
-        e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:6,textTransform:'uppercase'}},'Periodicitat'),
-        e('div',{style:{display:'flex',gap:8}},
-          ['mensual','anual'].map(p=>e('button',{key:p,onClick:()=>setForm(f=>({...f,periodicitat:p})),style:{
-            flex:1,background:form.periodicitat===p?C.accentDim:'transparent',
-            color:form.periodicitat===p?C.accent:C.dim,
-            border:'1px solid '+(form.periodicitat===p?C.accent+'55':C.border),
-            borderRadius:8,padding:'8px 0',cursor:'pointer',fontFamily:'inherit',fontWeight:700,fontSize:12
-          }},p==='mensual'?'Mensual':'Anual'))
+    e('div',{style:{display:'grid',gap:7}},
+      data.gastosFixes.length===0 && e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:24}},"Cap gasto fix. Afegeix-ne un!"),
+      data.gastosFixes.map(g=>e(Card,{key:g.id,style:{padding:'10px 12px'},onClick:()=>obrir(g)},
+        e('div',{style:{display:'flex',alignItems:'center',gap:9}},
+          e('div',{style:{width:3,height:28,borderRadius:2,background:g.color,flexShrink:0}}),
+          e('div',{style:{flex:1}},
+            e('div',{style:{fontWeight:600,color:C.text,fontSize:12}},g.nom),
+            e(Badge,{color:g.color},g.categoria)
+          ),
+          e('div',{style:{color:C.red,fontFamily:'monospace',fontWeight:700,fontSize:13}},e(Money,null,fmt(g.import)),'/mes'),
+          e(DeleteBtn,{nom:g.nom,onDelete:()=>setData(d=>({...d,gastosFixes:d.gastosFixes.filter(x=>x.id!==g.id)}))})
         )
-      ),
-      e(Input,{
-        label:form.periodicitat==='anual'?'Import anual (€)':'Import mensual (€)',
-        type:'number',value:form.import,
-        onChange:v=>setForm(f=>({...f,import:v})),
-        error:errs.import
-      }),
-      form.periodicitat==='anual' && form.import && !isNaN(form.import) && e('div',{style:{color:C.dim,fontSize:11,marginBottom:8,marginTop:-6}},
-        'Equivalent mensual: ',e('span',{style:{color:C.accent,fontWeight:700}},e(Money,null,fmt(+form.import/12)),'/mes')
-      ),
+      ))
+    ),
+    modal && e(Modal,{title:modal==='nou'?'Nou gasto fix':'Editar gasto fix',onClose:()=>setModal(null)},
+      e(Input,{label:'Nom',value:form.nom,onChange:v=>setForm(f=>({...f,nom:v})),placeholder:'Ex: Lloguer',error:errs.nom}),
+      e(Input,{label:'Import mensual (€)',type:'number',value:form.import,onChange:v=>setForm(f=>({...f,import:v})),error:errs.import}),
+      e(Input,{label:'Categoria',value:form.categoria,onChange:v=>setForm(f=>({...f,categoria:v})),placeholder:'Ex: Habitatge'}),
       e(RowBtns,{onSave:desar,onCancel:()=>setModal(null)})
     )
   );
@@ -1024,8 +691,6 @@ function GastosVariables({data,setData}) {
   const [form,setForm]=useState({nom:'',pressupost:''});
   const [errs,setErrs]=useState({});
   const [editCat,setEditCat]=useState(null);
-  const [varForm,setVarForm]=useState({cat:'',import:'',actiu:''});
-  const [varErr,setVarErr]=useState({});
 
   const mesDades=hist[mesActiu]||{};
   const cats=[...new Set([...Object.keys(pressupostos),...Object.keys(mesDades)])].sort();
@@ -1047,10 +712,7 @@ function GastosVariables({data,setData}) {
           e('span',{style:{color:C.dim,fontSize:13}},' / ',e(Money,null,fmt(totalP)))
         )
       ),
-      e('div',{style:{display:'flex',gap:6}},
-        e(Btn,{onClick:()=>{setModal('nouGasto');}},'+ Despesa'),
-        e(Btn,{onClick:()=>{setForm({nom:'',pressupost:''});setErrs({});setModal('nouCat');},secondary:true},'+ Categoria')
-      )
+      e(Btn,{onClick:()=>{setForm({nom:'',pressupost:''});setErrs({});setModal('nouCat')}},'+ Categoria')
     ),
     // Navegació mensual
     e('div',{style:{display:'flex',alignItems:'center',gap:8,marginBottom:14}},
@@ -1063,108 +725,67 @@ function GastosVariables({data,setData}) {
       e('button',{onClick:()=>setMesActiu(allMesos[mesIdx+1]),disabled:mesIdx===allMesos.length-1,
         style:{background:'none',border:`1px solid ${C.border}`,color:mesIdx===allMesos.length-1?C.border:C.dim,borderRadius:7,width:30,height:30,cursor:mesIdx===allMesos.length-1?'default':'pointer',fontSize:14}},'›')
     ),
-    // Categories unificades (resum + llista en una sola vista)
-    e('div',{style:{display:'grid',gap:8}},
-      cats.length===0 && e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:24}},'Cap categoria. Afegeix-ne una!'),
-      // Barra global si hi ha pressupost
-      cats.length>0 && totalP>0 && e('div',{style:{background:C.surface,border:'1px solid '+C.border,borderRadius:12,padding:'12px 14px',marginBottom:4}},
-        e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}},
-          e('span',{style:{color:C.dim,fontSize:10,fontWeight:600,textTransform:'uppercase'}},'Total del mes'),
-          e('div',{style:{display:'flex',alignItems:'center',gap:8}},
-            e('span',{style:{color:totalG>totalP?C.red:C.text,fontFamily:'monospace',fontWeight:800,fontSize:14}},fmt(totalG)),
-            e('span',{style:{color:C.dim,fontSize:12}},'/ '+fmt(totalP)),
-            e('span',{style:{background:(totalG>totalP?C.red:totalG>totalP*.8?C.yellow:C.green)+'22',
-              color:totalG>totalP?C.red:totalG>totalP*.8?C.yellow:C.green,
-              borderRadius:5,padding:'2px 7px',fontSize:10,fontWeight:700}},
-              (totalG/totalP*100).toFixed(0)+'%'
-            )
-          )
-        ),
-        e('div',{style:{background:C.border,borderRadius:5,height:7,overflow:'hidden',marginBottom:4}},
-          e('div',{style:{width:Math.min(100,(totalG/totalP)*100)+'%',height:'100%',
-            background:totalG>totalP?C.red:totalG>totalP*.8?C.yellow:C.green,
-            borderRadius:5,transition:'width .6s ease'}})
-        ),
-        e('div',{style:{color:totalG>totalP?C.red:C.green,fontSize:9,textAlign:'right',fontWeight:600}},
-          totalG>totalP?'+'+fmt(totalG-totalP)+' per sobre':fmt(totalP-totalG)+' disponible'
+    // Gràfica
+    cats.length>0 && e(Card,{style:{marginBottom:12}},
+      e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Gastat vs Pressupost'),
+      e(ResponsiveContainer,{width:'100%',height:150},
+        e(BarChart,{data:cats.map(c=>({nom:c.length>8?c.slice(0,7)+'…':c,gastat:mesDades[c]||0,pressupost:pressupostos[c]||0}))},
+          e(XAxis,{dataKey:'nom',tick:{fill:C.dim,fontSize:9},axisLine:false,tickLine:false}),
+          e(YAxis,{hide:true}),
+          e(Tooltip,{contentStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:11},formatter:v=>[fmt(v),''],cursor:{fill:C.border}}),
+          e(Legend,{wrapperStyle:{color:C.dim,fontSize:10}}),
+          e(Bar,{dataKey:'pressupost',name:'Pressupost',fill:C.border,radius:[3,3,0,0]}),
+          e(Bar,{dataKey:'gastat',name:'Gastat',fill:C.accent,radius:[3,3,0,0]})
         )
-      ),
-      // Cada categoria: una targeta compacta amb barra i edicio inline
+      )
+    ),
+    // Categories
+    e('div',{style:{display:'grid',gap:7}},
+      cats.length===0 && e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:24}},'Cap categoria. Afegeix-ne una!'),
       cats.map(cat=>{
         const gastat=mesDades[cat]||0;
         const pressupost=pressupostos[cat]||0;
         const over=pressupost>0&&gastat>pressupost;
-        const pct=pressupost>0?Math.min(100,(gastat/pressupost)*100):null;
-        const col=colorPerCat(cat);
-        const regs = (data.despesesRegistre||[]).filter(r=>r.cat===cat&&r.mes===mesActiu).sort((a,b)=>b.data.localeCompare(a.data));
-        const [obert,setObert] = useState(false);
-        return e('div',{key:cat,style:{background:C.surface,border:'1px solid '+(over?C.red+'55':C.border),borderRadius:12,padding:'11px 14px',transition:'border-color .2s'}},
-          e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:pct!==null?7:0}},
+        const pct=pressupost>0?Math.min(100,(gastat/pressupost)*100):0;
+        return e(Card,{key:cat,style:{padding:'10px 12px'}},
+          e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:pressupost>0?5:0}},
             e('div',{style:{display:'flex',alignItems:'center',gap:7}},
-              e('div',{style:{width:9,height:9,borderRadius:2,background:col,flexShrink:0}}),
-              e('span',{style:{fontWeight:700,color:C.text,fontSize:12}},cat),
+              e('span',{style:{fontWeight:600,color:C.text,fontSize:12}},cat),
               e('button',{onClick:()=>{setForm({nom:cat,pressupost:String(pressupost)});setModal('editPres');},
-                style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:11,padding:0,lineHeight:1}},'⚙️')
+                style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:10,padding:0}},'⚙️')
             ),
-            e('div',{style:{display:'flex',alignItems:'center',gap:6}},
-              over && e('span',{style:{color:C.red,fontSize:9,fontWeight:700}},'+'+fmt(gastat-pressupost)),
+            e('div',{style:{display:'flex',alignItems:'center',gap:8}},
+              over && e(Badge,{color:C.red},'+',e(Money,null,fmt(gastat-pressupost))),
+              // Inline edit del gastat
               editCat===cat
                 ? e('span',{style:{display:'inline-flex',alignItems:'center',gap:4}},
-                    e('input',{autoFocus:true,type:'number',defaultValue:String(gastat),
+                    e('input',{
+                      autoFocus:true, type:'number',
+                      defaultValue:String(gastat),
                       onKeyDown:ev=>{if(ev.key==='Enter'){setGastat(cat,ev.target.value);setEditCat(null);}if(ev.key==='Escape')setEditCat(null);},
-                      style:{background:C.bg,border:'1px solid '+C.accent,borderRadius:6,color:C.text,padding:'3px 7px',fontSize:12,width:80,outline:'none',fontFamily:'monospace',fontWeight:700,textAlign:'right'}}),
+                      style:{background:C.bg,border:`1px solid ${C.accent}`,borderRadius:6,color:C.text,padding:'3px 7px',fontSize:12,width:80,outline:'none',fontFamily:'monospace',fontWeight:700,textAlign:'right'}
+                    }),
                     e('button',{onClick:ev=>{setGastat(cat,ev.target.previousSibling?.value??gastat);setEditCat(null);},
                       style:{background:C.accent,border:'none',color:C.bg,borderRadius:5,padding:'3px 7px',cursor:'pointer',fontSize:11,fontWeight:800}},'✓'),
                     e('button',{onClick:()=>setEditCat(null),style:{background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:13}},'✕')
                   )
                 : e('span',{onClick:()=>setEditCat(cat),
-                    style:{color:over?C.red:C.text,fontFamily:'monospace',fontWeight:800,fontSize:14,cursor:'pointer',borderBottom:'1px dashed '+C.border}},
-                    fmt(gastat)
+                    style:{color:C.text,fontFamily:'monospace',fontWeight:700,fontSize:12,borderBottom:`1px dashed ${C.border}`,cursor:'pointer',paddingBottom:1},
+                    title:'Clic per editar'},
+                    e(Money,null,fmt(gastat))
                   ),
-              pressupost>0 && e('span',{style:{color:C.dim,fontSize:10}},'/'+fmt(pressupost)),
-              pct!==null && e('span',{style:{background:col+'22',color:col,borderRadius:4,padding:'0 5px',fontSize:9,fontWeight:700}},pct.toFixed(0)+'%'),
-              e(DeleteBtn,{nom:cat,onDelete:()=>setData(d=>{const pp={...(d.pressupostosVariables||{})};delete pp[cat];const h={...(d.historialVariables||{})};Object.keys(h).forEach(m=>{const x={...h[m]};delete x[cat];h[m]=x;});return{...d,pressupostosVariables:pp,historialVariables:h};})})
+              pressupost>0 && e('span',{style:{color:C.dim,fontSize:10}},'/ ',e(Money,null,fmt(pressupost))),
+              e(DeleteBtn,{nom:cat,onDelete:()=>setData(d=>{const p={...(d.pressupostosVariables||{})};delete p[cat];const h={...(d.historialVariables||{})};Object.keys(h).forEach(m=>{const x={...h[m]};delete x[cat];h[m]=x;});return{...d,pressupostosVariables:p,historialVariables:h};})})
             )
           ),
-          pct!==null && e('div',{style:{background:C.border,borderRadius:3,height:5,overflow:'hidden',marginBottom:regs.length>0?6:0}},
-            e('div',{style:{width:pct+'%',height:'100%',background:over?C.red:pct>80?C.yellow:col,borderRadius:3,transition:'width .5s'}})
-          ),
-          // Desplegable registres
-          regs.length>0 && e('div',null,
-            e('button',{onClick:()=>setObert(o=>!o),style:{
-              width:'100%',background:'none',border:'none',color:C.dim,cursor:'pointer',
-              fontSize:10,fontFamily:'inherit',textAlign:'left',padding:'4px 0',display:'flex',
-              alignItems:'center',gap:4
-            }},
-              e('span',{style:{transition:'transform .2s',display:'inline-block',transform:obert?'rotate(90deg)':'rotate(0deg)'}},'›'),
-              regs.length+' despesa'+(regs.length!==1?'s':''),
-              e('span',{style:{marginLeft:'auto',color:col,fontWeight:700}},fmt(regs.reduce((s,r)=>s+r.import,0)))
-            ),
-            obert && e('div',{style:{borderTop:'1px solid '+C.border,paddingTop:8,display:'grid',gap:5}},
-              regs.map(r=>e('div',{key:r.id,style:{display:'flex',alignItems:'center',gap:8,padding:'5px 0'}},
-                e('span',{style:{color:C.dim,fontSize:10,minWidth:70}},r.data),
-                e('span',{style:{color:C.text,fontFamily:'monospace',fontWeight:700,fontSize:12}},fmt(r.import)),
-                e('button',{
-                  onClick:()=>setData(d=>{
-                    const prev2=(d.historialVariables?.[mesActiu]?.[cat])||0;
-                    return {
-                      ...d,
-                      despesesRegistre:(d.despesesRegistre||[]).filter(x=>x.id!==r.id),
-                      historialVariables:{...(d.historialVariables||{}),[mesActiu]:{
-                        ...(d.historialVariables?.[mesActiu]||{}),
-                        [cat]:Math.max(0,Math.round((prev2-r.import)*100)/100)
-                      }}
-                    };
-                  }),
-                  style:{marginLeft:'auto',background:'none',border:'none',color:C.red+'66',
-                    cursor:'pointer',fontSize:13,padding:0,lineHeight:1}
-                },'✕')
-              ))
-            )
+          pressupost>0 && e(React.Fragment,null,
+            e(ProgressBar,{value:gastat,max:pressupost,color:over?C.red:pct>80?C.yellow:C.green}),
+            e('div',{style:{color:C.dim,fontSize:9,marginTop:2}},`${pct.toFixed(0)}% del pressupost`)
           )
         );
       })
-    ),    // Historial
+    ),
+    // Historial
     allMesos.filter(m=>m!==mesActiu&&hist[m]&&Object.keys(hist[m]).length>0).length>0 && e(Card,{style:{marginTop:12}},
       e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},'Historial mensual'),
       allMesos.filter(m=>hist[m]&&Object.keys(hist[m]).length>0).reverse().slice(0,6).map(m=>{
@@ -1183,59 +804,6 @@ function GastosVariables({data,setData}) {
       })
     ),
     // Modals
-    modal==='nouGasto' && e(Modal,{title:'Nova despesa',onClose:()=>setModal(null)},
-      e('div',{style:{marginBottom:12}},
-        e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:7,textTransform:'uppercase'}},'Categoria'),
-        cats.length===0
-          ? e('div',{style:{color:C.dim,fontSize:12}},'Crea primer una categoria.')
-          : e('div',{style:{display:'flex',gap:5,flexWrap:'wrap'}},
-              cats.map(cat=>e('button',{key:cat,onClick:()=>setVarForm(f=>({...f,cat,actiu:''})),style:{
-                background:varForm.cat===cat?colorPerCat(cat)+'33':'transparent',
-                color:varForm.cat===cat?colorPerCat(cat):C.dim,
-                border:'1px solid '+(varForm.cat===cat?colorPerCat(cat)+'66':C.border),
-                borderRadius:7,padding:'6px 12px',cursor:'pointer',fontSize:12,fontFamily:'inherit',fontWeight:600
-              }},cat))
-            ),
-        varErr.cat && e('div',{style:{color:C.red,fontSize:10,marginTop:4}},varErr.cat)
-      ),
-      varForm.cat==='Inversions' && data.inversions.length>0 && e('div',{style:{marginBottom:12}},
-        e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:7,textTransform:'uppercase'}},'Quin actiu?'),
-        e('div',{style:{display:'flex',gap:5,flexWrap:'wrap'}},
-          data.inversions.map(inv=>e('button',{key:inv.id,onClick:()=>setVarForm(f=>({...f,actiu:inv.nom,activId:inv.id})),style:{
-            background:varForm.actiu===inv.nom?inv.color+'33':'transparent',
-            color:varForm.actiu===inv.nom?inv.color:C.dim,
-            border:'1px solid '+(varForm.actiu===inv.nom?inv.color+'66':C.border),
-            borderRadius:7,padding:'5px 10px',cursor:'pointer',fontSize:11,fontFamily:'inherit',fontWeight:600
-          }},inv.nom+(inv.ticker?' ('+inv.ticker+')':'')))
-        )
-      ),
-      e(Input,{label:'Import (€)',type:'number',value:varForm.import,
-        onChange:v=>setVarForm(f=>({...f,import:v})),
-        placeholder:'0.00',error:varErr.import}),
-      e(RowBtns,{
-        onSave:()=>{
-          const er2={};
-          if(!varForm.cat)er2.cat='Selecciona una categoria';
-          if(!varForm.import||isNaN(varForm.import)||+varForm.import<=0)er2.import='Import vàlid';
-          if(Object.keys(er2).length){setVarErr(er2);return;}
-          const v=Math.round(+varForm.import*100)/100;
-          const prev=(data.historialVariables?.[mesActiu]?.[varForm.cat])||0;
-          const reg={id:uid(),cat:varForm.cat,import:v,data:new Date().toISOString().slice(0,10),mes:mesActiu};
-          setData(d=>{
-            const nd={...d,
-              historialVariables:{...(d.historialVariables||{}),[mesActiu]:{...(d.historialVariables?.[mesActiu]||{}),[varForm.cat]:Math.round((prev+v)*100)/100}},
-              despesesRegistre:[...(d.despesesRegistre||[]),reg]
-            };
-            if(varForm.cat==='Inversions'&&varForm.activId){
-              nd.inversions=nd.inversions.map(i=>String(i.id)===String(varForm.activId)?{...i,valor:Math.round((i.valor+v)*100)/100,cost:Math.round((i.cost+v)*100)/100}:i);
-            }
-            return nd;
-          });
-          setModal(null);setVarForm({cat:'',import:'',actiu:''});
-        },
-        onCancel:()=>setModal(null)
-      })
-    ),
     modal==='nouCat' && e(Modal,{title:'Nova categoria',onClose:()=>setModal(null)},
       e(Input,{label:'Nom',value:form.nom,onChange:v=>setForm(f=>({...f,nom:v})),placeholder:'Ex: Restaurants',error:errs.nom}),
       e(Input,{label:'Pressupost mensual (€)',type:'number',value:form.pressupost,onChange:v=>setForm(f=>({...f,pressupost:v})),error:errs.pressupost}),
@@ -1339,19 +907,14 @@ function Inversions({data,setData}) {
   const [errs,setErrs]=useState({});
   const [refreshingAll,setRefreshingAll]=useState(false);
   const [refreshLog,setRefreshLog]=useState('');
-  const [filtreInv,setFiltreInv]=useState('Tots');
-  const [sortDesc,setSortDesc]=useState(true);
-  const [aportModal,setAportModal]=useState(false);
-  const [aportForm,setAportForm]=useState({invId:'',import:''});
-  const [aportErr,setAportErr]=useState({});
 
   const total=data.inversions.reduce((s,i)=>s+i.valor,0);
   const totalCost=data.inversions.reduce((s,i)=>s+i.cost,0);
   const guany=total-totalCost;
   const pctG=gainPct(total,totalCost);
-  const byTipus=['ETF','Fons','Accions','Cripto','Pensions','Bons','Altres'].map(t=>({
+  const byTipus=['ETF','Accions','Cripto','Pensions','Bons','Altres'].map(t=>({
     name:t,value:data.inversions.filter(i=>i.tipus===t).reduce((s,i)=>s+i.valor,0),
-    color:TIPUS_COLORS[t]||C.dim
+    color:{ETF:C.accent,Accions:C.green,Cripto:C.yellow,Pensions:C.purple,Bons:C.orange,Altres:C.dim}[t]
   })).filter(d=>d.value>0);
 
   const obrir=(inv)=>{
@@ -1361,7 +924,7 @@ function Inversions({data,setData}) {
   const desar=()=>{
     const er={};if(!form.nom.trim())er.nom='Obligatori';if(!form.valor||isNaN(form.valor)||+form.valor<0)er.valor='Import vàlid';if(!form.cost||isNaN(form.cost)||+form.cost<0)er.cost='Import vàlid';
     if(Object.keys(er).length){setErrs(er);return;}
-    const item={id:modal==='nou'?uid():modal,nom:form.nom.trim(),ticker:form.ticker.trim()||null,tipus:form.tipus,valor:+form.valor,cost:+form.cost,color:TIPUS_COLORS[form.tipus]||PAL[data.inversions.length%PAL.length]};
+    const item={id:modal==='nou'?uid():modal,nom:form.nom.trim(),ticker:form.ticker.trim()||null,tipus:form.tipus,valor:+form.valor,cost:+form.cost,color:PAL[data.inversions.length%PAL.length]};
     setData(d=>({...d,inversions:modal==='nou'?[...d.inversions,item]:d.inversions.map(i=>i.id===modal?{...i,...item}:i)}));
     setModal(null);
   };
@@ -1380,14 +943,12 @@ function Inversions({data,setData}) {
   return e('div',null,
     e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:14}},
       e('div',null,
-        e('div',{style:{color:C.dim,fontSize:10,letterSpacing:1}},t(lang,'carteraTotal')),
+        e('div',{style:{color:C.dim,fontSize:10,letterSpacing:1}},'CARTERA TOTAL'),
         e('div',{style:{color:C.accent,fontSize:24,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(total))),
         e('div',{style:{color:guany>=0?C.green:C.red,fontSize:11}},guany>=0?'▲':'▼',' ',e(Money,null,fmt(Math.abs(guany))),` (${Math.abs(pctG).toFixed(1)}%)`)
       ),
       e('div',{style:{display:'flex',flexDirection:'column',gap:5,alignItems:'flex-end'}},
-        e(Btn,{onClick:()=>{setAportForm({invId:'',import:''});setAportErr({});setAportModal(true);}},
-          '+ Aportació'),
-        e(Btn,{onClick:()=>obrir('nou'),secondary:true},'+ Nou actiu'),
+        e(Btn,{onClick:()=>obrir('nou')},'+ Afegir'),
         e(Btn,{onClick:refreshAll,disabled:refreshingAll,secondary:true,style:{fontSize:10,padding:'5px 10px'}},refreshingAll?'⏳ Actualitzant...':'↻ Actualitzar tots'),
         refreshLog && e('div',{style:{color:refreshLog.startsWith('✓')?C.green:C.dim,fontSize:9,textAlign:'right',maxWidth:150}},refreshLog)
       )
@@ -1396,7 +957,11 @@ function Inversions({data,setData}) {
       e(Card,null,
         e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:9,textTransform:'uppercase'}},'Per tipus'),
         e('div',{style:{display:'flex',alignItems:'center',gap:8}},
-          e(DonutChart,{data:byTipus,size:90}),
+          e(ResponsiveContainer,{width:90,height:90},
+            e(PieChart,null,e(Pie,{data:byTipus,cx:'50%',cy:'50%',innerRadius:24,outerRadius:42,dataKey:'value',strokeWidth:0},
+              byTipus.map((d,i)=>e(Cell,{key:i,fill:d.color}))
+            ))
+          ),
           e('div',{style:{flex:1}},
             byTipus.map(d=>e('div',{key:d.name,style:{display:'flex',justifyContent:'space-between',marginBottom:4}},
               e('div',{style:{display:'flex',alignItems:'center',gap:4}},
@@ -1418,142 +983,17 @@ function Inversions({data,setData}) {
         )
       )
     ),
-    // Filtre + ordenació
-    e('div',{style:{display:'flex',gap:5,marginBottom:10,flexWrap:'wrap',alignItems:'center'}},
-      ['Tots','ETF','Fons','Accions','Cripto','Pensions','Bons','Altres'].map(t=>
-        e('button',{key:t,onClick:()=>setFiltreInv(t),style:{
-          background:filtreInv===t?(TIPUS_COLORS[t]||C.accent)+'33':'transparent',
-          color:filtreInv===t?(TIPUS_COLORS[t]||C.accent):C.dim,
-          border:'1px solid '+(filtreInv===t?(TIPUS_COLORS[t]||C.accent)+'66':C.border),
-          borderRadius:7,padding:'4px 10px',cursor:'pointer',fontSize:10,fontFamily:'inherit',fontWeight:600
-        }},t)
-      ),
-      e('button',{onClick:()=>setSortDesc(s=>!s),style:{
-        marginLeft:'auto',background:'transparent',border:'1px solid '+C.border,
-        color:C.dim,borderRadius:7,padding:'4px 10px',cursor:'pointer',fontSize:10,fontFamily:'inherit'
-      }},sortDesc?'↓ Major valor':'↑ Menor valor')
-    ),
     e('div',{style:{display:'grid',gap:7}},
       data.inversions.length===0 && e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:24}},'Cap inversió. Afegeix-ne una!'),
-      [...data.inversions]
-        .filter(inv=>filtreInv==='Tots'||inv.tipus===filtreInv)
-        .sort((a,b)=>sortDesc?b.valor-a.valor:a.valor-b.valor)
-        .map(inv=>e(InvCard,{key:inv.id,inv,onEdit:()=>obrir(inv),
+      data.inversions.map(inv=>e(InvCard,{key:inv.id,inv,onEdit:()=>obrir(inv),
         onValorChange:v=>setData(d=>({...d,inversions:d.inversions.map(i=>i.id===inv.id?{...i,valor:v}:i)})),
         onDelete:()=>setData(d=>({...d,inversions:d.inversions.filter(x=>x.id!==inv.id)}))
       }))
     ),
-    aportModal && e(Modal,{title:'+ Aportació a inversió',onClose:()=>setAportModal(false)},
-      // Descripció del concepte
-      e('div',{style:{background:C.accentDim,border:'1px solid '+C.accent+'33',borderRadius:10,padding:'10px 14px',marginBottom:14}},
-        e('div',{style:{color:C.accent,fontSize:11,fontWeight:700,marginBottom:3}},'Com funciona'),
-        e('div',{style:{color:C.dim,fontSize:11,lineHeight:1.6}},
-          "Afegeix diners a una posicio existent. El valor i el cost s'actualitzen automaticament.",e('br'),
-          "Si supera el teu gasto fix mensual d'inversions, el diferencial es registra com a variable extra."
-        )
-      ),
-      // Seleccionar actiu
-      e('div',{style:{marginBottom:14}},
-        e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:8,textTransform:'uppercase'}},'On vas a aportar?'),
-        e('div',{style:{display:'grid',gap:6}},
-          data.inversions.map(inv=>e('div',{key:inv.id,
-            onClick:()=>setAportForm(f=>({...f,invId:String(inv.id)})),
-            style:{
-              background:aportForm.invId===String(inv.id)?inv.color+'22':C.surface,
-              border:'2px solid '+(aportForm.invId===String(inv.id)?inv.color:C.border),
-              borderRadius:10,padding:'10px 14px',cursor:'pointer',transition:'all .15s',
-              display:'flex',justifyContent:'space-between',alignItems:'center'
-            }},
-            e('div',{style:{display:'flex',alignItems:'center',gap:8}},
-              e('div',{style:{width:10,height:10,borderRadius:'50%',background:inv.color}}),
-              e('div',null,
-                e('div',{style:{color:C.text,fontWeight:700,fontSize:13}},inv.nom),
-                e('div',{style:{color:C.dim,fontSize:10}},inv.tipus+(inv.ticker?' · '+inv.ticker:''))
-              )
-            ),
-            e('div',{style:{textAlign:'right'}},
-              e('div',{style:{color:C.text,fontFamily:'monospace',fontWeight:700,fontSize:12}},e(Money,null,fmt(inv.valor))),
-              e('div',{style:{color:inv.valor>=inv.cost?C.green:C.red,fontSize:10}},
-                (inv.valor>=inv.cost?'+':'')+((inv.valor-inv.cost)/inv.cost*100).toFixed(1)+'%'
-              )
-            )
-          ))
-        ),
-        aportErr.invId && e('div',{style:{color:C.red,fontSize:10,marginTop:4}},aportErr.invId)
-      ),
-      // Import
-      e('div',{style:{marginBottom:14}},
-        e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:6,textTransform:'uppercase'}},'Import a aportar (€)'),
-        e('input',{
-          type:'number',value:aportForm.import,
-          onChange:ev=>setAportForm(f=>({...f,import:ev.target.value})),
-          placeholder:'0.00',
-          style:{width:'100%',background:C.bg,border:'1px solid '+(aportErr.import?C.red:C.border),
-            borderRadius:8,color:C.text,padding:'10px 12px',fontSize:15,outline:'none',
-            fontFamily:'monospace',fontWeight:700,boxSizing:'border-box'}
-        }),
-        aportErr.import && e('div',{style:{color:C.red,fontSize:10,marginTop:3}},aportErr.import),
-        // Info: fix mensual d'inversions
-        (()=>{
-          const fixInv = data.gastosFixes.filter(g=>
-            g.nom.toLowerCase().includes('invers') ||
-            g.categoria.toLowerCase().includes('invers')
-          ).reduce((s,g)=>{
-            const im = g.periodicitat==='anual'?g.import/12:g.import;
-            return s+im;
-          },0);
-          const v = parseFloat(aportForm.import)||0;
-          if(fixInv>0) return e('div',{style:{marginTop:6,color:C.dim,fontSize:10,lineHeight:1.5}},
-            'Gasto fix inversions: ',e('span',{style:{color:C.accent}},e(Money,null,fmt(fixInv)),'/mes'),e('br'),
-            v>fixInv
-              ? e('span',{style:{color:C.yellow}},'⚠ Extra de ',e(Money,null,fmt(v-fixInv)),' es registrara com a variable')
-              : e('span',{style:{color:C.green}},'✓ Dins del fix mensual')
-          );
-          return null;
-        })()
-      ),
-      // Botó confirmar
-      e(RowBtns,{
-        onSave:()=>{
-          const er={};
-          if(!aportForm.invId)er.invId='Selecciona un actiu';
-          if(!aportForm.import||isNaN(aportForm.import)||+aportForm.import<=0)er.import='Import vàlid';
-          if(Object.keys(er).length){setAportErr(er);return;}
-          const v=Math.round(+aportForm.import*100)/100;
-          const invId=aportForm.invId;
-          // Fix mensual inversions
-          const fixInv=data.gastosFixes.filter(g=>
-            g.nom.toLowerCase().includes('invers')||g.categoria.toLowerCase().includes('invers')
-          ).reduce((s,g)=>s+(g.periodicitat==='anual'?g.import/12:g.import),0);
-          const extra=fixInv>0?Math.max(0,v-fixInv):0;
-          setData(d=>{
-            const nd={...d,
-              inversions:d.inversions.map(i=>String(i.id)===invId
-                ?{...i,valor:Math.round((i.valor+v)*100)/100,cost:Math.round((i.cost+v)*100)/100}
-                :i
-              )
-            };
-            // Si hi ha extra, registrar com a variable
-            if(extra>0){
-              const mk=mesKey();
-              const prev=(nd.historialVariables?.[mk]?.['Inversions extra'])||0;
-              nd.historialVariables={...(nd.historialVariables||{}),[mk]:{
-                ...(nd.historialVariables?.[mk]||{}),
-                'Inversions extra':Math.round((prev+extra)*100)/100
-              }};
-            }
-            return nd;
-          });
-          setAportModal(false);
-          setAportForm({invId:'',import:''});
-        },
-        onCancel:()=>setAportModal(false)
-      })
-    ),
     modal && e(Modal,{title:modal==='nou'?'Nova inversió':'Editar inversió',onClose:()=>setModal(null)},
       e(Input,{label:'Nom',value:form.nom,onChange:v=>setForm(f=>({...f,nom:v})),placeholder:'Ex: MSCI World ETF',error:errs.nom}),
       e(Input,{label:'Ticker (per actualitzar preus)',value:form.ticker,onChange:v=>setForm(f=>({...f,ticker:v})),placeholder:'Ex: IWDA, AAPL, BTC-EUR'}),
-      e(Select,{label:'Tipus',value:form.tipus,onChange:v=>setForm(f=>({...f,tipus:v})),options:['ETF','Fons','Accions','Cripto','Pensions','Bons','Altres']}),
+      e(Select,{label:'Tipus',value:form.tipus,onChange:v=>setForm(f=>({...f,tipus:v})),options:['ETF','Accions','Cripto','Pensions','Bons','Altres']}),
       e(Input,{label:'Valor actual (€)',type:'number',value:form.valor,onChange:v=>setForm(f=>({...f,valor:v})),error:errs.valor}),
       e(Input,{label:"Cost d'adquisició (€)",type:'number',value:form.cost,onChange:v=>setForm(f=>({...f,cost:v})),error:errs.cost}),
       e(RowBtns,{onSave:desar,onCancel:()=>setModal(null)})
@@ -1562,159 +1002,83 @@ function Inversions({data,setData}) {
 }
 
 // ── BÉNS ──────────────────────────────────────────────────────────────────────
-// Config per tipus: [icona, mostra_compra, mostra_deute, label_deute, label_fi, badge_color]
-const BENS_CFG = {
-  'Immoble':    ['🏠', true,  true,  'Hipoteca pendent', 'Fi hipoteca',  C.purple],
-  'Vehicle':    ['🚗', true,  true,  'Prestec pendent',  'Fi prestec',   C.orange],
-  'Prestec':    ['📄', false, true,  'Capital pendent',  'Fi prestec',   C.red],
-  'Compte':     ['💰', false, false, '',                 '',             C.green],
-  'Col·leccio': ['🎨', true,  false, '',                 '',             C.yellow],
-  'Electronica':['💻', true,  false, '',                 '',             C.accent],
-  'Altres':     ['📦', true,  false, '',                 '',             C.dim],
-};
-
 function Bens({data,setData}) {
   const [modal,setModal]=useState(null);
-  const emptyBe={nom:'',tipus:'Immoble',valorActual:'',valorCompra:'',deute:'',mensualitat:'',anysFi:'',icona:'🏠'};
-  const [form,setForm]=useState(emptyBe);
+  const empty={nom:'',tipus:'Immoble',valorActual:'',valorCompra:'',deute:'',mensualitat:'',anysFi:'',icona:'🏠'};
+  const [form,setForm]=useState(empty);
   const [errs,setErrs]=useState({});
-
-  const totalActius = data.bens.reduce((s,b)=>s+b.valorActual,0);
-  const totalDeute  = data.bens.reduce((s,b)=>s+(b.deute||0),0);
-  const totalNet    = totalActius - totalDeute;
+  const totalActius=data.bens.reduce((s,b)=>s+b.valorActual,0);
+  const totalDeute=data.bens.reduce((s,b)=>s+(b.deute||0),0);
 
   const obrir=(b)=>{
-    if(b==='nou'){
-      setForm(emptyBe);setErrs({});setModal('nou');
-    } else {
-      setForm({nom:b.nom,tipus:b.tipus,valorActual:String(b.valorActual),
-        valorCompra:String(b.valorCompra||''),deute:String(b.deute||0),
-        mensualitat:String(b.mensualitat||0),anysFi:b.anysFi||'',icona:b.icona||'📦'});
-      setErrs({});setModal(b.id);
-    }
+    if(b==='nou'){setForm(empty);setErrs({});setModal('nou');}
+    else{setForm({nom:b.nom,tipus:b.tipus,valorActual:String(b.valorActual),valorCompra:String(b.valorCompra),deute:String(b.deute||0),mensualitat:String(b.mensualitat||0),anysFi:b.anysFi||'',icona:b.icona||'📦'});setErrs({});setModal(b.id);}
   };
-
   const desar=()=>{
-    const er={};
-    if(!form.nom.trim())er.nom='Obligatori';
-    if(!form.valorActual||isNaN(form.valorActual)||+form.valorActual<0)er.valorActual='Import vàlid';
+    const er={};if(!form.nom.trim())er.nom='Obligatori';if(!form.valorActual||isNaN(form.valorActual)||+form.valorActual<0)er.valorActual='Import vàlid';
     if(Object.keys(er).length){setErrs(er);return;}
-    const cfg = BENS_CFG[form.tipus]||BENS_CFG['Altres'];
-    const item={
-      id:modal==='nou'?uid():modal,
-      nom:form.nom.trim(),
-      tipus:form.tipus,
-      valorActual:+form.valorActual,
-      valorCompra:cfg[1]?(+form.valorCompra||+form.valorActual):0,
-      deute:cfg[2]?(+form.deute||0):0,
-      mensualitat:cfg[2]?(+form.mensualitat||0):0,
-      anysFi:cfg[2]?form.anysFi.trim():'',
-      icona:form.icona||cfg[0]
-    };
+    const item={id:modal==='nou'?uid():modal,nom:form.nom.trim(),tipus:form.tipus,valorActual:+form.valorActual,valorCompra:+form.valorCompra||+form.valorActual,deute:+form.deute||0,mensualitat:+form.mensualitat||0,anysFi:form.anysFi.trim(),icona:form.icona||'📦'};
     setData(d=>({...d,bens:modal==='nou'?[...d.bens,item]:d.bens.map(b=>b.id===modal?item:b)}));
     setModal(null);
   };
 
-  // Quan canvia el tipus, actualitza la icona per defecte si era la icona per defecte
-  const onTipusChange = (t) => {
-    const oldCfg = BENS_CFG[form.tipus]||BENS_CFG['Altres'];
-    const newCfg = BENS_CFG[t]||BENS_CFG['Altres'];
-    const icona = form.icona===oldCfg[0] ? newCfg[0] : form.icona;
-    setForm(f=>({...f,tipus:t,icona}));
-  };
-
   return e('div',null,
-    // Header resum
     e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}},
       e('div',null,
-        e('div',{style:{color:C.dim,fontSize:10,letterSpacing:1}},'PATRIMONI NET'),
-        e('div',{style:{color:C.purple,fontSize:24,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(totalNet))),
-        e('div',{style:{display:'flex',gap:12,marginTop:2}},
-          e('span',{style:{color:C.dim,fontSize:10}},'Actius: ',e('span',{style:{color:C.text,fontWeight:700}},e(Money,null,fmt(totalActius)))),
-          totalDeute>0 && e('span',{style:{color:C.dim,fontSize:10}},'Deutes: ',e('span',{style:{color:C.red,fontWeight:700}},e(Money,null,fmt(totalDeute))))
-        )
+        e('div',{style:{color:C.dim,fontSize:10,letterSpacing:1}},'TOTAL ACTIUS FÍSICS'),
+        e('div',{style:{color:C.purple,fontSize:24,fontWeight:800,fontFamily:'monospace'}},e(Money,null,fmt(totalActius))),
+        totalDeute>0 && e('div',{style:{color:C.red,fontSize:10}},'Deute: ',e(Money,null,fmt(totalDeute)))
       ),
       e(Btn,{onClick:()=>obrir('nou')},'+ Afegir')
     ),
-
-    // Llista de béns
     e('div',{style:{display:'grid',gap:10}},
       data.bens.length===0 && e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:24}},'Cap bé registrat. Afegeix-ne un!'),
       data.bens.map(b=>{
-        const cfg = BENS_CFG[b.tipus]||BENS_CFG['Altres'];
-        const [icoDef, mostraCompra, mostraDeute, labelDeute, labelFi, badgeColor] = cfg;
-        const eq = b.valorActual-(b.deute||0);
-        const g  = mostraCompra ? b.valorActual-(b.valorCompra||b.valorActual) : 0;
-        const pg = mostraCompra ? gainPct(b.valorActual, b.valorCompra||b.valorActual) : 0;
-
+        const g=b.valorActual-b.valorCompra; const pg=gainPct(b.valorActual,b.valorCompra);
+        const eq=b.valorActual-(b.deute||0);
         return e(Card,{key:b.id,onClick:()=>obrir(b)},
-          // Capçalera
-          e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:(b.deute>0&&mostraDeute)?10:0}},
+          e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:b.deute>0?10:0}},
             e('div',{style:{display:'flex',alignItems:'center',gap:9}},
-              e('div',{style:{fontSize:24}},b.icona||icoDef),
+              e('div',{style:{fontSize:24}},b.icona),
               e('div',null,
                 e('div',{style:{fontWeight:700,color:C.text,fontSize:13}},b.nom),
-                e(Badge,{color:badgeColor},b.tipus)
+                e(Badge,{color:C.purple},b.tipus)
               )
             ),
             e('div',{style:{display:'flex',alignItems:'center',gap:9}},
               e('div',{style:{textAlign:'right'}},
                 e('div',{style:{color:C.text,fontFamily:'monospace',fontWeight:700,fontSize:15}},e(Money,null,fmt(b.valorActual))),
-                mostraCompra && b.valorCompra>0 && e('div',{style:{color:g>=0?C.green:C.red,fontSize:10,fontFamily:'monospace'}},
-                  e(Money,null,(g>=0?'+':'')+fmt(g)+' ('+pg.toFixed(1)+'%)')
-                )
+                e('div',{style:{color:g>=0?C.green:C.red,fontSize:10,fontFamily:'monospace'}},e(Money,null,`${g>=0?'+':''}${fmt(g)} (${pg.toFixed(1)}%)`))
               ),
               e(DeleteBtn,{nom:b.nom,onDelete:()=>setData(d=>({...d,bens:d.bens.filter(x=>x.id!==b.id)}))})
             )
           ),
-          // Secció deute (hipoteca / prestec)
-          mostraDeute && b.deute>0 && e('div',{style:{background:C.bg,borderRadius:9,padding:10}},
-            e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr '+(b.mensualitat>0?'1fr':''),gap:8,marginBottom:7}},
-              e('div',null,
-                e('div',{style:{color:C.dim,fontSize:9}},labelDeute||'Pendent'),
-                e('div',{style:{color:C.red,fontFamily:'monospace',fontWeight:700,fontSize:11}},e(Money,null,fmt(b.deute)))
-              ),
-              e('div',null,
-                e('div',{style:{color:C.dim,fontSize:9}},'Equitat neta'),
-                e('div',{style:{color:C.green,fontFamily:'monospace',fontWeight:700,fontSize:11}},e(Money,null,fmt(eq)))
-              ),
-              b.mensualitat>0 && e('div',null,
-                e('div',{style:{color:C.dim,fontSize:9}},'Mensualitat'),
-                e('div',{style:{color:C.yellow,fontFamily:'monospace',fontWeight:700,fontSize:11}},e(Money,null,fmt(b.mensualitat)),'/m')
-              )
+          b.deute>0 && e('div',{style:{background:C.bg,borderRadius:9,padding:10}},
+            e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:7}},
+              e('div',null,e('div',{style:{color:C.dim,fontSize:9}},'Deute pendent'),e('div',{style:{color:C.red,fontFamily:'monospace',fontWeight:700,fontSize:11}},e(Money,null,fmt(b.deute)))),
+              e('div',null,e('div',{style:{color:C.dim,fontSize:9}},'Equitat neta'),e('div',{style:{color:C.green,fontFamily:'monospace',fontWeight:700,fontSize:11}},e(Money,null,fmt(eq)))),
+              b.mensualitat>0 && e('div',null,e('div',{style:{color:C.dim,fontSize:9}},'Mensualitat'),e('div',{style:{color:C.yellow,fontFamily:'monospace',fontWeight:700,fontSize:11}},e(Money,null,fmt(b.mensualitat)),'/m'))
             ),
-            b.valorActual>0 && e(ProgressBar,{value:eq,max:b.valorActual,color:badgeColor,height:4}),
+            e(ProgressBar,{value:b.valorActual-eq,max:b.valorActual,color:C.purple,height:4}),
             e('div',{style:{display:'flex',justifyContent:'space-between',marginTop:3}},
-              b.valorActual>0 && e('span',{style:{color:C.dim,fontSize:9}},'Pagat: '+((eq/b.valorActual)*100).toFixed(0)+'%'),
-              b.anysFi && e('span',{style:{color:C.dim,fontSize:9}},(labelFi||'Fi')+': '+b.anysFi)
+              e('span',{style:{color:C.dim,fontSize:9}},`Pagat: ${((eq/b.valorActual)*100).toFixed(0)}%`),
+              b.anysFi && e('span',{style:{color:C.dim,fontSize:9}},`Fi hipoteca: ${b.anysFi}`)
             )
           )
         );
       })
     ),
-
-    // Modal
-    modal && e(Modal,{title:modal==='nou'?'Nou element':'Editar element',onClose:()=>setModal(null)},
+    modal && e(Modal,{title:modal==='nou'?'Nou bé':'Editar bé',onClose:()=>setModal(null)},
       e('div',{style:{display:'grid',gridTemplateColumns:'55px 1fr',gap:7}},
         e(Input,{label:'Emoji',value:form.icona,onChange:v=>setForm(f=>({...f,icona:v}))}),
-        e(Input,{label:'Nom',value:form.nom,onChange:v=>setForm(f=>({...f,nom:v})),
-          placeholder:form.tipus==='Compte'?'Ex: Compte corrent':form.tipus==='Prestec'?'Ex: Prestec personal':'Ex: Pis principal',
-          error:errs.nom})
+        e(Input,{label:'Nom',value:form.nom,onChange:v=>setForm(f=>({...f,nom:v})),placeholder:'Ex: Pis principal',error:errs.nom})
       ),
-      e(Select,{label:'Tipus',value:form.tipus,onChange:onTipusChange,
-        options:['Immoble','Vehicle','Prestec','Compte','Col·leccio','Electronica','Altres']}),
-      e(Input,{label:form.tipus==='Compte'?'Saldo actual (€)':'Valor actual (€)',
-        type:'number',value:form.valorActual,onChange:v=>setForm(f=>({...f,valorActual:v})),error:errs.valorActual}),
-      // Camps condicionals per tipus
-      (BENS_CFG[form.tipus]||BENS_CFG['Altres'])[1] &&
-        e(Input,{label:'Valor de compra (€)',type:'number',value:form.valorCompra,onChange:v=>setForm(f=>({...f,valorCompra:v}))}),
-      (BENS_CFG[form.tipus]||BENS_CFG['Altres'])[2] && e('div',null,
-        e(Input,{label:(BENS_CFG[form.tipus]||BENS_CFG['Altres'])[3]||'Deute pendent (€)',
-          type:'number',value:form.deute,onChange:v=>setForm(f=>({...f,deute:v}))}),
-        e(Input,{label:'Mensualitat (€)',type:'number',value:form.mensualitat,onChange:v=>setForm(f=>({...f,mensualitat:v}))}),
-        e(Input,{label:(BENS_CFG[form.tipus]||BENS_CFG['Altres'])[4]?((BENS_CFG[form.tipus]||BENS_CFG['Altres'])[4]+' (any)'):null,
-          value:form.anysFi,onChange:v=>setForm(f=>({...f,anysFi:v})),placeholder:'Ex: 2041'})
-      ),
+      e(Select,{label:'Tipus',value:form.tipus,onChange:v=>setForm(f=>({...f,tipus:v})),options:['Immoble','Vehicle',"Col·lecció",'Electrònica','Altres']}),
+      e(Input,{label:'Valor actual (€)',type:'number',value:form.valorActual,onChange:v=>setForm(f=>({...f,valorActual:v})),error:errs.valorActual}),
+      e(Input,{label:'Valor de compra (€)',type:'number',value:form.valorCompra,onChange:v=>setForm(f=>({...f,valorCompra:v}))}),
+      e(Input,{label:'Deute pendent (€)',type:'number',value:form.deute,onChange:v=>setForm(f=>({...f,deute:v}))}),
+      e(Input,{label:'Mensualitat (€)',type:'number',value:form.mensualitat,onChange:v=>setForm(f=>({...f,mensualitat:v}))}),
+      e(Input,{label:'Any fi del deute',value:form.anysFi,onChange:v=>setForm(f=>({...f,anysFi:v})),placeholder:'Ex: 2041'}),
       e(RowBtns,{onSave:desar,onCancel:()=>setModal(null)})
     )
   );
@@ -1847,40 +1211,6 @@ function Transaccions({data,setData}) {
 }
 
 // ── FIRE ──────────────────────────────────────────────────────────────────────
-// ── FireInput: uncontrolled input for FIRE params ────────────────────────────
-function FireInput({label,unit,value,onSave}) {
-  const [localVal,setLocalVal] = useState(String(value));
-  const [focused,setFocused] = useState(false);
-
-  // Keep in sync when value changes externally (but not while typing)
-  useEffect(()=>{
-    if(!focused) setLocalVal(String(value));
-  },[value,focused]);
-
-  const commit = (raw) => {
-    const v = parseFloat(raw.replace(',','.'));
-    if(!isNaN(v) && v > 0) onSave(v);
-    else setLocalVal(String(value)); // revert if invalid
-  };
-
-  return e('div',null,
-    e('div',{style:{color:C.dim,fontSize:9,fontWeight:600,marginBottom:3,textTransform:'uppercase'}},label),
-    e('div',{style:{display:'flex',alignItems:'center',gap:5}},
-      e('input',{
-        type:'text',
-        inputMode:'decimal',
-        value:localVal,
-        onChange:ev=>setLocalVal(ev.target.value),
-        onFocus:ev=>{setFocused(true);ev.target.select();},
-        onBlur:ev=>{setFocused(false);commit(ev.target.value);},
-        onKeyDown:ev=>{if(ev.key==='Enter'){commit(ev.target.value);ev.target.blur();}},
-        style:{flex:1,background:C.bg,border:'1px solid '+C.border,borderRadius:7,color:C.text,padding:'6px 9px',fontSize:12,outline:'none',fontFamily:'monospace',fontWeight:700}
-      }),
-      e('span',{style:{color:C.dim,fontSize:10,minWidth:20}},unit)
-    )
-  );
-}
-
 function Fire({data,setData}) {
   const f=data.fire;
   const setF=vals=>setData(d=>({...d,fire:{...d.fire,...vals}}));
@@ -1917,8 +1247,15 @@ function Fire({data,setData}) {
     e(Card,{style:{marginBottom:12}},
       e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},'Paràmetres'),
       e('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:9}},
-        [['Edat actual','edatActual','anys'],['Despeses anuals','despesesAnuals','€'],['Rendiment esperat','rendimentEsperatPct','%'],['Inflacio','inflacio','%'],['Regla retirada','reglaPct','%']].map(([label,key,unit])=>
-          e(FireInput,{key,label,unit,value:f[key],onSave:v=>setF({[key]:v})})
+        [['Edat actual','edatActual','anys'],['Despeses anuals (€)','despesesAnuals','€'],['Rendiment esperat (%)','rendimentEsperatPct','%'],['Inflació (%)','inflacio','%'],['Regla de retirada (%)','reglaPct','%']].map(([label,key,unit])=>
+          e('div',{key},
+            e('div',{style:{color:C.dim,fontSize:9,fontWeight:600,marginBottom:3,textTransform:'uppercase'}},label),
+            e('div',{style:{display:'flex',alignItems:'center',gap:5}},
+              e('input',{type:'number',value:f[key],onChange:ev=>{const v=parseFloat(ev.target.value);if(!isNaN(v))setF({[key]:v});},
+                style:{flex:1,background:C.bg,border:`1px solid ${C.border}`,borderRadius:7,color:C.text,padding:'6px 9px',fontSize:12,outline:'none',fontFamily:'monospace',fontWeight:700}}),
+              e('span',{style:{color:C.dim,fontSize:10,minWidth:20}},unit)
+            )
+          )
         ),
         e('div',{key:'estalvi'},
           e('div',{style:{color:C.dim,fontSize:9,marginBottom:3,textTransform:'uppercase'}},'Estalvi mensual actual'),
@@ -1928,7 +1265,21 @@ function Fire({data,setData}) {
     ),
     e(Card,null,
       e('div',{style:{fontWeight:700,fontSize:10,color:C.dim,marginBottom:10,textTransform:'uppercase'}},'Projecció fins FIRE'),
-        e(AreaChartSimple,{data:proj.filter((_,i)=>i%2===0||i<6).map(d=>({...d,mes:String(d.any),valor:d.valor})),height:190}),
+      e(ResponsiveContainer,{width:'100%',height:190},
+        e(AreaChart,{data:proj.filter((_,i)=>i%2===0||i<6)},
+          e('defs',null,e('linearGradient',{id:'gradF',x1:'0',y1:'0',x2:'0',y2:'1'},
+            e('stop',{offset:'5%',stopColor:C.green,stopOpacity:.2}),
+            e('stop',{offset:'95%',stopColor:C.green,stopOpacity:0})
+          )),
+          e(XAxis,{dataKey:'any',tick:{fill:C.dim,fontSize:9},axisLine:false,tickLine:false}),
+          e(YAxis,{hide:true}),
+          e(Tooltip,{contentStyle:{background:C.bg,border:`1px solid ${C.border}`,borderRadius:8,color:C.text,fontSize:10},formatter:(v,n)=>[fmt(v),n==='valor'?'Patrimoni':'Objectiu']}),
+          e(ReferenceLine,{y:objectiu,stroke:C.accent,strokeDasharray:'4 4',strokeWidth:1}),
+          e(Area,{type:'monotone',dataKey:'valor',stroke:C.green,strokeWidth:2,fill:'url(#gradF)',name:'valor'}),
+          e(Area,{type:'monotone',dataKey:'objectiu',stroke:C.accent,strokeWidth:1,strokeDasharray:'4 4',fill:'none',name:'objectiu'})
+        )
+      ),
+      edatFire && e('div',{style:{textAlign:'center',marginTop:6,color:C.dim,fontSize:10}},'🎯 FIRE als ',e('span',{style:{color:C.accent,fontWeight:700}},`${edatFire} anys`),' — ',`${anysFire} anys des d'ara`),
       e('div',{style:{marginTop:10,padding:10,background:C.bg,borderRadius:9}},
         e('div',{style:{fontWeight:700,fontSize:9,color:C.dim,marginBottom:7,textTransform:'uppercase'}},'Projecció per fites'),
         e('div',{style:{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:8}},
@@ -1946,97 +1297,66 @@ function Fire({data,setData}) {
   );
 }
 
-// ── SUPABASE CONFIG ───────────────────────────────────────────────────────────
-const SB_URL = 'https://fscforkcwwoywadwkinr.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZzY2Zvcmtjd3dveXdhZHdraW5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MTEyOTAsImV4cCI6MjA5MzE4NzI5MH0.v63aTLKvkt2YcUlzl9H02AHHITHi5YwQ4w_M9benJEQ';
+// ── BACKUP MODAL ──────────────────────────────────────────────────────────────
+function BackupModal({data,setData,onClose}) {
+  const [backupText,setBackupText]=useState('');
+  const [msg,setMsg]=useState('');
 
-// Supabase client
-const sbClient = supabase.createClient(SB_URL, SB_KEY);
+  const exportar=()=>{
+    const json=JSON.stringify(data,null,2);
+    const ts=new Date().toISOString().slice(0,16).replace('T','_').replace(/:/g,'-');
+    const blob=new Blob([json],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=`fintrack_${ts}.json`;a.click();URL.revokeObjectURL(url);
+    setMsg('✓ Backup descarregat!');setTimeout(()=>setMsg(''),3000);
+  };
 
-// Auth helpers
-const sbSignUp = async (email, password) => {
-  const {data, error} = await sbClient.auth.signUp({email, password});
-  if(error) throw new Error(error.message);
-  return data;
-};
-const sbSignIn = async (email, password) => {
-  const {data, error} = await sbClient.auth.signInWithPassword({email, password});
-  if(error) throw new Error(error.message);
-  return data;
-};
-const sbSignOut = async () => { await sbClient.auth.signOut(); };
-const sbGetUser = async () => {
-  const {data} = await sbClient.auth.getUser();
-  return data?.user || null;
-};
+  const importarFitxer=ev=>{
+    const file=ev.target.files[0];if(!file)return;
+    const r=new FileReader();r.onload=e=>setBackupText(e.target.result);r.readAsText(file);
+  };
 
-// ── DIAGNOSTIC ────────────────────────────────────────────────────────────────
-function runDiagnostic(data) {
-  const issues = [];
-  const w = (cat,text,fix) => issues.push({cat,text,fix,sev:'warn'});
-  const e2 = (cat,text,fix) => issues.push({cat,text,fix,sev:'err'});
-  const inf = (cat,text,fix) => issues.push({cat,text,fix,sev:'info'});
+  const importar=()=>{
+    try{
+      const parsed=JSON.parse(backupText);
+      if(typeof parsed.ingressos==='undefined')throw new Error('Format invàlid');
+      setData({...INIT,...parsed});onClose();
+      setMsg('✓ Dades restaurades!');
+    }catch(err){setMsg('✗ Error: '+err.message);}
+  };
 
-  if(!data.ingressos || data.ingressos===0)
-    e2('Ingressos','No has configurat la nomina mensual','Ves a Dashboard i edita la nomina');
-
-  const tFixes = data.gastosFixes.reduce((s,g)=>s+g.import,0);
-  if(data.ingressos>0 && tFixes>data.ingressos*0.7)
-    e2('Gastos Fixes','Els gastos fixes superen el 70% dels ingressos ('+Math.round(tFixes/data.ingressos*100)+'%)','Revisa si pots reduir algun gasto fix');
-
-  data.gastosFixes.forEach(g=>{
-    if(!g.categoria||g.categoria==='Altres') w('Gastos Fixes','El gasto "'+g.nom+'" no te categoria assignada','Edita-lo i assigna una categoria');
-    if(g.import<=0) e2('Gastos Fixes','El gasto "'+g.nom+'" te import 0 o negatiu','Elimina-lo o corregeix el import');
-  });
-
-  const cats = Object.keys(data.pressupostosVariables||{});
-  const mesActual = Object.keys(data.historialVariables||{}).sort().reverse()[0];
-  if(mesActual) {
-    const mesDades = data.historialVariables[mesActual]||{};
-    cats.forEach(cat=>{
-      const gastat = mesDades[cat]||0;
-      const pressupost = data.pressupostosVariables[cat]||0;
-      if(gastat > pressupost*1.2)
-        e2('Variables','La categoria "'+cat+'" ha superat el pressupost un '+Math.round((gastat/pressupost-1)*100)+'%','Considera augmentar el pressupost o reduir la despesa');
-    });
-  }
-
-  data.inversions.forEach(inv=>{
-    if(!inv.ticker) inf('Inversions','"'+inv.nom+'" no te ticker assignat','Edita-la i afegeix el ticker per actualitzar preus');
-    if(inv.cost>0 && inv.valor<inv.cost*0.5) e2('Inversions','"'+inv.nom+'" ha perdut mes del 50% del valor','Revisa si vols mantenir aquesta posicio');
-    if(inv.valor<=0) w('Inversions','"'+inv.nom+'" te valor 0 o negatiu','Actualitza el valor o elimina-la');
-  });
-
-  const totalInv = data.inversions.reduce((s,i)=>s+i.valor,0);
-  const cripto = data.inversions.filter(i=>i.tipus==='Cripto').reduce((s,i)=>s+i.valor,0);
-  if(totalInv>0 && cripto/totalInv>0.4)
-    w('Inversions','La cripto representa el '+Math.round(cripto/totalInv*100)+'% de la cartera','Considera diversificar - alta exposicio a cripto es molt volatil');
-
-  data.bens.forEach(b=>{
-    if(b.deute>0 && !b.mensualitat) w('Bens','"'+b.nom+'" te deute pero sense mensualitat configurada','Edita-lo i afegeix la mensualitat');
-    if(b.deute>b.valorActual) e2('Bens','"'+b.nom+'" te deute superior al valor actual ('+fmt(b.deute-b.valorActual)+' negatiu)','El be te patrimoni net negatiu - revisa les xifres');
-    if(b.valorActual<=0) w('Bens','"'+b.nom+'" te valor actual 0','Actualitza el valor de mercat del be');
-  });
-
-  data.objectius.forEach(o=>{
-    if(o.actual>o.meta) inf('Objectius','"'+o.nom+'" ja ha assolit la meta!','Actualitza la meta o marca-lo com a completat');
-    if(o.meta<=0) w('Objectius','"'+o.nom+'" te meta 0 o negativa','Corregeix el import de la meta');
-  });
-
-  if(data.ingressos>0) {
-    const totalGastos = tFixes + Object.values(data.historialVariables?.[mesKey()]||{}).reduce((s,v)=>s+v,0);
-    const estalvi = data.ingressos - totalGastos;
-    const taxa = estalvi/data.ingressos;
-    if(taxa<0) e2('General','Estas gastant mes del que ingressses (deficit de '+fmt(Math.abs(estalvi))+')','Revisa els gastos variables i fixes');
-    else if(taxa<0.1) w('General','Taxa estalvi molt baixa ('+Math.round(taxa*100)+'%)','Es recomana estalviar almenys un 20% dels ingressos');
-    else if(taxa>=0.3) inf('General','Excel-lent taxa estalvi ('+Math.round(taxa*100)+'%)','Estàs en bon camí cap a la independència financera');
-  }
-
-  if(!data.gastosFixes.length && !data.inversions.length && !data.bens.length)
-    inf('General','L app esta buida','Comença afegint els teus gastos fixes, inversions i bens');
-
-  return issues;
+  return e(Modal,{title:'💾 Backup de dades',onClose},
+    e('div',{style:{background:C.yellow+'18',border:`1px solid ${C.yellow}44`,borderRadius:9,padding:'10px 12px',marginBottom:16}},
+      e('div',{style:{color:C.yellow,fontSize:11,fontWeight:700,marginBottom:3}},'⚠️ Important'),
+      e('div',{style:{color:C.dim,fontSize:11,lineHeight:1.5}},'Les dades es guarden al navegador. Fes backup cada cop que acabis per no perdre res.')
+    ),
+    e('button',{onClick:exportar,style:{width:'100%',background:C.accent,color:C.bg,border:'none',borderRadius:10,padding:'11px 0',fontWeight:800,fontSize:13,cursor:'pointer',fontFamily:'inherit',marginBottom:16}},'⬇️ Descarregar backup (.json)'),
+    e('div',{style:{borderTop:`1px solid ${C.border}`,paddingTop:16,marginBottom:12}},
+      e('div',{style:{color:C.dim,fontSize:11,fontWeight:600,marginBottom:10,textTransform:'uppercase',letterSpacing:.5}},'Restaurar backup'),
+      e('label',{style:{display:'block',width:'100%',background:C.bg,border:`1px dashed ${C.border}`,borderRadius:9,padding:'10px 0',textAlign:'center',cursor:'pointer',color:C.dim,fontSize:12,marginBottom:10}},
+        '📂 Selecciona fitxer .json',
+        e('input',{type:'file',accept:'.json',onChange:importarFitxer,style:{display:'none'}})
+      ),
+      backupText && e('div',null,
+        e('div',{style:{color:C.green,fontSize:11,marginBottom:8}},`✓ Fitxer carregat (${(backupText.length/1024).toFixed(1)} KB)`),
+        e('button',{onClick:importar,style:{width:'100%',background:C.green,color:C.bg,border:'none',borderRadius:9,padding:'10px 0',fontWeight:800,fontSize:12,cursor:'pointer',fontFamily:'inherit'}},'⬆️ Restaurar ara')
+      )
+    ),
+    msg && e('div',{style:{background:msg.startsWith('✓')?C.green+'22':C.red+'22',border:`1px solid ${msg.startsWith('✓')?C.green:C.red}44`,borderRadius:8,padding:'8px 12px',color:msg.startsWith('✓')?C.green:C.red,fontSize:12}},msg),
+    e('button',{onClick:onClose,style:{marginTop:14,width:'100%',background:'transparent',border:`1px solid ${C.border}`,color:C.dim,borderRadius:9,padding:'9px 0',cursor:'pointer',fontSize:12,fontFamily:'inherit'}},'Tancar')
+  );
 }
+
+// ── APP ───────────────────────────────────────────────────────────────────────
+const TABS=[
+  {id:'dashboard',label:'Dashboard',icon:'⚡'},
+  {id:'transaccions',label:'Historial',icon:'📋'},
+  {id:'fixes',label:'Fixes',icon:'📌'},
+  {id:'variables',label:'Variables',icon:'📊'},
+  {id:'inversions',label:'Inversions',icon:'📈'},
+  {id:'bens',label:'Béns',icon:'🏛️'},
+  {id:'fire',label:'FIRE',icon:'🔥'},
+];
 
 // ── AUTH SCREEN (Login / Register) ───────────────────────────────────────────
 function AuthScreen({onAuth}) {
@@ -2047,7 +1367,6 @@ function AuthScreen({onAuth}) {
   const [loading,setLoading] = useState(false);
   const [err,setErr] = useState('');
   const [ok,setOk] = useState('');
-
   const submit = async () => {
     setErr('');setOk('');
     if(!email.trim()||!pass.trim()){setErr('Omple tots els camps');return;}
@@ -2066,341 +1385,115 @@ function AuthScreen({onAuth}) {
     } catch(e){ setErr(e.message); }
     setLoading(false);
   };
-
   const inp = {width:'100%',background:C.bg,border:'1px solid '+C.border,borderRadius:10,color:C.text,padding:'12px 14px',fontSize:14,outline:'none',fontFamily:'inherit',boxSizing:'border-box',marginBottom:10};
-
   return e('div',{style:{minHeight:'100vh',background:C.bg,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'0 24px',fontFamily:"'Sora',sans-serif"}},
     e('div',{style:{width:'100%',maxWidth:360}},
       e('div',{style:{textAlign:'center',marginBottom:32}},
         e('div',{style:{fontSize:32,fontWeight:900,marginBottom:6}},
-          e('span',{style:{color:C.accent}},'fin'),e('span',{style:{color:C.white}},'track')
-        ),
-        e('div',{style:{color:C.dim,fontSize:11,letterSpacing:2,textTransform:'uppercase'}},T[lang]?.gestorPersonal||t(lang,'gestorPersonal'))
-      ),
+          e('span',{style:{color:C.accent}},'fin'),e('span',{style:{color:C.white}},'track')),
+        e('div',{style:{color:C.dim,fontSize:11,letterSpacing:2,textTransform:'uppercase'}},t(lang,'gestorPersonal'))),
       e('div',{style:{background:C.surface,border:'1px solid '+C.border,borderRadius:16,padding:24}},
         e('div',{style:{display:'flex',gap:4,marginBottom:20,background:C.bg,borderRadius:10,padding:4}},
           ['login','register'].map(m=>e('button',{key:m,onClick:()=>{setMode(m);setErr('');setOk('');},style:{
             flex:1,padding:'8px 0',borderRadius:8,border:'none',cursor:'pointer',fontFamily:'inherit',
             fontWeight:700,fontSize:12,transition:'all .15s',
-            background:mode===m?C.surface:'transparent',
-            color:mode===m?C.accent:C.dim
-          }},m==='login'?t(lang,'entrar'):t(lang,'crearCompte')))
-        ),
+            background:mode===m?C.surface:'transparent',color:mode===m?C.accent:C.dim
+          }},m==='login'?t(lang,'entrar'):t(lang,'crearCompte')))),
         e('input',{type:'email',placeholder:t(lang,'correuElectronic'),value:email,onChange:ev=>setEmail(ev.target.value),style:inp}),
-        e('input',{type:'password',placeholder:t(lang,'contrasenya'),value:pass,onChange:ev=>setPass(ev.target.value),
-          onKeyDown:ev=>{if(ev.key==='Enter')submit();},style:inp}),
-        mode==='register' && e('input',{type:'password',placeholder:t(lang,'confirmaContrasenya'),value:pass2,
-          onChange:ev=>setPass2(ev.target.value),onKeyDown:ev=>{if(ev.key==='Enter')submit();},style:inp}),
-        err && e('div',{style:{color:C.red,fontSize:12,marginBottom:10,padding:'8px 12px',background:C.red+'11',borderRadius:8}},err),
-        ok && e('div',{style:{color:C.green,fontSize:12,marginBottom:10,padding:'8px 12px',background:C.green+'11',borderRadius:8}},ok),
+        e('input',{type:'password',placeholder:t(lang,'contrasenya'),value:pass,onChange:ev=>setPass(ev.target.value),onKeyDown:ev=>{if(ev.key==='Enter')submit();},style:inp}),
+        mode==='register'&&e('input',{type:'password',placeholder:t(lang,'confirmaContrasenya'),value:pass2,onChange:ev=>setPass2(ev.target.value),onKeyDown:ev=>{if(ev.key==='Enter')submit();},style:inp}),
+        err&&e('div',{style:{color:C.red,fontSize:12,marginBottom:10,padding:'8px 12px',background:C.red+'11',borderRadius:8}},err),
+        ok&&e('div',{style:{color:C.green,fontSize:12,marginBottom:10,padding:'8px 12px',background:C.green+'11',borderRadius:8}},ok),
         e('button',{onClick:submit,disabled:loading,style:{
           width:'100%',background:loading?C.border:C.accent,color:C.bg,border:'none',
           borderRadius:10,padding:'13px 0',fontWeight:800,fontSize:14,cursor:loading?'default':'pointer',fontFamily:'inherit'
-        }},loading?t(lang,'carregant'):(mode==='login'?t(lang,'entrar'):t(lang,'crearCompte')))
-      )
-    )
-  );
-}
-
-// ── PIN CHANGE ───────────────────────────────────────────────────────────────
-const DEFAULT_PIN = '1234';
-
-function PinChange({onSavePin=()=>{}, currentPin=DEFAULT_PIN}) {
-  const [step,setStep] = useState('current'); // current | new | confirm
-  const [current,setCurrent] = useState('');
-  const [newPin,setNewPin] = useState('');
-  const [confirm,setConfirm] = useState('');
-  const [msg,setMsg] = useState('');
-  const [err,setErr] = useState(false);
-
-  const val = step==='current'?current:step==='new'?newPin:confirm;
-  const setVal = step==='current'?setCurrent:step==='new'?setNewPin:setConfirm;
-
-  const labels = {current:'PIN actual',new:'PIN nou (4 digits)',confirm:'Confirma el PIN nou'};
-
-  const pressP = (d) => {
-    if(val.length>=4) return;
-    const next = val+d;
-    setVal(next);
-    setErr(false);setMsg('');
-    if(next.length===4){
-      if(step==='current'){
-        const stored = currentPin||DEFAULT_PIN;
-        if(next===stored){setStep('new');setCurrent(next);}
-        else{setErr(true);setMsg('PIN incorrecte');setTimeout(()=>{setCurrent('');setErr(false);},600);}
-      } else if(step==='new'){
-        setStep('confirm');
-      } else {
-        if(next===newPin){
-          onSavePin(newPin);
-          setMsg('PIN canviat correctament!');
-          setStep('current');setCurrent('');setNewPin('');setConfirm('');
-        } else {
-          setErr(true);setMsg('Els PINs no coincideixen');
-          setTimeout(()=>{setConfirm('');setStep('new');setNewPin('');setErr(false);},600);
-        }
-      }
-    }
-  };
-
-  const delP = () => setVal(v=>v.slice(0,-1));
-
-  return e('div',null,
-    e('div',{style:{color:C.dim,fontSize:11,marginBottom:10}},labels[step]),
-    e('div',{style:{display:'flex',gap:10,marginBottom:14,justifyContent:'center'}},
-      [0,1,2,3].map(i=>e('div',{key:i,style:{
-        width:12,height:12,borderRadius:'50%',
-        background:val.length>i?(err?C.red:C.accent):C.border,transition:'background .15s'
-      }}))
-    ),
-    e('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,52px)',gap:7,justifyContent:'center'}},
-      ['1','2','3','4','5','6','7','8','9','','0','⌫'].map((d,i)=>
-        d===''?e('div',{key:i}):
-        e('button',{key:i,onClick:()=>d==='⌫'?delP():pressP(d),style:{
-          width:52,height:52,borderRadius:12,
-          background:d==='⌫'?'transparent':C.bg,
-          border:'1px solid '+(d==='⌫'?'transparent':C.border),
-          color:d==='⌫'?C.dim:C.text,fontSize:d==='⌫'?16:17,fontWeight:700,
-          cursor:'pointer',fontFamily:'inherit'
-        }},d)
-      )
-    ),
-    msg && e('div',{style:{color:err?C.red:C.green,fontSize:11,marginTop:10,textAlign:'center',fontWeight:600}},msg)
-  );
+        }},loading?t(lang,'carregant'):(mode==='login'?t(lang,'entrar'):t(lang,'crearCompte'))))));
 }
 
 // ── BACKUP + DIAGNOSTIC MODAL ─────────────────────────────────────────────────
 function BackupModal({data,setData,onClose}) {
+  const lang2 = useContext(LangCtx);
   const [tab,setTab]=useState('drive');
-  const [backupText,setBackupText]=useState('');
-  const [msg,setMsg]=useState('');
-  const [sbStatus,setSbStatus]=useState('idle'); // idle | loading | ok | error
+  const [sbStatus,setSbStatus]=useState('idle');
   const [sbMsg,setSbMsg]=useState('');
   const [diagIssues,setDiagIssues]=useState(null);
-  const [sbReady,setSbReady]=useState(true);
-
-
-
-  // Run diagnostic on mount
-  useEffect(()=>{
-    if(tab==='diagnostic') setDiagIssues(runDiagnostic(data));
-  },[tab]);
-
-  const exportar=()=>{
-    const json=JSON.stringify(data,null,2);
-    const ts=new Date().toISOString().slice(0,16).replace('T','_').replace(/:/g,'-');
-    const blob=new Blob([json],{type:'application/json'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download=`fintrack_${ts}.json`;a.click();URL.revokeObjectURL(url);
-    setMsg('✓ Backup descarregat!');setTimeout(()=>setMsg(''),3000);
-  };
-
-  const importarFitxer=ev=>{
-    const file=ev.target.files[0];if(!file)return;
-    const r=new FileReader();r.onload=e2=>setBackupText(e2.target.result);r.readAsText(file);
-  };
-
-  const importar=()=>{
-    try{
-      const parsed=JSON.parse(backupText);
-      if(typeof parsed.ingressos==='undefined')throw new Error('Format invàlid');
-      setData({...INIT,...parsed});onClose();
-    }catch(err){setMsg('✗ Error: '+err.message);}
-  };
-
+  useEffect(()=>{if(tab==='diagnostic')setDiagIssues(runDiagnostic(data));},[tab]);
   const handleSbSave=async()=>{
     setSbStatus('loading');setSbMsg('Desant...');
-    const r2=await SB_SAVE(data); const r={ok:true,msg:"ok Desat a Supabase"};
-    setSbStatus(r.ok?'ok':'error');setSbMsg(r.msg);
+    try{await SB_SAVE(data);setSbStatus('ok');setSbMsg('ok Desat a Supabase');}
+    catch(e){setSbStatus('error');setSbMsg('Error: '+e.message);}
   };
-
   const handleSbLoad=async()=>{
-    setSbStatus('loading');setSbMsg(t(lang,'carregant'));
-    let r;
-    try {
-      const d=await SB_LOAD();
-      if(d){setDataSafe({...INIT,...d});r={ok:true,msg:"ok Restaurat de Supabase"};}
-      else r={ok:false,msg:"Cap dada a Supabase"};
-    } catch(e){r={ok:false,msg:"Error: "+e.message};}
-    setSbStatus(r.ok?'ok':'error');setSbMsg(r.msg);
-    if(r.ok) setTimeout(onClose,1200);
+    setSbStatus('loading');setSbMsg(t(lang2,'carregant'));
+    try{const d=await SB_LOAD();if(d){setData({...INIT,...d});setSbStatus('ok');setSbMsg('ok Restaurat de Supabase');setTimeout(onClose,1200);}else{setSbStatus('error');setSbMsg('Cap dada a Supabase');}}
+    catch(e){setSbStatus('error');setSbMsg('Error: '+e.message);}
   };
-
   const tabBtn=(id,label)=>e('button',{onClick:()=>setTab(id),style:{
     flex:1,background:tab===id?C.surface:'transparent',color:tab===id?C.accent:C.dim,
     border:'none',borderBottom:`2px solid ${tab===id?C.accent:'transparent'}`,
-    padding:'10px 0',cursor:'pointer',fontFamily:'inherit',fontWeight:700,fontSize:12,
-    transition:'all .15s'
+    padding:'10px 0',cursor:'pointer',fontFamily:'inherit',fontWeight:700,fontSize:12,transition:'all .15s'
   }},label);
-
   const sevColor={err:C.red,warn:C.yellow,info:C.accent};
   const sevIcon={err:'X',warn:'!',info:'i'};
-
-  return e(Modal,{title:'',onClose,width:480},
-    // Tabs
+  return e(Modal,{title:'',onClose},
     e('div',{style:{display:'flex',borderBottom:'1px solid '+C.border,marginBottom:18,marginTop:-6}},
-      tabBtn('drive','☁️ '+t(lang,'supabaseTab')),
-      tabBtn('diagnostic','🔍 '+t(lang,'diagnosticTab')),
-      tabBtn('dades','🗑️ '+t(lang,'dadesTab'))
-    ),
-
-    // ── SUPABASE TAB ──
-    tab==='drive' && e('div',null,
+      tabBtn('drive','☁️ '+t(lang2,'supabaseTab')),
+      tabBtn('diagnostic','🔍 '+t(lang2,'diagnosticTab')),
+      tabBtn('dades','🗑️ '+t(lang2,'dadesTab'))),
+    tab==='drive'&&e('div',null,
       e('div',{style:{background:C.green+'18',border:'1px solid '+C.green+'44',borderRadius:10,padding:'10px 14px',marginBottom:14,display:'flex',alignItems:'center',gap:8}},
         e('div',{style:{width:8,height:8,borderRadius:'50%',background:C.green,flexShrink:0}}),
-        e('span',{style:{color:C.green,fontSize:12,fontWeight:600}},t(lang,'connectat')),
-        e('span',{style:{color:C.dim,fontSize:11}},'Sincronitzacio entre dispositius activa')
-      ),
+        e('span',{style:{color:C.green,fontSize:12,fontWeight:600}},t(lang2,'connectat')),
+        e('span',{style:{color:C.dim,fontSize:11}},'Sincronitzacio entre dispositius activa')),
       e('button',{onClick:handleSbSave,disabled:sbStatus==='loading',
         style:{width:'100%',background:C.accent,color:C.bg,border:'none',borderRadius:10,padding:'11px 0',fontWeight:800,fontSize:13,cursor:sbStatus==='loading'?'not-allowed':'pointer',fontFamily:'inherit',marginBottom:10,opacity:sbStatus==='loading'?.6:1}},
-        sbStatus==='loading'?'Desant...':t(lang,'desaServidor')
-      ),
+        sbStatus==='loading'?'Desant...':t(lang2,'desaServidor')),
       e('button',{onClick:handleSbLoad,disabled:sbStatus==='loading',
         style:{width:'100%',background:'transparent',border:'1px solid '+C.border,color:C.dim,borderRadius:10,padding:'10px 0',fontWeight:700,fontSize:12,cursor:sbStatus==='loading'?'not-allowed':'pointer',fontFamily:'inherit',marginBottom:12,opacity:sbStatus==='loading'?.6:1}},
-        t(lang,'carregaServidor')
-      ),
+        t(lang2,'carregaServidor')),
       e('div',{style:{background:C.surface,border:'1px solid '+C.border,borderRadius:10,padding:14}},
         e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:8,textTransform:'uppercase'}},'Com funciona'),
         e('div',{style:{color:C.dim,fontSize:12,lineHeight:1.7}},
           'Les dades es guarden automaticament al servidor cada cop que fas un canvi.',e('br'),
-          'Per sincronitzar entre dispositius: clica "Carregar del servidor" quan canvies de dispositiu.'
-        )
-      ),
-      sbMsg && e('div',{style:{marginTop:12,background:sbMsg.startsWith('ok')?C.green+'22':C.red+'22',border:'1px solid '+(sbMsg.startsWith('ok')?C.green:C.red)+'44',borderRadius:8,padding:'8px 12px',color:sbMsg.startsWith('ok')?C.green:C.red,fontSize:12}},sbMsg)
-    ),
-
-    // ── DIAGNOSTIC TAB ──
-    tab==='diagnostic' && e('div',null,
-      diagIssues===null && e('div',{style:{textAlign:'center',padding:20,color:C.dim}},'Analitzant...'),
-      diagIssues && diagIssues.length===0 && e('div',{style:{textAlign:'center',padding:24}},
+          'Per sincronitzar: clica "Carregar del servidor" quan canvies de dispositiu.')),
+      sbMsg&&e('div',{style:{marginTop:12,background:sbMsg.startsWith('ok')?C.green+'22':C.red+'22',border:'1px solid '+(sbMsg.startsWith('ok')?C.green:C.red)+'44',borderRadius:8,padding:'8px 12px',color:sbMsg.startsWith('ok')?C.green:C.red,fontSize:12}},sbMsg)),
+    tab==='diagnostic'&&e('div',null,
+      diagIssues===null&&e('div',{style:{textAlign:'center',padding:20,color:C.dim}},'Analitzant...'),
+      diagIssues&&diagIssues.length===0&&e('div',{style:{textAlign:'center',padding:24}},
         e('div',{style:{fontSize:32,marginBottom:8}},'✓'),
-        e('div',{style:{color:C.green,fontWeight:700,fontSize:14,marginBottom:4}},t(lang,'totCorrecte')),
-        e('div',{style:{color:C.dim,fontSize:12}},"No shan detectat errors ni inconsistencies.")
-      ),
-      diagIssues && diagIssues.length>0 && e('div',null,
+        e('div',{style:{color:C.green,fontWeight:700,fontSize:14,marginBottom:4}},t(lang2,'totCorrecte')),
+        e('div',{style:{color:C.dim,fontSize:12}},'No shan detectat errors ni inconsistencies.')),
+      diagIssues&&diagIssues.length>0&&e('div',null,
         e('div',{style:{display:'flex',gap:12,marginBottom:14}},
           ['err','warn','info'].map(sev=>{
             const count=diagIssues.filter(i=>i.sev===sev).length;
-            if(!count) return null;
-            const labels={err:'Error',warn:'Avís',info:'Info'};
+            if(!count)return null;
             return e('div',{key:sev,style:{display:'flex',alignItems:'center',gap:5}},
               e('span',{style:{color:sevColor[sev],fontWeight:700,fontSize:12}},sevIcon[sev]),
-              e('span',{style:{color:sevColor[sev],fontSize:11}},count+' '+labels[sev]+(count!==1?'s':''))
-            );
-          })
-        ),
+              e('span',{style:{color:sevColor[sev],fontSize:11}},count+' '+({err:'Error',warn:'Avís',info:'Info'}[sev])+(count!==1?'s':'')));
+          })),
         e('div',{style:{display:'grid',gap:8}},
           diagIssues.map((issue,i)=>e('div',{key:i,style:{background:C.bg,border:`1px solid ${sevColor[issue.sev]}33`,borderRadius:10,padding:12}},
             e('div',{style:{display:'flex',gap:8,marginBottom:4}},
               e('span',{style:{color:sevColor[issue.sev],fontWeight:800,fontSize:12,flexShrink:0}},sevIcon[issue.sev]),
               e('div',null,
                 e('div',{style:{color:C.text,fontSize:12,fontWeight:600}},issue.text),
-                e('div',{style:{color:C.dim,fontSize:10,marginTop:3}},e('span',{style:{color:sevColor[issue.sev],opacity:.7}},issue.cat),' · '+issue.fix)
-              )
-            )
-          ))
-        )
-      )
-    ),
-
-    tab==='dades' && e('div',null,
-
+                e('div',{style:{color:C.dim,fontSize:10,marginTop:3}},e('span',{style:{color:sevColor[issue.sev],opacity:.7}},issue.cat),' · '+issue.fix)))))))),
+    tab==='dades'&&e('div',null,
       e('div',{style:{background:C.red+'11',border:'1px solid '+C.red+'33',borderRadius:12,padding:18,marginBottom:12}},
-        e('div',{style:{fontWeight:700,color:C.red,fontSize:13,marginBottom:6}},t(lang,'zonaPerill')),
-        e('div',{style:{color:C.dim,fontSize:12,lineHeight:1.6,marginBottom:14}},
-          'Aquesta accio esborrar TOTES les dades permanentment. Assegura-te de tenir backup primer.'
-        ),
+        e('div',{style:{fontWeight:700,color:C.red,fontSize:13,marginBottom:6}},t(lang2,'zonaPerill')),
+        e('div',{style:{color:C.dim,fontSize:12,lineHeight:1.6,marginBottom:14}},'Aquesta accio esborrar TOTES les dades permanentment. Assegura-te de tenir backup primer.'),
         e('button',{
-          onClick:async()=>{
-            if(window.confirm(t(lang,'confirmaEsborrar'))){
-              if(window.confirm(t(lang,'confirmaEsborrar2'))){
-                setData(INIT);
-                try{await SB_SAVE(INIT);}catch{}
-                onClose();
-              }
-            }
-          },
+          onClick:async()=>{if(window.confirm(t(lang2,'confirmaEsborrar'))){if(window.confirm(t(lang2,'confirmaEsborrar2'))){setData(INIT);try{await SB_SAVE(INIT);}catch{}onClose();}}},
           style:{width:'100%',background:C.red,color:'#fff',border:'none',borderRadius:10,padding:'12px 0',fontWeight:800,fontSize:13,cursor:'pointer',fontFamily:'inherit'}
-        },t(lang,'esborraDades'))
-      )
-    ),
-    e('button',{onClick:onClose,style:{marginTop:16,width:'100%',background:'transparent',border:`1px solid ${C.border}`,color:C.dim,borderRadius:9,padding:'9px 0',cursor:'pointer',fontSize:12,fontFamily:'inherit'}},'Tancar')
-  );
-}
-
-
-// ── PIN SCREEN ────────────────────────────────────────────────────────────────
-function PinScreen({onUnlock, correctPin}) {
-  const [digits,setDigits] = useState('');
-  const [error,setError] = useState(false);
-  const [shake,setShake] = useState(false);
-
-  const press = (d) => {
-    if(digits.length>=4) return;
-    const next = digits+d;
-    setDigits(next);
-    setError(false);
-    if(next.length===4){
-      const stored = correctPin||DEFAULT_PIN;
-      if(next===stored){
-        onUnlock();
-      } else {
-        setShake(true);
-        setError(true);
-        setTimeout(()=>{setDigits('');setShake(false);},600);
-      }
-    }
-  };
-
-  const del = () => setDigits(d=>d.slice(0,-1));
-
-  return e('div',{style:{minHeight:'100vh',background:C.bg,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:0,fontFamily:"'Sora',sans-serif"}},
-    e('div',{style:{marginBottom:32,textAlign:'center'}},
-      e('div',{style:{fontSize:28,fontWeight:900,marginBottom:6}},
-        e('span',{style:{color:C.accent}},'fin'),e('span',{style:{color:C.white}},'track')
-      ),
-      e('div',{style:{color:C.dim,fontSize:11,letterSpacing:2}},'INTRODUEIX EL PIN')
-    ),
-    // Dots
-    e('div',{style:{
-      display:'flex',gap:16,marginBottom:32,
-      animation:shake?'shake .4s ease':'none'
-    }},
-      [0,1,2,3].map(i=>e('div',{key:i,style:{
-        width:16,height:16,borderRadius:'50%',
-        background:digits.length>i?(error?C.red:C.accent):C.border,
-        transition:'background .15s',
-        boxShadow:digits.length>i?'0 0 8px '+(error?C.red:C.accent)+'66':'none'
-      }}))
-    ),
-    // Keypad
-    e('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,72px)',gap:10}},
-      ['1','2','3','4','5','6','7','8','9','','0','⌫'].map((d,i)=>
-        d===''
-          ? e('div',{key:i})
-          : e('button',{key:i,onClick:()=>d==='⌫'?del():press(d),style:{
-              width:72,height:72,borderRadius:16,
-              background:d==='⌫'?'transparent':C.surface,
-              border:'1px solid '+(d==='⌫'?'transparent':C.border),
-              color:d==='⌫'?C.dim:C.text,
-              fontSize:d==='⌫'?20:22,fontWeight:700,cursor:'pointer',
-              fontFamily:'inherit',transition:'all .1s',
-              boxShadow:d==='⌫'?'none':'0 2px 8px #0004'
-            }},d)
-      )
-    ),
-    error && e('div',{style:{color:C.red,fontSize:12,marginTop:20,fontWeight:600}},'PIN incorrecte')
-  );
+        },t(lang2,'esborraDades')))),
+    e('button',{onClick:onClose,style:{marginTop:16,width:'100%',background:'transparent',border:`1px solid ${C.border}`,color:C.dim,borderRadius:9,padding:'9px 0',cursor:'pointer',fontSize:12,fontFamily:'inherit'}},'Tancar'));
 }
 
 // ── APP ───────────────────────────────────────────────────────────────────────
-// TABS are built dynamically with translations in App render
-
 function App() {
-  const [authUser,setAuthUser]=useState(null);   // null = not checked yet
-  const [authReady,setAuthReady]=useState(false); // false = checking auth
-  const [unlocked,setUnlocked]=useState(false);
-  const [correctPin,setCorrectPin]=useState(null);
+  const [authUser,setAuthUser]=useState(null);
+  const [authReady,setAuthReady]=useState(false);
   const [tab,setTab]=useState('dashboard');
   const [blurred,setBlurred]=useState(false);
   const [showBackup,setShowBackup]=useState(false);
@@ -2409,261 +1502,153 @@ function App() {
   const [lang,setLang]=useState(()=>localStorage.getItem('fintrack-lang')||'ca');
   useEffect(()=>{localStorage.setItem('fintrack-lang',lang);},[lang]);
   const [data,setData]=useState(INIT);
-
-  // Apply theme
   C = theme==='dark' ? {...DARK} : {...LIGHT};
   document.body.style.background = C.bg;
+  const [loaded,setLoaded]=useState(false);
+  const [loadError,setLoadError]=useState('');
+  const [userHasEdited,setUserHasEdited]=useState(false);
 
-  // ── Estats de càrrega ─────────────────────────────────────────────────────
-  const [loaded, setLoaded] = useState(false);
-  const [loadError, setLoadError] = useState('');
-  const [userHasEdited, setUserHasEdited] = useState(false);
-
-  // ── Check auth on mount ───────────────────────────────────────────────────
   useEffect(()=>{
-    (async()=>{
-      try {
-        const user = await sbGetUser();
-        setAuthUser(user);
-      } catch {}
-      setAuthReady(true);
-    })();
-    // Listen for auth changes
-    const {data:{subscription}} = sbClient.auth.onAuthStateChange((_,session)=>{
-      setAuthUser(session?.user||null);
-
-    });
+    (async()=>{try{const user=await sbGetUser();setAuthUser(user);}catch{}setAuthReady(true);})();
+    const {data:{subscription}}=sbClient.auth.onAuthStateChange((_,session)=>{setAuthUser(session?.user||null);});
     return ()=>subscription.unsubscribe();
   },[]);
 
-  // ── Auto-actualitza el dia 1 de cada mes ─────────────────────────────────
   useEffect(()=>{
-    if(!loaded) return;
-    const now = new Date();
-    const mk = mesKey();
-    const isDay1 = now.getDate() === 1;
-    // Només a partir de juny 2026
-    const isAfterJun2026 = now >= new Date('2026-06-01');
-    const lastUpdate = data._lastMonthUpdate;
-    if(lastUpdate === mk) return; // ja processat aquest mes
-
-    let updates = {_lastMonthUpdate: mk};
-
-    // Redueix deutes (només dia 1 i a partir de juny 2026)
-    if(isDay1 && isAfterJun2026) {
-      const bensActualitzats = data.bens.map(b=>{
-        if(!b.mensualitat || b.mensualitat<=0 || !b.deute || b.deute<=0) return b;
-        return {...b, deute: Math.max(0, Math.round((b.deute-b.mensualitat)*100)/100)};
+    if(!loaded)return;
+    const now=new Date();const mk=mesKey();
+    const isDay1=now.getDate()===1;
+    const isAfterJun2026=now>=new Date('2026-06-01');
+    const lastUpdate=data._lastMonthUpdate;
+    if(lastUpdate===mk)return;
+    let updates={_lastMonthUpdate:mk};
+    if(isDay1&&isAfterJun2026){
+      updates.bens=data.bens.map(b=>{
+        if(!b.mensualitat||b.mensualitat<=0||!b.deute||b.deute<=0)return b;
+        return{...b,deute:Math.max(0,Math.round((b.deute-b.mensualitat)*100)/100)};
       });
-      updates.bens = bensActualitzats;
     }
-
-    // Desa snapshot del mes anterior (dia 1 de cada mes)
-    if(isDay1) {
-      const prevDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
-      const prevMk = mesKey(prevDate);
-      const snapshots2 = data.snapshotMesos||{};
-      if(!snapshots2[prevMk]) {
-        const iM = g => g.periodicitat==='anual' ? g.import/12 : g.import;
-        const s2 = {
-          ingressos: (data.historialNomines||{})[prevMk]||data.ingressos,
-          totalInv: (data.inversions||[]).reduce((s,i)=>s+i.valor,0),
-          totalBens: (data.bens||[]).reduce((s,b)=>s+b.valorActual,0),
-          totalDeute: (data.bens||[]).reduce((s,b)=>s+(b.deute||0),0),
-          totalFixes: (data.gastosFixes||[]).reduce((s,g)=>s+iM(g),0),
-          totalVars: Object.values(data.historialVariables?.[prevMk]||{}).reduce((s,v)=>s+v,0),
-          cash: data.cash||0,
-          guanyInv: (data.inversions||[]).reduce((s,i)=>s+(i.valor-i.cost),0),
-          pctInv: gainPct((data.inversions||[]).reduce((s,i)=>s+i.valor,0),(data.inversions||[]).reduce((s,i)=>s+i.cost,0)),
-          patrimoni: Math.round((data.inversions||[]).reduce((s,i)=>s+i.valor,0)+(data.bens||[]).reduce((s,b)=>s+b.valorActual,0)-(data.bens||[]).reduce((s,b)=>s+(b.deute||0),0)+(data.cash||0))
+    if(isDay1){
+      const prevDate=new Date(now.getFullYear(),now.getMonth()-1,1);
+      const prevMk=mesKey(prevDate);
+      const snapshots2=data.snapshotMesos||{};
+      if(!snapshots2[prevMk]){
+        const iM=g=>g.periodicitat==='anual'?g.import/12:g.import;
+        const s2={
+          ingressos:(data.historialNomines||{})[prevMk]||data.ingressos,
+          totalInv:(data.inversions||[]).reduce((s,i)=>s+i.valor,0),
+          totalBens:(data.bens||[]).reduce((s,b)=>s+b.valorActual,0),
+          totalDeute:(data.bens||[]).reduce((s,b)=>s+(b.deute||0),0),
+          totalFixes:(data.gastosFixes||[]).reduce((s,g)=>s+iM(g),0),
+          totalVars:Object.values(data.historialVariables?.[prevMk]||{}).reduce((s,v)=>s+v,0),
+          cash:data.cash||0,
+          guanyInv:(data.inversions||[]).reduce((s,i)=>s+(i.valor-i.cost),0),
+          pctInv:gainPct((data.inversions||[]).reduce((s,i)=>s+i.valor,0),(data.inversions||[]).reduce((s,i)=>s+i.cost,0)),
+          patrimoni:Math.round((data.inversions||[]).reduce((s,i)=>s+i.valor,0)+(data.bens||[]).reduce((s,b)=>s+b.valorActual,0)-(data.bens||[]).reduce((s,b)=>s+(b.deute||0),0)+(data.cash||0))
         };
-        updates.snapshotMesos = {...snapshots2, [prevMk]: s2};
+        updates.snapshotMesos={...snapshots2,[prevMk]:s2};
       }
+      const mesAbrN=now.toLocaleString('ca-ES',{month:'short'}).slice(0,3)+' '+now.getFullYear().toString().slice(2);
+      const evoArr=data.evolucioPat||[];
+      const totalPatrimoni=Math.round((data.inversions||[]).reduce((s,i)=>s+i.valor,0)+(data.bens||[]).reduce((s,b)=>s+b.valorActual,0)-(data.bens||[]).reduce((s,b)=>s+(b.deute||0),0)+(data.cash||0));
+      if(!evoArr.some(e=>e.mes===mesAbrN)&&totalPatrimoni>0)updates.evolucioPat=[...evoArr.slice(-23),{mes:mesAbrN,valor:totalPatrimoni}];
     }
-
-    // Desa punt d'evolució del patrimoni (dia 1 de cada mes)
-    if(isDay1) {
-      const mesAbrN = now.toLocaleString('ca-ES',{month:'short'}).slice(0,3)+' '+now.getFullYear().toString().slice(2);
-      const evoArr = data.evolucioPat||[];
-      const totalPatrimoni = Math.round(
-        (data.inversions||[]).reduce((s,i)=>s+i.valor,0) +
-        (data.bens||[]).reduce((s,b)=>s+b.valorActual,0) -
-        (data.bens||[]).reduce((s,b)=>s+(b.deute||0),0) +
-        (data.cash||0)
-      );
-      const jaExisteix = evoArr.some(e=>e.mes===mesAbrN);
-      if(!jaExisteix && totalPatrimoni>0) {
-        updates.evolucioPat = [...evoArr.slice(-23), {mes:mesAbrN, valor:totalPatrimoni}];
-      }
-    }
-
     setDataSafe(d=>({...d,...updates}));
   },[loaded]);
 
-  // ── Càrrega inicial des de Supabase (quan hi ha usuari autenticat) ─────────
   useEffect(()=>{
-    if(!authUser) return;
+    if(!authUser)return;
     setLoaded(false);
     (async()=>{
-      try {
-        const d = await SB_LOAD();
-        if(d && typeof d.ingressos !== 'undefined') {
-          setData({...INIT,...d});
-        } else {
-          setData(INIT);
-        }
-        setLoaded(true);
-      } catch(e) {
-        setLoadError('No es pot connectar a Supabase: '+e.message);
-        setLoaded(true);
-      }
+      try{const d=await SB_LOAD();if(d&&typeof d.ingressos!=='undefined'){setData({...INIT,...d});}else{setData(INIT);}setLoaded(true);}
+      catch(e){setLoadError('No es pot connectar: '+e.message);setLoaded(true);}
     })();
   },[authUser]);
 
-  // ── Auto-desa cada canvi a Supabase (debounce 1s) ─────────────────────────
-  const setDataSafe = (updater) => {
-    if(loaded) setUserHasEdited(true);
-    setData(updater);
-  };
+  const setDataSafe=(updater)=>{if(loaded)setUserHasEdited(true);setData(updater);};
 
   useEffect(()=>{
-    if(!loaded || !userHasEdited) return;
+    if(!loaded||!userHasEdited)return;
     setSaveStatus('saving');
-    const t = setTimeout(async()=>{
-      try {
-        await SB_SAVE(data);
-        setSaveStatus('ok');
-      } catch(e) {
-        setSaveStatus('error');
-        console.error('Save error:', e);
-      }
-    }, 1000);
-    return ()=>clearTimeout(t);
-  },[data, loaded, userHasEdited]);
+    const timer=setTimeout(async()=>{try{await SB_SAVE(data);setSaveStatus('ok');}catch(e){setSaveStatus('error');}},1000);
+    return()=>clearTimeout(timer);
+  },[data,loaded,userHasEdited]);
 
-  // ── Backup automàtic cada divendres ───────────────────────────────────────
   useEffect(()=>{
-    if(!loaded || !userHasEdited) return;
-    const now = new Date();
-    const isFriday = now.getDay() === 5;
-    const lastBackup = localStorage.getItem('fintrack-last-backup');
-    const today = now.toISOString().slice(0,10);
-    if(isFriday && lastBackup !== today) {
-      // Auto-download backup
-      setTimeout(()=>{
-        const json = JSON.stringify(data, null, 2);
-        const blob = new Blob([json],{type:'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'fintrack_backup_'+today+'.json';
-        a.click();
-        URL.revokeObjectURL(url);
-        localStorage.setItem('fintrack-last-backup', today);
-      }, 3000);
+    if(!loaded||!userHasEdited)return;
+    const now=new Date();
+    if(now.getDay()===5){
+      const today=now.toISOString().slice(0,10);
+      if(localStorage.getItem('fintrack-last-backup')!==today){
+        setTimeout(()=>{
+          const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+          const url=URL.createObjectURL(blob);
+          const a=document.createElement('a');a.href=url;a.download='fintrack_backup_'+today+'.json';a.click();
+          URL.revokeObjectURL(url);localStorage.setItem('fintrack-last-backup',today);
+        },3000);
+      }
     }
   },[loaded]);
 
   const [hBlur,setHBlur]=useState(false);
   const [hBackup,setHBackup]=useState(false);
 
-  // Comprovant autenticació
-  if(!authReady) return e('div',{style:{minHeight:'100vh',background:C.bg,display:'flex',alignItems:'center',justifyContent:'center'}},
+  if(!authReady)return e('div',{style:{minHeight:'100vh',background:C.bg,display:'flex',alignItems:'center',justifyContent:'center'}},
     e('div',{style:{textAlign:'center'}},
       e('div',{style:{fontSize:26,fontWeight:900,marginBottom:12}},e('span',{style:{color:C.accent}},'fin'),e('span',{style:{color:C.white}},'track')),
-      e('div',{style:{width:28,height:28,border:'3px solid '+C.border,borderTopColor:C.accent,borderRadius:'50%',animation:'spin .8s linear infinite',margin:'0 auto'}})
-    )
-  );
-  // No autenticat → pantalla login/registre
-  if(!authUser) return e(AuthScreen,{onAuth:async()=>{const u=await sbGetUser();setAuthUser(u);}});
-
-
-  if(!loaded) return e('div',{style:{minHeight:'100vh',background:C.bg,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:14,fontFamily:"'Sora',sans-serif"}},
+      e('div',{style:{width:28,height:28,border:'3px solid '+C.border,borderTopColor:C.accent,borderRadius:'50%',animation:'spin .8s linear infinite',margin:'0 auto'}})));
+  if(!authUser)return e(LangCtx.Provider,{value:lang},e(AuthScreen,{onAuth:async()=>{const u=await sbGetUser();setAuthUser(u);}}));
+  if(!loaded)return e('div',{style:{minHeight:'100vh',background:C.bg,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:14,fontFamily:"'Sora',sans-serif"}},
     e('div',{style:{fontSize:26,fontWeight:900}},e('span',{style:{color:C.accent}},'fin'),e('span',{style:{color:C.white}},'track')),
     e('div',{style:{width:32,height:32,border:'3px solid '+C.border,borderTopColor:C.accent,borderRadius:'50%',animation:'spin .8s linear infinite'}}),
-    e('div',{style:{color:C.dim,fontSize:11,letterSpacing:2}},'CARREGANT...')
-  );
+    e('div',{style:{color:C.dim,fontSize:11,letterSpacing:2}},'CARREGANT...'));
 
   return e(LangCtx.Provider,{value:lang},e(ThemeCtx.Provider,{value:theme},e(BlurCtx.Provider,{value:blurred},
     e('div',{key:theme,className:blurred?'blurred-mode':'',style:{background:C.bg,minHeight:'100vh',fontFamily:"'Sora',system-ui,sans-serif",color:C.text,maxWidth:900,margin:'0 auto',paddingBottom:60}},
-      // Header
       e('div',{style:{padding:'12px 16px 10px',display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:`1px solid ${C.border}`,position:'sticky',top:0,background:C.bg,zIndex:100}},
         e('div',null,
-          e('div',{style:{fontSize:17,fontWeight:900,letterSpacing:-.5}},
-            e('span',{style:{color:C.accent}},'fin'),e('span',{style:{color:C.white}},'track')
-          ),
+          e('div',{style:{fontSize:17,fontWeight:900,letterSpacing:-.5}},e('span',{style:{color:C.accent}},'fin'),e('span',{style:{color:C.white}},'track')),
           e('div',{style:{display:'flex',alignItems:'center',gap:4}},
             e('div',{style:{color:C.dim,fontSize:8,letterSpacing:1.5,textTransform:'uppercase'}},t(lang,'gestorPersonal')),
-            saveStatus==='saving' && e('span',{style:{color:C.accent,fontSize:8}},' ● '+t(lang,'desant')),
-            saveStatus==='ok' && e('span',{style:{color:C.green,fontSize:8}},' ✓ '+t(lang,'desat')),
-            saveStatus==='error' && e('span',{style:{color:C.red,fontSize:8}},' ✗ error desant'),
-            loadError && e('span',{style:{color:C.red,fontSize:8}},' ⚠ '+loadError)
-          )
-        ),
+            saveStatus==='saving'&&e('span',{style:{color:C.accent,fontSize:8}},' ● '+t(lang,'desant')),
+            saveStatus==='ok'&&e('span',{style:{color:C.green,fontSize:8}},' ✓ '+t(lang,'desat')),
+            saveStatus==='error'&&e('span',{style:{color:C.red,fontSize:8}},' ✗ error'),
+            loadError&&e('span',{style:{color:C.red,fontSize:8}},' ⚠ '+loadError))),
         e('div',{style:{display:'flex',gap:6,alignItems:'center'}},
-          // Blur
-          e('button',{
-            onClick:()=>setBlurred(b=>!b),
-            onMouseEnter:()=>setHBlur(true),onMouseLeave:()=>setHBlur(false),
-            title:blurred?'Mostrar imports':'Ocultar imports',
+          e('button',{onClick:()=>setBlurred(b=>!b),onMouseEnter:()=>setHBlur(true),onMouseLeave:()=>setHBlur(false),
+            title:blurred?'Mostrar':'Ocultar',
             style:{background:blurred?C.accentDim:'transparent',border:`1px solid ${blurred?C.accent+'55':(hBlur?C.accent+'66':C.border)}`,color:blurred?C.accent:(hBlur?C.accent:C.dim),borderRadius:7,width:32,height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,transition:'all .2s'}
           },blurred?'🙈':'👁️'),
           e('select',{value:lang,onChange:ev=>setLang(ev.target.value),
             style:{background:C.surface,border:'1px solid '+C.border,color:C.dim,borderRadius:7,height:32,cursor:'pointer',fontSize:11,fontWeight:700,fontFamily:'inherit',padding:'0 6px',outline:'none',appearance:'none',textAlign:'center',minWidth:40}
           },e('option',{value:'ca'},'CA'),e('option',{value:'es'},'ES'),e('option',{value:'en'},'EN')),
-          // Theme toggle
-          e('button',{
-            onClick:()=>setTheme(t=>t==='dark'?'light':'dark'),
+          e('button',{onClick:()=>setTheme(th=>th==='dark'?'light':'dark'),
             title:'Mode '+(theme==='dark'?'clar':'fosc'),
             style:{background:'transparent',border:'1px solid '+C.border,color:C.dim,borderRadius:7,width:32,height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,transition:'all .2s'}
           },theme==='dark'?'☀️':'🌙'),
-          // Backup
-          e('button',{
-            onClick:()=>setShowBackup(true),
+          e('button',{onClick:()=>setShowBackup(true),
             onMouseEnter:()=>setHBackup(true),onMouseLeave:()=>setHBackup(false),
             title:'Backup / Restaurar',
             style:{background:'transparent',border:`1px solid ${hBackup?C.yellow+'77':C.border}`,color:hBackup?C.yellow:C.dim,borderRadius:7,width:32,height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,transition:'all .2s'}
           },'💾'),
-          // Reset removed - see backup modal Dades tab
-          e('button',{
-            onClick:async()=>{if(window.confirm(t(lang,'tancarSessio'))){await sbSignOut();}},
-            title:'Tancar sessio',
-            style:{background:C.red+'18',border:'1px solid '+C.red+'55',color:C.red,borderRadius:7,padding:'0 10px',height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,fontFamily:'inherit',transition:'all .2s',gap:4,whiteSpace:'nowrap'}
-          },e('span',null,'↪'),' Sortir'),
-        )
-      ),
-      // Tabs
-      e('div',{style:{display:'flex',gap:0,padding:'0 8px',overflowX:'auto',borderBottom:'2px solid '+C.border,scrollbarWidth:'none',msOverflowStyle:'none'}},
-        [{id:'dashboard',icon:'⚡'},{id:'fixes',icon:'📌'},{id:'variables',icon:'📊'},{id:'inversions',icon:'📈'},{id:'bens',icon:'🏛️'},{id:'fire',icon:'🔥'}].map(t=>e('button',{key:t.id,onClick:()=>setTab(t.id),
-          style:{
-            background:'transparent',
-            color:tab===t.id?C.accent:C.dim,
-            border:'none',
-            borderBottom:tab===t.id?'3px solid '+C.accent:'3px solid transparent',
-            marginBottom:'-2px',
-            padding:'14px 18px',
-            cursor:'pointer',
-            fontWeight:tab===t.id?800:600,
-            fontSize:13,
-            whiteSpace:'nowrap',
-            transition:'all .15s',
-            fontFamily:'inherit',
-            letterSpacing:.1
-          }
-        },t.icon+' '+t.label))
-      ),
-      // Content
+          e('button',{onClick:async()=>{if(window.confirm(t(lang,'tancarSessio'))){await sbSignOut();}},
+            style:{background:C.red+'18',border:'1px solid '+C.red+'55',color:C.red,borderRadius:7,padding:'0 10px',height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,fontFamily:'inherit',gap:4,whiteSpace:'nowrap'}
+          },e('span',null,'↪'),' '+t(lang,'sortir')))),
+      e('div',{style:{display:'flex',gap:0,padding:'0 8px',overflowX:'auto',borderBottom:'2px solid '+C.border,scrollbarWidth:'none'}},
+        [{id:'dashboard',icon:'⚡'},{id:'fixes',icon:'📌'},{id:'variables',icon:'📊'},{id:'inversions',icon:'📈'},{id:'bens',icon:'🏛️'},{id:'fire',icon:'🔥'}].map(tb=>e('button',{key:tb.id,onClick:()=>setTab(tb.id),
+          style:{background:'transparent',color:tab===tb.id?C.accent:C.dim,border:'none',
+            borderBottom:tab===tb.id?'3px solid '+C.accent:'3px solid transparent',marginBottom:'-2px',
+            padding:'14px 18px',cursor:'pointer',fontWeight:tab===tb.id?800:600,fontSize:13,
+            whiteSpace:'nowrap',transition:'all .15s',fontFamily:'inherit',letterSpacing:.1}
+        },tb.icon+' '+(T[lang]?.[tb.id]||tb.id)))),
       e('div',{style:{padding:'16px 14px'}},
-        tab==='dashboard' && e(Dashboard,{data,setData:setDataSafe,setTab}),
-        tab==='fixes' && e(GastosFixes,{data,setData:setDataSafe}),
-        tab==='variables' && e(GastosVariables,{data,setData:setDataSafe}),
-        tab==='inversions' && e(Inversions,{data,setData:setDataSafe}),
-        tab==='bens' && e(Bens,{data,setData:setDataSafe}),
-        tab==='fire' && e(Fire,{data,setData:setDataSafe})
-      ),
-      showBackup && e(BackupModal,{data,setData:setDataSafe,onClose:()=>setShowBackup(false)})
-    )
-  )));
+        tab==='dashboard'&&e(Dashboard,{data,setData:setDataSafe,setTab}),
+        tab==='fixes'&&e(GastosFixes,{data,setData:setDataSafe}),
+        tab==='variables'&&e(GastosVariables,{data,setData:setDataSafe}),
+        tab==='inversions'&&e(Inversions,{data,setData:setDataSafe}),
+        tab==='bens'&&e(Bens,{data,setData:setDataSafe}),
+        tab==='fire'&&e(Fire,{data,setData:setDataSafe})),
+      showBackup&&e(BackupModal,{data,setData:setDataSafe,onClose:()=>setShowBackup(false)})))));
 }
 
 // Mount
