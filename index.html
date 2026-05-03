@@ -2436,6 +2436,11 @@ function App() {
             style:{background:'transparent',border:'1px solid '+C.border,color:C.dim,borderRadius:7,width:32,height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,transition:'all .2s'}
           },theme==='dark'?'☀️':'🌙'),
           // Reset removed - see backup modal Dades tab
+          e('button',{
+            onClick:async()=>{if(window.confirm('Vols tancar la sessio?')){await sbSignOut();}},
+            title:'Tancar sessio',
+            style:{background:C.red+'18',border:'1px solid '+C.red+'55',color:C.red,borderRadius:7,padding:'0 10px',height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,fontFamily:'inherit',transition:'all .2s',gap:4,whiteSpace:'nowrap'}
+          },e('span',null,'↪'),' Sortir'),
         )
       ),
       // Tabs
