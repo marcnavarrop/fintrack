@@ -15,6 +15,12 @@
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     #root{padding-top:env(safe-area-inset-top);}
     ::-webkit-scrollbar{width:4px;}
+    .blurred-mode [data-money],
+    .blurred-mode span[style*="DM Mono"],
+    .blurred-mode span[style*="monospace"] {
+      filter: blur(6px) !important;
+      user-select: none !important;
+    }
     ::-webkit-scrollbar-thumb{background:#1e2d45;border-radius:2px;}
     select option{background:#111827;}
     input[type=number]::-webkit-inner-spin-button{opacity:.3;}
@@ -258,6 +264,192 @@ const INIT = {
 
 // ── Blur context ──────────────────────────────────────────────────────────────
 const BlurCtx = createContext(false);
+
+// ── TRADUCCIONS ───────────────────────────────────────────────────────────────
+const T = {
+  ca:{
+    // Nav
+    dashboard:'Dashboard',fixes:'Fixes',variables:'Variables',
+    inversions:'Inversions',bens:'Bens',fire:'FIRE',
+    // Dashboard
+    patrimoni:'Patrimoni net total',rendiment:'rendiment inversions',
+    nomina:'Nomina mensual',taxaEstalvi:'Taxa estalvi',
+    cash:'Cash disponible',delPatrimoni:'del patrimoni',
+    mesActual:'Mes actual',fotoMes:'foto del mes',
+    evolucio:'Evolucio patrimoni',autoMes:'Auto: dia 1 cada mes',
+    distribucio:'Distribucio patrimoni',objectius:"Objectius d'estalvi",
+    capObjectiu:'Cap objectiu. Afegeix-ne un!',
+    nouObjectiu:'Nou objectiu',editarObjectiu:'Editar objectiu',falta:'Falta',
+    // Actions
+    editar:'Editar',desar:'Desar',cancelar:'Cancel·lar',afegir:'+ Afegir',
+    carregant:'Carregant...',
+    // Fixes
+    totalMensual:'TOTAL MENSUAL EQUIVALENT',
+    perCategoria:'Per categoria',
+    nouGastoFix:'Nou gasto fix',editarGastoFix:'Editar gasto fix',
+    nomLabel:'Nom',importMensual:'Import mensual (€)',importAnual:'Import anual (€)',
+    categoriaLabel:'Categoria',periodicitatLabel:'Periodicitat',
+    mensual:'Mensual',anual:'Anual',equivMensual:'Equivalent mensual',
+    capGasto:'Cap gasto fix. Afegeix-ne un!',
+    // Variables
+    nouaDespesa:'+ Despesa',novaCategoria:'+ Categoria',
+    resumMes:'Resum del mes',gastat:'Gastat',pressupost:'Pressupost',
+    disponible:'disponible',perSobre:'per sobre',
+    capCategoria:'Cap categoria. Afegeix-ne una!',
+    nouaDespesaTitle:'Nova despesa',quinActiu:'Quin actiu?',
+    // Inversions
+    carteraTotal:'CARTERA TOTAL',nouActiu:'+ Nou actiu',
+    novaAportacio:'+ Aportacio',actualitzarTots:'Actualitzar tots',
+    capInversio:'Cap inversio. Afegeix-ne una!',
+    novaInversio:'Nova inversio',editarInversio:'Editar inversio',
+    // Bens
+    patrimoniNetLabel:'PATRIMONI NET',actius:'Actius',deutes:'Deutes',
+    capBe:'Cap be registrat. Afegeix-ne un!',
+    nouElement:'Nou element',editarElement:'Editar element',
+    mensualitat:'Mensualitat',pagat:'Pagat',
+    valorActual:'Valor actual (€)',valorCompra:'Valor de compra (€)',
+    deutePendent:'Deute pendent (€)',anyFi:'Any fi del deute',
+    // FIRE
+    calculadoraFire:'CALCULADORA FIRE',objectiuFire:'Objectiu FIRE',
+    edatFire:'Edat FIRE est.',rendaMes:'Renda/mes FIRE',
+    parametres:'Parametres',edatActual:'Edat actual',
+    despesesAnuals:'Despeses anuals',rendimentEsperat:'Rendiment esperat',
+    inflacioLabel:'Inflacio',reglaRetirada:'Regla retirada',
+    projeccio:'Projeccio fins FIRE',anysFire:"anys des d'ara",
+    // Auth
+    entrar:'Entrar',crearCompte:'Crear compte',
+    correuElectronic:'Correu electronic',contrasenya:'Contrasenya',
+    confirmaContrasenya:'Confirma la contrasenya',
+    compteCreat:'Compte creat! Comprova el correu per confirmar-lo, despres torna a entrar.',
+    gestorPersonal:'Gestor financer personal',
+    // Header/misc
+    sortir:'Sortir',tancarSessio:'Vols tancar la sessio?',
+    desant:'desant...', desat:'desat',
+    esborraDades:'Esborrar totes les dades',zonaPerill:'Zona de perill',
+    confirmaEsborrar:'Segur que vols esborrar TOTES les dades?',
+    confirmaEsborrar2:'Confirma: esborrar tot definitament?',
+    connectat:'Connectat a Supabase',
+    desaServidor:'Desar al servidor ara',carregaServidor:'Carregar del servidor',
+    totCorrecte:'Tot correcte!',noErrores:'No shan detectat errors.',
+    // Backup modal tabs
+    supabaseTab:'Supabase',diagnosticTab:'Diagnostic',dadesTab:'Dades',
+  },
+  es:{
+    dashboard:'Resumen',fixes:'Gastos fijos',variables:'Variables',
+    inversions:'Inversiones',bens:'Bienes',fire:'FIRE',
+    patrimoni:'Patrimonio neto total',rendiment:'rendimiento inversiones',
+    nomina:'Nomina mensual',taxaEstalvi:'Tasa ahorro',
+    cash:'Efectivo disponible',delPatrimoni:'del patrimonio',
+    mesActual:'Mes actual',fotoMes:'foto del mes',
+    evolucio:'Evolucion patrimonio',autoMes:'Auto: dia 1 cada mes',
+    distribucio:'Distribucion patrimonio',objectius:'Objetivos de ahorro',
+    capObjectiu:'Sin objetivos. Anade uno!',
+    nouObjectiu:'Nuevo objetivo',editarObjectiu:'Editar objetivo',falta:'Falta',
+    editar:'Editar',desar:'Guardar',cancelar:'Cancelar',afegir:'+ Anadir',
+    carregant:'Cargando...',
+    totalMensual:'TOTAL MENSUAL EQUIVALENTE',
+    perCategoria:'Por categoria',
+    nouGastoFix:'Nuevo gasto fijo',editarGastoFix:'Editar gasto fijo',
+    nomLabel:'Nombre',importMensual:'Importe mensual (€)',importAnual:'Importe anual (€)',
+    categoriaLabel:'Categoria',periodicitatLabel:'Periodicidad',
+    mensual:'Mensual',anual:'Anual',equivMensual:'Equivalente mensual',
+    capGasto:'Sin gastos fijos. Anade uno!',
+    nouaDespesa:'+ Gasto',novaCategoria:'+ Categoria',
+    resumMes:'Resumen del mes',gastat:'Gastado',pressupost:'Presupuesto',
+    disponible:'disponible',perSobre:'por encima',
+    capCategoria:'Sin categorias. Anade una!',
+    nouaDespesaTitle:'Nuevo gasto',quinActiu:'Que activo?',
+    carteraTotal:'CARTERA TOTAL',nouActiu:'+ Nuevo activo',
+    novaAportacio:'+ Aportacion',actualitzarTots:'Actualizar todos',
+    capInversio:'Sin inversiones. Anade una!',
+    novaInversio:'Nueva inversion',editarInversio:'Editar inversion',
+    patrimoniNetLabel:'PATRIMONIO NETO',actius:'Activos',deutes:'Deudas',
+    capBe:'Sin bienes registrados. Anade uno!',
+    nouElement:'Nuevo elemento',editarElement:'Editar elemento',
+    mensualitat:'Cuota mensual',pagat:'Pagado',
+    valorActual:'Valor actual (€)',valorCompra:'Valor de compra (€)',
+    deutePendent:'Deuda pendiente (€)',anyFi:'Ano fin deuda',
+    calculadoraFire:'CALCULADORA FIRE',objectiuFire:'Objetivo FIRE',
+    edatFire:'Edad FIRE est.',rendaMes:'Renta/mes FIRE',
+    parametres:'Parametros',edatActual:'Edad actual',
+    despesesAnuals:'Gastos anuales',rendimentEsperat:'Rendimiento esperado',
+    inflacioLabel:'Inflacion',reglaRetirada:'Regla retirada',
+    projeccio:'Proyeccion hasta FIRE',anysFire:'anos desde ahora',
+    entrar:'Entrar',crearCompte:'Crear cuenta',
+    correuElectronic:'Correo electronico',contrasenya:'Contrasena',
+    confirmaContrasenya:'Confirma la contrasena',
+    compteCreat:'Cuenta creada! Revisa el correo para confirmarla, luego vuelve a entrar.',
+    gestorPersonal:'Gestor financiero personal',
+    sortir:'Salir',tancarSessio:'Quieres cerrar sesion?',
+    desant:'guardando...', desat:'guardado',
+    esborraDades:'Borrar todos los datos',zonaPerill:'Zona de peligro',
+    confirmaEsborrar:'Seguro que quieres borrar TODOS los datos?',
+    confirmaEsborrar2:'Confirma: borrar todo definitivamente?',
+    connectat:'Conectado a Supabase',
+    desaServidor:'Guardar en servidor ahora',carregaServidor:'Cargar del servidor',
+    totCorrecte:'Todo correcto!',noErrores:'No se han detectado errores.',
+    supabaseTab:'Supabase',diagnosticTab:'Diagnostico',dadesTab:'Datos',
+  },
+  en:{
+    dashboard:'Dashboard',fixes:'Fixed costs',variables:'Variable costs',
+    inversions:'Investments',bens:'Assets',fire:'FIRE',
+    patrimoni:'Total net worth',rendiment:'investment return',
+    nomina:'Monthly income',taxaEstalvi:'Savings rate',
+    cash:'Available cash',delPatrimoni:'of portfolio',
+    mesActual:'Current month',fotoMes:'month snapshot',
+    evolucio:'Portfolio evolution',autoMes:'Auto: 1st of each month',
+    distribucio:'Portfolio distribution',objectius:'Savings goals',
+    capObjectiu:'No goals yet. Add one!',
+    nouObjectiu:'New goal',editarObjectiu:'Edit goal',falta:'Remaining',
+    editar:'Edit',desar:'Save',cancelar:'Cancel',afegir:'+ Add',
+    carregant:'Loading...',
+    totalMensual:'MONTHLY TOTAL',
+    perCategoria:'By category',
+    nouGastoFix:'New fixed expense',editarGastoFix:'Edit fixed expense',
+    nomLabel:'Name',importMensual:'Monthly amount (€)',importAnual:'Annual amount (€)',
+    categoriaLabel:'Category',periodicitatLabel:'Frequency',
+    mensual:'Monthly',anual:'Annual',equivMensual:'Monthly equivalent',
+    capGasto:'No fixed expenses. Add one!',
+    nouaDespesa:'+ Expense',novaCategoria:'+ Category',
+    resumMes:'Month summary',gastat:'Spent',pressupost:'Budget',
+    disponible:'available',perSobre:'over budget',
+    capCategoria:'No categories. Add one!',
+    nouaDespesaTitle:'New expense',quinActiu:'Which asset?',
+    carteraTotal:'TOTAL PORTFOLIO',nouActiu:'+ New asset',
+    novaAportacio:'+ Contribution',actualitzarTots:'Update all',
+    capInversio:'No investments. Add one!',
+    novaInversio:'New investment',editarInversio:'Edit investment',
+    patrimoniNetLabel:'NET WORTH',actius:'Assets',deutes:'Debts',
+    capBe:'No assets recorded. Add one!',
+    nouElement:'New item',editarElement:'Edit item',
+    mensualitat:'Monthly payment',pagat:'Paid',
+    valorActual:'Current value (€)',valorCompra:'Purchase value (€)',
+    deutePendent:'Outstanding debt (€)',anyFi:'Debt end year',
+    calculadoraFire:'FIRE CALCULATOR',objectiuFire:'FIRE target',
+    edatFire:'Est. FIRE age',rendaMes:'Monthly FIRE income',
+    parametres:'Parameters',edatActual:'Current age',
+    despesesAnuals:'Annual expenses',rendimentEsperat:'Expected return',
+    inflacioLabel:'Inflation',reglaRetirada:'Withdrawal rule',
+    projeccio:'Projection to FIRE',anysFire:'years from now',
+    entrar:'Sign in',crearCompte:'Create account',
+    correuElectronic:'Email address',contrasenya:'Password',
+    confirmaContrasenya:'Confirm password',
+    compteCreat:'Account created! Check your email to confirm, then sign in.',
+    gestorPersonal:'Personal finance manager',
+    sortir:'Sign out',tancarSessio:'Do you want to sign out?',
+    desant:'saving...', desat:'saved',
+    esborraDades:'Delete all data',zonaPerill:'Danger zone',
+    confirmaEsborrar:'Are you sure you want to delete ALL data?',
+    confirmaEsborrar2:'Confirm: delete everything permanently?',
+    connectat:'Connected to Supabase',
+    desaServidor:'Save to server now',carregaServidor:'Load from server',
+    totCorrecte:'All good!',noErrores:'No errors or inconsistencies found.',
+    supabaseTab:'Supabase',diagnosticTab:'Diagnostic',dadesTab:'Data',
+  }
+};
+const LangCtx = createContext('ca');
+const useT = () => { const l=useContext(LangCtx); return k=>T[l]?.[k]||T.ca[k]||k; };
+
 function Money({children}) {
   const blur = useContext(BlurCtx);
   return e('span',{style:{filter:blur?'blur(6px)':'none',transition:'filter .2s',display:'inline-block',userSelect:blur?'none':'auto'}},children);
@@ -1884,7 +2076,7 @@ function AuthScreen({onAuth}) {
         e('div',{style:{fontSize:32,fontWeight:900,marginBottom:6}},
           e('span',{style:{color:C.accent}},'fin'),e('span',{style:{color:C.white}},'track')
         ),
-        e('div',{style:{color:C.dim,fontSize:11,letterSpacing:2,textTransform:'uppercase'}},'Gestor financer personal')
+        e('div',{style:{color:C.dim,fontSize:11,letterSpacing:2,textTransform:'uppercase'}},T[lang]?.gestorPersonal||'Gestor financer personal')
       ),
       e('div',{style:{background:C.surface,border:'1px solid '+C.border,borderRadius:16,padding:24}},
         e('div',{style:{display:'flex',gap:4,marginBottom:20,background:C.bg,borderRadius:10,padding:4}},
@@ -2121,8 +2313,8 @@ function BackupModal({data,setData,onClose}) {
         ),
         e('button',{
           onClick:async()=>{
-            if(window.confirm('Segur que vols esborrar TOTES les dades?')){
-              if(window.confirm('Confirma: esborrar tot definitament?')){
+            if(window.confirm(T[lang]?.confirmaEsborrar||'Segur que vols esborrar TOTES les dades?')){
+              if(window.confirm(T[lang]?.confirmaEsborrar2||'Confirma: esborrar tot definitament?')){
                 setData(INIT);
                 try{await SB_SAVE(INIT);}catch{}
                 onClose();
@@ -2203,14 +2395,7 @@ function PinScreen({onUnlock, correctPin}) {
 }
 
 // ── APP ───────────────────────────────────────────────────────────────────────
-const TABS=[
-  {id:'dashboard',label:'Dashboard',icon:'⚡'},
-  {id:'fixes',label:'Fixes',icon:'📌'},
-  {id:'variables',label:'Variables',icon:'📊'},
-  {id:'inversions',label:'Inversions',icon:'📈'},
-  {id:'bens',label:'Béns',icon:'🏛️'},
-  {id:'fire',label:'FIRE',icon:'🔥'},
-];
+// TABS are built dynamically with translations in App render
 
 function App() {
   const [authUser,setAuthUser]=useState(null);   // null = not checked yet
@@ -2222,6 +2407,8 @@ function App() {
   const [showBackup,setShowBackup]=useState(false);
   const [saveStatus,setSaveStatus]=useState('idle');
   const [theme,setTheme]=useState(()=>localStorage.getItem('fintrack-theme')||'dark');
+  const [lang,setLang]=useState(()=>localStorage.getItem('fintrack-lang')||'ca');
+  useEffect(()=>{localStorage.setItem('fintrack-lang',lang);},[lang]);
   const [data,setData]=useState(INIT);
 
   // Apply theme
@@ -2398,8 +2585,8 @@ function App() {
     e('div',{style:{color:C.dim,fontSize:11,letterSpacing:2}},'CARREGANT...')
   );
 
-  return e(ThemeCtx.Provider,{value:theme},e(BlurCtx.Provider,{value:blurred},
-    e('div',{key:theme,style:{background:C.bg,minHeight:'100vh',fontFamily:"'Sora',system-ui,sans-serif",color:C.text,maxWidth:900,margin:'0 auto',paddingBottom:60}},
+  return e(LangCtx.Provider,{value:lang},e(ThemeCtx.Provider,{value:theme},e(BlurCtx.Provider,{value:blurred},
+    e('div',{key:theme,className:blurred?'blurred-mode':'',style:{background:C.bg,minHeight:'100vh',fontFamily:"'Sora',system-ui,sans-serif",color:C.text,maxWidth:900,margin:'0 auto',paddingBottom:60}},
       // Header
       e('div',{style:{padding:'12px 16px 10px',display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:`1px solid ${C.border}`,position:'sticky',top:0,background:C.bg,zIndex:100}},
         e('div',null,
@@ -2408,8 +2595,8 @@ function App() {
           ),
           e('div',{style:{display:'flex',alignItems:'center',gap:4}},
             e('div',{style:{color:C.dim,fontSize:8,letterSpacing:1.5,textTransform:'uppercase'}},'Gestor financer personal'),
-            saveStatus==='saving' && e('span',{style:{color:C.accent,fontSize:8}},' ● desant...'),
-            saveStatus==='ok' && e('span',{style:{color:C.green,fontSize:8}},' ✓ desat'),
+            saveStatus==='saving' && e('span',{style:{color:C.accent,fontSize:8}},' ● '+(T[lang]?.desant||'desant...')),
+            saveStatus==='ok' && e('span',{style:{color:C.green,fontSize:8}},' ✓ '+(T[lang]?.desat||'desat')),
             saveStatus==='error' && e('span',{style:{color:C.red,fontSize:8}},' ✗ error desant'),
             loadError && e('span',{style:{color:C.red,fontSize:8}},' ⚠ '+loadError)
           )
@@ -2422,6 +2609,15 @@ function App() {
             title:blurred?'Mostrar imports':'Ocultar imports',
             style:{background:blurred?C.accentDim:'transparent',border:`1px solid ${blurred?C.accent+'55':(hBlur?C.accent+'66':C.border)}`,color:blurred?C.accent:(hBlur?C.accent:C.dim),borderRadius:7,width:32,height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,transition:'all .2s'}
           },blurred?'🙈':'👁️'),
+          e('select',{value:lang,onChange:ev=>setLang(ev.target.value),
+            style:{background:C.surface,border:'1px solid '+C.border,color:C.dim,borderRadius:7,height:32,cursor:'pointer',fontSize:11,fontWeight:700,fontFamily:'inherit',padding:'0 6px',outline:'none',appearance:'none',textAlign:'center',minWidth:40}
+          },e('option',{value:'ca'},'CA'),e('option',{value:'es'},'ES'),e('option',{value:'en'},'EN')),
+          // Theme toggle
+          e('button',{
+            onClick:()=>setTheme(t=>t==='dark'?'light':'dark'),
+            title:'Mode '+(theme==='dark'?'clar':'fosc'),
+            style:{background:'transparent',border:'1px solid '+C.border,color:C.dim,borderRadius:7,width:32,height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,transition:'all .2s'}
+          },theme==='dark'?'☀️':'🌙'),
           // Backup
           e('button',{
             onClick:()=>setShowBackup(true),
@@ -2429,15 +2625,9 @@ function App() {
             title:'Backup / Restaurar',
             style:{background:'transparent',border:`1px solid ${hBackup?C.yellow+'77':C.border}`,color:hBackup?C.yellow:C.dim,borderRadius:7,width:32,height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,transition:'all .2s'}
           },'💾'),
-          // Theme toggle
-          e('button',{
-            onClick:()=>setTheme(t=>t==='dark'?'light':'dark'),
-            title:'Mode '+(theme==='dark'?'clar':'fosc'),
-            style:{background:'transparent',border:'1px solid '+C.border,color:C.dim,borderRadius:7,width:32,height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,transition:'all .2s'}
-          },theme==='dark'?'☀️':'🌙'),
           // Reset removed - see backup modal Dades tab
           e('button',{
-            onClick:async()=>{if(window.confirm('Vols tancar la sessio?')){await sbSignOut();}},
+            onClick:async()=>{if(window.confirm(T[lang]?.tancarSessio||'Vols tancar la sessio?')){await sbSignOut();}},
             title:'Tancar sessio',
             style:{background:C.red+'18',border:'1px solid '+C.red+'55',color:C.red,borderRadius:7,padding:'0 10px',height:32,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,fontFamily:'inherit',transition:'all .2s',gap:4,whiteSpace:'nowrap'}
           },e('span',null,'↪'),' Sortir'),
@@ -2445,7 +2635,7 @@ function App() {
       ),
       // Tabs
       e('div',{style:{display:'flex',gap:0,padding:'0 8px',overflowX:'auto',borderBottom:'2px solid '+C.border,scrollbarWidth:'none',msOverflowStyle:'none'}},
-        TABS.map(t=>e('button',{key:t.id,onClick:()=>setTab(t.id),
+        [{id:'dashboard',icon:'⚡'},{id:'fixes',icon:'📌'},{id:'variables',icon:'📊'},{id:'inversions',icon:'📈'},{id:'bens',icon:'🏛️'},{id:'fire',icon:'🔥'}].map(t=>e('button',{key:t.id,onClick:()=>setTab(t.id),
           style:{
             background:'transparent',
             color:tab===t.id?C.accent:C.dim,
@@ -2474,7 +2664,7 @@ function App() {
       ),
       showBackup && e(BackupModal,{data,setData:setDataSafe,onClose:()=>setShowBackup(false)})
     )
-  ));
+  )));
 }
 
 // Mount
