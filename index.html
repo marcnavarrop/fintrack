@@ -1063,6 +1063,14 @@ const KRAKEN_MAP = {
   'BNB':'BNBEUR','DOGE':'XDGEUR',
 };
 
+// ETF/ETC tickers - Yahoo Finance suffixes to try in order
+const YAHOO_SUFFIXES = [
+  '', '.DE', '.L', '.AS', '.PA', '.MI', '.SW', '.F', '.MC'
+];
+
+// Known ISINs that need manual update (no reliable API)
+const MANUAL_ISINS = /^[A-Z]{2}[A-Z0-9]{10}$/;
+
 // Fetch crypto via Kraken (reliable, CORS-enabled, free)
 async function fetchCrypto(ticker) {
   const tk = ticker.toUpperCase().replace('-EUR','').replace('-USD','');
@@ -1079,28 +1087,30 @@ async function fetchCrypto(ticker) {
   } catch { return null; }
 }
 
-// Fetch ETFs/Stocks via Yahoo Finance (works from browser)
+// Fetch ETFs/Stocks via Yahoo Finance - tries multiple suffixes
 async function fetchStock(ticker) {
-  try {
-    const r = await fetch(
-      'https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(ticker)+'?interval=1d&range=1d',
-      {headers:{'User-Agent':'Mozilla/5.0'}}
-    );
-    if(!r.ok) return null;
-    const d = await r.json();
-    const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
-    return price ? Math.round(price*100)/100 : null;
-  } catch {}
-  // Fallback: query2
-  try {
-    const r = await fetch(
-      'https://query2.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(ticker)+'?interval=1d&range=1d'
-    );
-    if(!r.ok) return null;
-    const d = await r.json();
-    const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
-    return price ? Math.round(price*100)/100 : null;
-  } catch { return null; }
+  // If it looks like a pure ISIN (12 chars, no dot), it won't work on Yahoo
+  if(MANUAL_ISINS.test(ticker)) return null;
+  
+  // Build list of tickers to try
+  const base = ticker.replace(/\.(DE|L|AS|PA|MI|SW|F|MC)$/i,'');
+  const alreadyHasSuffix = ticker !== base;
+  const toTry = alreadyHasSuffix ? [ticker] : [ticker, ...YAHOO_SUFFIXES.slice(1).map(s=>base+s)];
+  
+  for(const tk of toTry) {
+    for(const host of ['query1','query2']) {
+      try {
+        const r = await fetch(
+          `https://${host}.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(tk)}?interval=1d&range=1d`
+        );
+        if(!r.ok) continue;
+        const d = await r.json();
+        const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
+        if(price) return Math.round(price*100)/100;
+      } catch {}
+    }
+  }
+  return null;
 }
 
 async function fetchPrice(ticker, tipus) {
@@ -1116,7 +1126,7 @@ async function fetchPrice(ticker, tipus) {
 function InvCard({inv,onEdit,onValorChange,onDelete}){
   const [fetching,setFetching]=useState(false);const [lastUpdate,setLastUpdate]=useState(null);const [editing,setEditing]=useState(false);const [tempVal,setTempVal]=useState('');
   const g=inv.valor-inv.cost,p=gainPct(inv.valor,inv.cost);
-  const refresh=async(ev)=>{ev.stopPropagation();setFetching(true);const pr=await fetchPrice(inv.ticker,inv.tipus);if(pr!==null){onValorChange(pr);setLastUpdate(new Date().toLocaleTimeString('ca-ES',{hour:'2-digit',minute:'2-digit'}));}else{setLastUpdate('✗ no trobat');}setFetching(false);};
+  const refresh=async(ev)=>{ev.stopPropagation();setFetching(true);const pr=await fetchPrice(inv.ticker,inv.tipus);if(pr!==null){onValorChange(pr,true);setLastUpdate(new Date().toLocaleTimeString('ca-ES',{hour:'2-digit',minute:'2-digit'}));}else{setLastUpdate('✗ no trobat');}setFetching(false);};
   return e(Card,{style:{padding:'10px 12px'},onClick:!editing?onEdit:undefined},
     e('div',{style:{display:'flex',alignItems:'center',gap:9}},
       e('div',{style:{width:3,height:32,borderRadius:2,background:inv.color,flexShrink:0}}),
@@ -1125,7 +1135,10 @@ function InvCard({inv,onEdit,onValorChange,onDelete}){
           e('span',{style:{fontWeight:600,color:C.text,fontSize:12}},inv.nom),
           e(Badge,{color:inv.color},inv.tipus),
           inv.ticker&&e('span',{style:{color:C.dim,fontSize:9,fontFamily:'monospace'}},inv.ticker)),
-        lastUpdate&&e('div',{style:{color:C.green,fontSize:9,marginTop:2}},'✓ actualitzat '+lastUpdate)),
+        e('div',{style:{display:'flex',gap:6,alignItems:'center',flexWrap:'wrap'}},
+          lastUpdate&&e('div',{style:{color:lastUpdate.startsWith('✗')?C.red:C.green,fontSize:9}},(lastUpdate.startsWith('✗')?'':'✓ ')+lastUpdate),
+          !lastUpdate&&inv.lastUpdate&&e('div',{style:{color:C.dim,fontSize:9}},'actualitzat '+inv.lastUpdate),
+          MANUAL_ISINS.test(inv.ticker||'')&&e('div',{style:{color:C.yellow,fontSize:9}},'📝 actualització manual'))),
       e('div',{style:{textAlign:'right'}},
         editing?e('span',{style:{display:'inline-flex',alignItems:'center',gap:4}},
           e('input',{value:tempVal,onChange:ev=>setTempVal(ev.target.value),type:'number',autoFocus:true,
@@ -1137,10 +1150,14 @@ function InvCard({inv,onEdit,onValorChange,onDelete}){
         :e('div',{onClick:ev=>{ev.stopPropagation();setTempVal(String(inv.valor));setEditing(true);},title:'Clic per editar',style:{cursor:'pointer'}},
           e('div',{style:{color:fetching?C.dim:C.text,fontFamily:'monospace',fontWeight:700,fontSize:13,borderBottom:'1px dashed '+C.border}},fetching?e('span',{style:{color:C.accent}},'···'):e(Money,null,fmt(inv.valor))),
           e('div',{style:{color:g>=0?C.green:C.red,fontSize:10,fontFamily:'monospace'}},e(Money,null,(g>=0?'+':'')+fmt(g)+' ('+p.toFixed(1)+'%)')))),
-      inv.ticker&&!editing&&e('button',{onClick:refresh,disabled:fetching,
-        onMouseEnter:ev=>{if(!fetching){ev.currentTarget.style.borderColor=C.accent+'66';ev.currentTarget.style.color=C.accent;}},
+      inv.ticker&&!editing&&e('button',{
+        onClick: MANUAL_ISINS.test(inv.ticker||'') ? undefined : refresh,
+        disabled:fetching||MANUAL_ISINS.test(inv.ticker||''),
+        title: MANUAL_ISINS.test(inv.ticker||'') ? 'ISIN detectat: actualitza el valor manualment fent clic al número' : 'Actualitzar preu de '+inv.ticker,
+        onMouseEnter:ev=>{if(!fetching&&!MANUAL_ISINS.test(inv.ticker||'')){ev.currentTarget.style.borderColor=C.accent+'66';ev.currentTarget.style.color=C.accent;}},
         onMouseLeave:ev=>{if(!fetching){ev.currentTarget.style.borderColor=C.border;ev.currentTarget.style.color=C.dim;}},
-        style:{background:'transparent',border:'1px solid '+C.border,color:C.dim,borderRadius:6,width:26,height:26,cursor:fetching?'default':'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,flexShrink:0,transition:'all .2s',fontWeight:700}},fetching?'⏳':'↻'),
+        style:{background:'transparent',border:'1px solid '+C.border,color:MANUAL_ISINS.test(inv.ticker||'')?C.border:C.dim,borderRadius:6,width:26,height:26,cursor:fetching||MANUAL_ISINS.test(inv.ticker||'')?'default':'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,flexShrink:0,transition:'all .2s',fontWeight:700}
+      },fetching?'⏳':'↻'),
       e(DeleteBtn,{nom:inv.nom,onDelete})));
 }
 function Inversions({data,setData}){
@@ -1204,7 +1221,7 @@ function Inversions({data,setData}){
     e('div',{style:{display:'grid',gap:7}},
       data.inversions.length===0&&e('div',{style:{color:C.dim,fontSize:12,textAlign:'center',padding:24}},t('capInversio')),
       [...data.inversions].filter(inv=>filtreInv==='Tots'||inv.tipus===filtreInv).sort((a,b)=>{'use strict';const pA=(a.valor-a.cost)/Math.max(1,a.cost),pB=(b.valor-b.cost)/Math.max(1,b.cost);if(sortDesc==='valor_desc')return b.valor-a.valor;if(sortDesc==='valor_asc')return a.valor-b.valor;if(sortDesc==='pct_desc')return pB-pA;return pA-pB;})
-        .map(inv=>e(InvCard,{key:inv.id,inv,onEdit:()=>obrir(inv),onValorChange:v=>setData(d=>({...d,inversions:d.inversions.map(i=>i.id===inv.id?{...i,valor:v}:i)})),onDelete:()=>setData(d=>({...d,inversions:d.inversions.filter(x=>x.id!==inv.id)}))}))),
+        .map(inv=>e(InvCard,{key:inv.id,inv,onEdit:()=>obrir(inv),onValorChange:(v,auto)=>setData(d=>({...d,inversions:d.inversions.map(i=>i.id===inv.id?{...i,valor:v,lastUpdate:auto?new Date().toISOString().slice(0,10):i.lastUpdate}:i)})),onDelete:()=>setData(d=>({...d,inversions:d.inversions.filter(x=>x.id!==inv.id)}))}))),
     aportModal&&e(Modal,{title:'+ Aportació a inversió',onClose:()=>setAportModal(false)},
       e('div',{style:{background:C.accentDim,border:'1px solid '+C.accent+'33',borderRadius:10,padding:'10px 14px',marginBottom:14}},
         e('div',{style:{color:C.accent,fontSize:11,fontWeight:700,marginBottom:3}},t('comFunciona')),
