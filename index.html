@@ -911,7 +911,7 @@ function CatCard({cat, gastat, pressupost, col, pct, over, regs, mesActiu, editC
     regs.length>0&&e('div',null,
       e('button',{onClick:()=>setObert(o=>!o),style:{width:'100%',background:'none',border:'none',color:C.dim,cursor:'pointer',fontSize:10,fontFamily:'inherit',textAlign:'left',padding:'4px 0',display:'flex',alignItems:'center',gap:4}},
         e('span',{style:{transition:'transform .2s',display:'inline-block',transform:obert?'rotate(90deg)':'rotate(0deg)'}},'›'),
-        regs.length+' despesa'+(regs.length!==1?'s':''),
+        regs.length+(regs.length===1?' despesa':' despeses'),
         e('span',{style:{marginLeft:'auto',color:col,fontWeight:700}},fmt(regs.reduce((s,r)=>s+r.import,0)))),
       obert&&e('div',{style:{borderTop:'1px solid '+C.border,paddingTop:8,display:'grid',gap:5}},
         regs.map(r=>e('div',{key:r.id,style:{display:'flex',alignItems:'center',gap:8,padding:'5px 0'}},
@@ -1049,18 +1049,74 @@ function GastosVariables({data,setData}) {
 }
 
 // ── INVERSIONS ────────────────────────────────────────────────────────────────
-const GECKO_MAP={'BTC':'bitcoin','BTC-EUR':'bitcoin','ETH':'ethereum','ETH-EUR':'ethereum','SOL':'solana','SOL-EUR':'solana','BNB':'binancecoin','BNB-EUR':'binancecoin','XRP':'ripple','XRP-EUR':'ripple','ADA':'cardano','ADA-EUR':'cardano','MATIC':'matic-network','AVAX':'avalanche-2','LINK':'chainlink'};
-async function fetchPrice(ticker,tipus){
-  if(!ticker)return null;
-  const tk=ticker.toUpperCase();const geckoId=GECKO_MAP[tk];
-  if(geckoId||tipus==='Cripto'){const id=geckoId||tk.replace('-EUR','').replace('-USD','').toLowerCase();try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids='+id+'&vs_currencies=eur');if(r.ok){const d=await r.json();if(d[id]?.eur)return d[id].eur;}}catch{}}
-  try{const url='https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(ticker)+'?interval=1d&range=1d';const r=await fetch('https://api.allorigins.win/get?url='+encodeURIComponent(url));if(r.ok){const o=await r.json();const d=JSON.parse(o.contents);const p=d?.chart?.result?.[0]?.meta?.regularMarketPrice;if(p)return Math.round(p*100)/100;}}catch{}
-  return null;
+// ── Mapa de tickers cripto → parells Kraken ──────────────────────────────────
+const KRAKEN_MAP = {
+  'BTC':'XBTEUR','BTC-EUR':'XBTEUR','BITCOIN':'XBTEUR',
+  'ETH':'ETHEUR','ETH-EUR':'ETHEUR','ETHEREUM':'ETHEUR',
+  'SOL':'SOLEUR','SOL-EUR':'SOLEUR',
+  'ADA':'ADAEUR','ADA-EUR':'ADAEUR',
+  'XRP':'XRPEUR','XRP-EUR':'XRPEUR',
+  'DOT':'DOTEUR','DOT-EUR':'DOTEUR',
+  'MATIC':'MATICEUR','AVAX':'AVAXEUR',
+  'LINK':'LINKEUR','UNI':'UNIEUR',
+  'LTC':'LTCEUR','LTC-EUR':'LTCEUR',
+  'BNB':'BNBEUR','DOGE':'XDGEUR',
+};
+
+// Fetch crypto via Kraken (reliable, CORS-enabled, free)
+async function fetchCrypto(ticker) {
+  const tk = ticker.toUpperCase().replace('-EUR','').replace('-USD','');
+  const pair = KRAKEN_MAP[ticker.toUpperCase()] || KRAKEN_MAP[tk] || (tk+'EUR');
+  try {
+    const r = await fetch('https://api.kraken.com/0/public/Ticker?pair='+pair);
+    if(!r.ok) return null;
+    const d = await r.json();
+    if(d.error?.length) return null;
+    const key = Object.keys(d.result||{})[0];
+    if(!key) return null;
+    const price = parseFloat(d.result[key].c[0]);
+    return isNaN(price) ? null : Math.round(price*100)/100;
+  } catch { return null; }
+}
+
+// Fetch ETFs/Stocks via Yahoo Finance (works from browser)
+async function fetchStock(ticker) {
+  try {
+    const r = await fetch(
+      'https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(ticker)+'?interval=1d&range=1d',
+      {headers:{'User-Agent':'Mozilla/5.0'}}
+    );
+    if(!r.ok) return null;
+    const d = await r.json();
+    const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
+    return price ? Math.round(price*100)/100 : null;
+  } catch {}
+  // Fallback: query2
+  try {
+    const r = await fetch(
+      'https://query2.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(ticker)+'?interval=1d&range=1d'
+    );
+    if(!r.ok) return null;
+    const d = await r.json();
+    const price = d?.chart?.result?.[0]?.meta?.regularMarketPrice;
+    return price ? Math.round(price*100)/100 : null;
+  } catch { return null; }
+}
+
+async function fetchPrice(ticker, tipus) {
+  if(!ticker) return null;
+  const isCripto = tipus==='Cripto' || KRAKEN_MAP[ticker.toUpperCase()] || ticker.toUpperCase().endsWith('-EUR') || ticker.toUpperCase().endsWith('-USD');
+  if(isCripto) {
+    const p = await fetchCrypto(ticker);
+    if(p !== null) return p;
+  }
+  // ETFs, Accions, Fons, Pensions, Bons → Yahoo Finance
+  return await fetchStock(ticker);
 }
 function InvCard({inv,onEdit,onValorChange,onDelete}){
   const [fetching,setFetching]=useState(false);const [lastUpdate,setLastUpdate]=useState(null);const [editing,setEditing]=useState(false);const [tempVal,setTempVal]=useState('');
   const g=inv.valor-inv.cost,p=gainPct(inv.valor,inv.cost);
-  const refresh=async(ev)=>{ev.stopPropagation();setFetching(true);const pr=await fetchPrice(inv.ticker,inv.tipus);if(pr!==null){onValorChange(pr);setLastUpdate(new Date().toLocaleTimeString('ca-ES',{hour:'2-digit',minute:'2-digit'}));}setFetching(false);};
+  const refresh=async(ev)=>{ev.stopPropagation();setFetching(true);const pr=await fetchPrice(inv.ticker,inv.tipus);if(pr!==null){onValorChange(pr);setLastUpdate(new Date().toLocaleTimeString('ca-ES',{hour:'2-digit',minute:'2-digit'}));}else{setLastUpdate('✗ no trobat');}setFetching(false);};
   return e(Card,{style:{padding:'10px 12px'},onClick:!editing?onEdit:undefined},
     e('div',{style:{display:'flex',alignItems:'center',gap:9}},
       e('div',{style:{width:3,height:32,borderRadius:2,background:inv.color,flexShrink:0}}),
@@ -1099,7 +1155,24 @@ function Inversions({data,setData}){
   const desar=()=>{const er={};if(!form.nom.trim())er.nom='Obligatori';if(!form.valor||isNaN(form.valor)||+form.valor<0)er.valor='Import vàlid';if(!form.cost||isNaN(form.cost)||+form.cost<0)er.cost='Import vàlid';if(Object.keys(er).length){setErrs(er);return;}
     const item={id:modal==='nou'?uid():modal,nom:form.nom.trim(),ticker:form.ticker.trim()||null,tipus:form.tipus,valor:+form.valor,cost:+form.cost,color:TIPUS_COLORS[form.tipus]||PAL[data.inversions.length%PAL.length]};
     setData(d=>({...d,inversions:modal==='nou'?[...d.inversions,item]:d.inversions.map(i=>i.id===modal?{...i,...item}:i)}));setModal(null);};
-  const refreshAll=async()=>{const amb=data.inversions.filter(i=>i.ticker);if(!amb.length){setRefreshLog('Cap actiu té ticker.');return;}setRefreshingAll(true);setRefreshLog('Actualitzant '+amb.length+' actius...');const updates={};let ok=0,fail=0;await Promise.all(amb.map(async inv=>{const pr=await fetchPrice(inv.ticker,inv.tipus);if(pr!==null){updates[inv.id]=pr;ok++;}else fail++;}));if(ok>0)setData(d=>({...d,inversions:d.inversions.map(i=>updates[i.id]!==undefined?{...i,valor:updates[i.id]}:i)}));setRefreshLog('✓ '+ok+' actualitzat'+(ok!==1?'s':'')+(fail>0?' · '+fail+' error':'')+'·'+new Date().toLocaleTimeString('ca-ES',{hour:'2-digit',minute:'2-digit'}));setRefreshingAll(false);};
+  const refreshAll=async()=>{
+    const amb=data.inversions.filter(i=>i.ticker);
+    if(!amb.length){setRefreshLog('Cap actiu té ticker configurat.');return;}
+    setRefreshingAll(true);
+    setRefreshLog('Actualitzant '+amb.length+' actius...');
+    const updates={};let ok=0,fail=[];
+    await Promise.all(amb.map(async inv=>{
+      const pr=await fetchPrice(inv.ticker,inv.tipus);
+      if(pr!==null){updates[inv.id]=pr;ok++;}
+      else fail.push(inv.ticker||inv.nom);
+    }));
+    if(ok>0) setData(d=>({...d,inversions:d.inversions.map(i=>updates[i.id]!==undefined?{...i,valor:updates[i.id]}:i)}));
+    const hora=new Date().toLocaleTimeString('ca-ES',{hour:'2-digit',minute:'2-digit'});
+    if(ok>0&&fail.length===0) setRefreshLog('✓ '+ok+' actualitzat'+(ok!==1?'s':'')+' · '+hora);
+    else if(ok>0) setRefreshLog('✓ '+ok+' ok · ✗ no trobat: '+fail.join(', ')+' · '+hora);
+    else setRefreshLog("✗ No s'han pogut obtenir preus. Tickers: "+fail.join(", "));
+    setRefreshingAll(false);
+  };
   return e('div',null,
     e('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:14}},
       e('div',null,
