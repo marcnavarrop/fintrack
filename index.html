@@ -995,7 +995,7 @@ function GastosVariables({data,setData}) {
         const regs=(data.despesesRegistre||[]).filter(r=>r.cat===cat&&r.mes===mesActiu).sort((a,b)=>b.data.localeCompare(a.data));
         return e(CatCard,{key:cat,cat,gastat,pressupost,col,pct,over,regs,mesActiu,editCat,setEditCat,setGastat,setData,setForm,setModal});
       }),
-    modal==='nouGasto'&&e(Modal,{title:t('nouaDespesa2')||'Nova despesa',onClose:()=>setModal(null)},
+    modal==='nouGasto'&&e(Modal,{title:'Nova despesa',onClose:()=>setModal(null)},
       e('div',{style:{marginBottom:12}},
         e('div',{style:{color:C.dim,fontSize:10,fontWeight:600,marginBottom:7,textTransform:'uppercase'}},'Categoria'),
         cats.length===0?e('div',{style:{color:C.dim,fontSize:12}},'Crea primer una categoria.'):
